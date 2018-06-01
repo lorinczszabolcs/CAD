@@ -1579,132 +1579,6 @@ namespace cagd
         }
     }
 
-    void GLWidget::setAlphaUPatch(double value)
-    {
-        if (_patch->getAlphaU() != value)
-        {
-            _patch->setAlphaU(value);
-
-            if (! _patch->UpdateVertexBufferObjectsOfData())
-            {
-                throw Exception("Could not create patch!\n");
-            }
-
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
-
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
-
-            _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
-            _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
-
-            for(GLuint i = 0; i < 5; i++)
-            {
-                (*_u_lines)[i]->UpdateVertexBufferObjects();
-                (*_v_lines)[i]->UpdateVertexBufferObjects();
-            }
-
-            _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
-
-            if(_before_interpolation)
-                _before_interpolation->UpdateVertexBufferObjects();
-
-            RowMatrix<GLdouble> u_knot_vector(4);
-            u_knot_vector(0) = 0.0;
-            u_knot_vector(1) = 1.0 / 3.0;
-            u_knot_vector(2) = 2.0 / 3.0;
-            u_knot_vector(3) = 1.0;
-
-            ColumnMatrix<GLdouble> v_knot_vector(4);
-            v_knot_vector(0) = 0.0;
-            v_knot_vector(1) = 1.0 / 3.0;
-            v_knot_vector(2) = 2.0 / 3.0;
-            v_knot_vector(3) = 1.0;
-
-            Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
-            for (int row = 0; row < 4; ++row)
-                for (int column = 0; column < 4; ++column)
-                    _patch->GetData(row, column, data_points_to_interpolate(row, column));
-
-            if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
-            {
-                _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
-                if(_after_interpolation)
-                    _after_interpolation->UpdateVertexBufferObjects();
-            }
-
-            updateGL();
-        }
-    }
-
-    void GLWidget::setAlphaVPatch(double value)
-    {
-        if (_patch->getAlphaV() != value)
-        {
-            _patch->setAlphaV(value);
-
-            if (! _patch->UpdateVertexBufferObjectsOfData())
-            {
-                throw Exception("Could not create patch!\n");
-            }
-
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
-
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
-
-            _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
-            _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
-
-            for(GLuint i = 0; i < 5; i++)
-            {
-                (*_u_lines)[i]->UpdateVertexBufferObjects();
-                (*_v_lines)[i]->UpdateVertexBufferObjects();
-            }
-
-            _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
-
-            if(_before_interpolation)
-                _before_interpolation->UpdateVertexBufferObjects();
-
-            RowMatrix<GLdouble> u_knot_vector(4);
-            u_knot_vector(0) = 0.0;
-            u_knot_vector(1) = 1.0 / 3.0;
-            u_knot_vector(2) = 2.0 / 3.0;
-            u_knot_vector(3) = 1.0;
-
-            ColumnMatrix<GLdouble> v_knot_vector(4);
-            v_knot_vector(0) = 0.0;
-            v_knot_vector(1) = 1.0 / 3.0;
-            v_knot_vector(2) = 2.0 / 3.0;
-            v_knot_vector(3) = 1.0;
-
-            Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
-            for (int row = 0; row < 4; ++row)
-                for (int column = 0; column < 4; ++column)
-                    _patch->GetData(row, column, data_points_to_interpolate(row, column));
-
-            if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
-            {
-                _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
-                if(_after_interpolation)
-                    _after_interpolation->UpdateVertexBufferObjects();
-            }
-
-            updateGL();
-        }
-    }
-
     void GLWidget::setControlPointArcIndex(int index)
     {
         if (_cp_index_arc != index)
@@ -1843,6 +1717,7 @@ namespace cagd
         if (_cp_index_u != index)
         {
             _cp_index_u = index;
+
             DCoordinate3 aux;
             _patch->GetData(_cp_index_u, _cp_index_v, aux);
 
@@ -1850,9 +1725,9 @@ namespace cagd
             _act_cp_patch_y = aux[1];
             _act_cp_patch_z = aux[2];
 
-            emit xCoordinateArcChanged(_act_cp_patch_x);
-            emit yCoordinateArcChanged(_act_cp_patch_y);
-            emit zCoordinateArcChanged(_act_cp_patch_z);
+            emit xCoordinatePatchChanged(_act_cp_patch_x);
+            emit yCoordinatePatchChanged(_act_cp_patch_y);
+            emit zCoordinatePatchChanged(_act_cp_patch_z);
         }
     }
 
@@ -1868,9 +1743,9 @@ namespace cagd
             _act_cp_patch_y = aux[1];
             _act_cp_patch_z = aux[2];
 
-            emit xCoordinateArcChanged(_act_cp_patch_x);
-            emit yCoordinateArcChanged(_act_cp_patch_y);
-            emit zCoordinateArcChanged(_act_cp_patch_z);
+            emit xCoordinatePatchChanged(_act_cp_patch_x);
+            emit yCoordinatePatchChanged(_act_cp_patch_y);
+            emit zCoordinatePatchChanged(_act_cp_patch_z);
         }
     }
 
@@ -1933,6 +1808,7 @@ namespace cagd
                 if(_after_interpolation)
                     _after_interpolation->UpdateVertexBufferObjects();
             }
+            updateGL();
         }
     }
 
@@ -1995,6 +1871,7 @@ namespace cagd
                 if(_after_interpolation)
                     _after_interpolation->UpdateVertexBufferObjects();
             }
+            updateGL();
         }
     }
 
@@ -2057,8 +1934,134 @@ namespace cagd
                 if(_after_interpolation)
                     _after_interpolation->UpdateVertexBufferObjects();
             }
+            updateGL();
         }
     }
+
+    void GLWidget::setAlphaUPatch(double value)
+    {
+        if (_patch->getAlphaU() != value)
+        {
+            _patch->setAlphaU(value);
+
+            if (! _patch->UpdateVertexBufferObjectsOfData())
+            {
+                throw Exception("Could not create patch!\n");
+            }
+
+            _before_interpolation = nullptr;
+            _after_interpolation = nullptr;
+            _u_lines = nullptr;
+            _v_lines = nullptr;
+
+            _before_int = true;
+            _after_int = true;
+            _u_lin = true;
+            _v_lin = true;
+
+            _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
+            _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for(GLuint i = 0; i < 5; i++)
+            {
+                (*_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_v_lines)[i]->UpdateVertexBufferObjects();
+            }
+
+            _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            if(_before_interpolation)
+                _before_interpolation->UpdateVertexBufferObjects();
+
+            RowMatrix<GLdouble> u_knot_vector(4);
+            u_knot_vector(0) = 0.0;
+            u_knot_vector(1) = 1.0 / 3.0;
+            u_knot_vector(2) = 2.0 / 3.0;
+            u_knot_vector(3) = 1.0;
+
+            ColumnMatrix<GLdouble> v_knot_vector(4);
+            v_knot_vector(0) = 0.0;
+            v_knot_vector(1) = 1.0 / 3.0;
+            v_knot_vector(2) = 2.0 / 3.0;
+            v_knot_vector(3) = 1.0;
+
+            Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
+            for (int row = 0; row < 4; ++row)
+                for (int column = 0; column < 4; ++column)
+                    _patch->GetData(row, column, data_points_to_interpolate(row, column));
+
+            if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
+            {
+                _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+                if(_after_interpolation)
+                    _after_interpolation->UpdateVertexBufferObjects();
+            }
+            updateGL();
+        }
+    }
+
+    void GLWidget::setAlphaVPatch(double value)
+    {
+        if (_patch->getAlphaV() != value)
+        {
+            _patch->setAlphaV(value);
+
+            if (! _patch->UpdateVertexBufferObjectsOfData())
+            {
+                throw Exception("Could not create patch!\n");
+            }
+
+            _before_interpolation = nullptr;
+            _after_interpolation = nullptr;
+            _u_lines = nullptr;
+            _v_lines = nullptr;
+
+            _before_int = true;
+            _after_int = true;
+            _u_lin = true;
+            _v_lin = true;
+
+            _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
+            _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for(GLuint i = 0; i < 5; i++)
+            {
+                (*_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_v_lines)[i]->UpdateVertexBufferObjects();
+            }
+
+            _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            if(_before_interpolation)
+                _before_interpolation->UpdateVertexBufferObjects();
+
+            RowMatrix<GLdouble> u_knot_vector(4);
+            u_knot_vector(0) = 0.0;
+            u_knot_vector(1) = 1.0 / 3.0;
+            u_knot_vector(2) = 2.0 / 3.0;
+            u_knot_vector(3) = 1.0;
+
+            ColumnMatrix<GLdouble> v_knot_vector(4);
+            v_knot_vector(0) = 0.0;
+            v_knot_vector(1) = 1.0 / 3.0;
+            v_knot_vector(2) = 2.0 / 3.0;
+            v_knot_vector(3) = 1.0;
+
+            Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
+            for (int row = 0; row < 4; ++row)
+                for (int column = 0; column < 4; ++column)
+                    _patch->GetData(row, column, data_points_to_interpolate(row, column));
+
+            if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
+            {
+                _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+                if(_after_interpolation)
+                    _after_interpolation->UpdateVertexBufferObjects();
+            }
+            updateGL();
+        }
+    }
+
 
     //-----------
     // Destructor

@@ -13,7 +13,6 @@ GLdouble FirstOrderAlgebraicTrigonometricPatch::getAlphaU() const
 {
     return _alpha_u;
 }
-
 void FirstOrderAlgebraicTrigonometricPatch::setAlphaU(GLdouble alpha_u)
 {
     _alpha_u = alpha_u;
