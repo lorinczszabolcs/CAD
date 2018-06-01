@@ -162,6 +162,7 @@ namespace cagd
             }
             else if (_tab_index == 5)
             {
+                cout << _patch->_data;
                 renderFirstOrderAlgebraicTrigonometricPatch();
             }
 
@@ -2054,6 +2055,7 @@ namespace cagd
                 if(_after_interpolation)
                     _after_interpolation->UpdateVertexBufferObjects();
             }
+
             updateGL();
         }
     }

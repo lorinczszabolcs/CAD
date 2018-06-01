@@ -30,6 +30,7 @@ namespace cagd
         GLuint               _vbo_data;            // vertex buffer object of the control net
         GLdouble             _u_min, _u_max;       // definition domain in direction u
         GLdouble             _v_min, _v_max;       // definition domain in direction v
+    public:
         Matrix<DCoordinate3> _data;                // the control net (usually stores position vectors)
 
     public:
