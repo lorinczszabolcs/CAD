@@ -1,0 +1,20 @@
+#include "FirstOrderAlgebraicTrigonometricCompositeSurfaces3.h"
+
+using namespace cagd;
+
+FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::PatchAttributes() :
+    patch(new FirstOrderAlgebraicTrigonometricPatch())
+{
+}
+
+FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::~PatchAttributes()
+{
+    if(this->patch)
+    {
+        delete this->patch;
+    }
+    if(this->image)
+    {
+        delete this->image;
+    }
+}
