@@ -24,16 +24,9 @@ namespace cagd
     protected:
         std::vector<ArcAttributes> _attributes;
         GLdouble                   _alpha;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        GLuint                     _mod;
-        GLuint                     _div_point_count;
->>>>>>> parent of 615955c... javitas
-=======
-        GLuint                     _mod;
-        GLuint                     _div_point_count;
->>>>>>> parent of 615955c... javitas
+
+        GLuint                     _mod; //max order of derivates
+        GLuint                     _div_point_count; //div point count = 200
 
     public:
         FirstOrderAlgebraicTrigonometricCompositeCurve3(GLdouble alpha, GLuint max_arc_count = 1000);
@@ -41,22 +34,22 @@ namespace cagd
         FirstOrderAlgebraicTrigonometricCompositeCurve3();
 
         // insert new isolated arc
-        GLvoid insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc);
+        GLboolean insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc);
         GLvoid validateAttributes(ArcAttributes *oldAttr, ArcAttributes *newAttr);
 
-        GLvoid UpdateArcVBOGenerateImage(ArcAttribute &arc);
+        GLvoid UpdateArcVBOGenerateImage(ArcAttributes &arc);
 
         // continue existing arc -> index, direction, haromszorosan megnyujtani, degeneralodik szakasz
-        GLvoid continueExistingArc(GLuint index, Direction direction);
+        GLboolean continueExistingArc(GLuint index, Direction direction);
 
         // join existing arcs -> index1, index2 (attributes), direction1, direction2 -> ketto koze ujat
-        GLvoid joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
+        GLboolean joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
 
         // merge existing arcs -> index1, index2 (attributes), direction1, direction2 -> rendertex labelekhez -> kettot ossze
-        GLvoid mergeExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
+        GLboolean mergeExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
 
         // erase existing arc
-        GLvoid eraseExistingArc(GLuint index);
+        GLboolean eraseExistingArc(GLuint index);
 
         GLvoid validatePointersInArcAttr(ArcAttributes *oldAttr, ArcAttributes *newAttr);
 
