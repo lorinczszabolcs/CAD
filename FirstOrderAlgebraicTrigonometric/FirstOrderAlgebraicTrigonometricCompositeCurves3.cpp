@@ -121,26 +121,26 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
            validatePointersInArcAttr(oldAddrs, &_attributes[0]);
            ArcAttributes &added =  _attributes[size];
 
-           added._arc = new FirstOrderAlgebraicTrigonometricArc3();
+           added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
            (*added._arc)[0] = (*arc._arc)[3];
            (*added._arc)[1] = 2*(*arc._arc)[3] - (*arc._arc)[2];
            (*added._arc)[2] = 3*(*arc._arc)[3] - 2*(*arc._arc)[2];
-           (*added._arc)[3] = 4*(*arc._arc)[3] - 3*(*arc_.arc)[2];
+           (*added._arc)[3] = 4*(*arc._arc)[3] - 3*(*arc._arc)[2];
 
            arc._next = &added;
            added._previous = &arc;
            UpdateArcVBOGenerateImage(added);
        } else {
-           if(arc.previous != nullptr)
+           if(arc._previous != nullptr)
                return GL_FALSE;
 
            GLuint size = _attributes.size();
            ArcAttributes *oldAddrs = &_attributes[0];
            _attributes.resize(size + 1);
-           ValidatePointersInArcAttrs(oldAddrs,&_attributes[0]);
+           validatePointersInArcAttr(oldAddrs, &_attributes[0]);
            ArcAttributes &added =  _attributes[size];
 
-           added._arc = new FirstOrderAlgebraicTrigonometricArc3();
+           added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
            (*added._arc)[0] = 4*(*arc._arc)[0] - 3*(*arc._arc)[1];
            (*added._arc)[1] = 3*(*arc._arc)[0] - 2*(*arc._arc)[1];
            (*added._arc)[2] = 2*(*arc._arc)[0] - (*arc._arc)[1];
@@ -176,7 +176,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
 
         ArcAttributes &joiner = _attributes[size];
 
-        joiner._arc = FirstOrderAlgebraicTrigonometricArc3();
+        joiner._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
         (*joiner._arc)[0] = (*arc1._arc)[3];
         (*joiner._arc)[1] = 2*(*arc1._arc)[3] - (*arc1._arc)[2];
         (*joiner._arc)[2] = 2*(*arc2._arc)[0] - (*arc2._arc)[1];
@@ -185,7 +185,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
         arc1._next = &joiner;
         arc2._previous = &joiner;
         joiner._next = &arc2;
-        joiner.previous = &arc1;
+        joiner._previous = &arc1;
         UpdateArcVBOGenerateImage(joiner);
     }
     return GL_TRUE;
