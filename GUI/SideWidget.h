@@ -23,5 +23,9 @@ namespace cagd
             void setControlPointArcX(double value);
             void setControlPointArcY(double value);
             void setControlPointArcZ(double value);
+
+            void setControlPointPatchX(double value);
+            void setControlPointPatchY(double value);
+            void setControlPointPatchZ(double value);
     };
 }

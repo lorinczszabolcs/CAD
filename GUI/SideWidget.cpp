@@ -84,4 +84,29 @@ namespace cagd
             controlPointTranslateArcZ->setValue(value);
         }
     }
+
+    void SideWidget::setControlPointPatchX(double value)
+    {
+        if (controlPointTranslatePatchX->value() != value)
+        {
+            controlPointTranslatePatchX->setValue(value);
+        }
+    }
+
+    void SideWidget::setControlPointPatchY(double value)
+    {
+        if (controlPointTranslatePatchY->value() != value)
+        {
+            controlPointTranslatePatchY->setValue(value);
+        }
+    }
+
+    void SideWidget::setControlPointPatchZ(double value)
+    {
+        if (controlPointTranslatePatchZ->value() != value)
+        {
+            controlPointTranslatePatchZ->setValue(value);
+        }
+    }
+
 }
