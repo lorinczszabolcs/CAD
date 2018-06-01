@@ -1,6 +1,5 @@
 #include "FirstOrderAlgebraicTrigonometricCompositeCurve3.h"
 #include "Core/Exceptions.h"
-//#include "Core/GenericCurves3.h"
 
 using namespace cagd;
 
@@ -52,23 +51,30 @@ FirstOrderAlgebraicTrigonometricCompositeCurve3::ArcAttributes& FirstOrderAlgebr
     return *this;
 }
 
-FirstOrderAlgebraicTrigonometricCompositeCurve3::FirstOrderAlgebraicTrigonometricCompositeCurve3()
-{}
+FirstOrderAlgebraicTrigonometricCompositeCurve3::FirstOrderAlgebraicTrigonometricCompositeCurve3(GLdouble alpha, GLuint max_arc_count)
+{
+    _attributes.reserve(max_arc_count);
+    _alpha = alpha;
+    _mod = 5;
+    _div_point_count = 200;
+}
 
 FirstOrderAlgebraicTrigonometricCompositeCurve3::~FirstOrderAlgebraicTrigonometricCompositeCurve3()
 {
     _attributes.clear();
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc)
 {
     GLuint size = _attributes.size();
     ArcAttributes *old = &_attributes[0];
     _attributes.resize(size + 1);
     validateAttributes(old, &_attributes[0]);
     ArcAttributes &newArc = _attributes[size];
-    newArc.arc = &trigArc;
+    newArc._arc = &trigArc;
     UpdateArcVBOGenerateImage(newArc);
+
+    return GL_TRUE;
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validateAttributes(ArcAttributes *oldAttr, ArcAttributes *newAttr)
@@ -77,65 +83,66 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validateAttributes(ArcAt
     {
         for(GLuint i = 0; i < _attributes.size(); i++)
         {
-            if(_attributes[i].next)
-               _attributes[i].next = _attributes[i].next - oldAttr + newAttr;
-            if(_attributes[i].previous)
-                _attributes[i].previous = _attributes[i].previous - oldAttr + newAttr;
+            if(_attributes[i]._next)
+               _attributes[i]._next = _attributes[i]._next - oldAttr + newAttr;
+            if(_attributes[i]._previous)
+                _attributes[i]._previous = _attributes[i]._previous - oldAttr + newAttr;
         }
     }
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::UpdateArcVBOGenerateImage(ArcAttributes &arc_attr)
 {
-    if (!arc_attr.arc->UpdateVertexBufferObjectsOfData()) {
+    if (!arc_attr._arc->UpdateVertexBufferObjectsOfData()) {
         throw Exception("Could not update the vertex buffer objects of the control polygon in FirstOrderAlgebraicTrigonometricCompositeCurves!");
     }
 
-    arc_attr.image = arc_attr.arc->GenerateImage(_mod, _div_point_count);
-    if (!arc_attr.image) {
+    arc_attr._image = arc_attr._arc->GenerateImage(_mod, _div_point_count);
+    if (!arc_attr._image) {
         throw Exception("Could not generate the image of arc in FirstOrderAlgebraicTrigonometricCompositeCurves!");
     }
 
-    if (!arc_attr.image->UpdateVertexBufferObjects()) {
+    if (!arc_attr._image->UpdateVertexBufferObjects()) {
         throw Exception("Could not update the VBOS arc of image in FirstOrderAlgebraicTrigonometricCompositeCurves");
     }
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(GLuint index, Direction direction)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(GLuint index, Direction direction)
 {
-
+    return GL_TRUE;
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2)
 {
-
+    return GL_TRUE;
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::mergeExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::mergeExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2)
 {
-
+    return GL_TRUE;
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::eraseExistingArc(GLuint index)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::eraseExistingArc(GLuint index)
 {
     ArcAttributes *oldAttr = &_attributes[0];
     ArcAttributes &tmp = _attributes[index];
-    if(tmp.next != nullptr) {
-        tmp.next->previous = nullptr;
+    if(tmp._next != nullptr) {
+        tmp._next->_previous = nullptr;
     }
-    if(tmp.previous->next != nullptr)
+    if(tmp._previous->_next != nullptr)
     {
-        tmp.previous->next = nullptr;
+        tmp._previous->_next = nullptr;
     }
     _attributes.erase(_attributes.begin() + index);
     for(GLuint i = 0; i < _attributes.size(); i++)
     {
-        if(_attributes[i].next > &tmp)
-            _attributes[i].next--;
-        if(_attributes[i].previous > &tmp)
-            _attributes[i].previous--;
+        if(_attributes[i]._next > &tmp)
+            _attributes[i]._next--;
+        if(_attributes[i]._previous > &tmp)
+            _attributes[i]._previous--;
     }
     validatePointersInArcAttr(oldAttr, &_attributes[0]);
+    return GL_TRUE;
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validatePointersInArcAttr(ArcAttributes *oldAttr, ArcAttributes *newAttr)
@@ -144,10 +151,10 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validatePointersInArcAtt
     {
         for(GLuint i = 0; i < _attributes.size(); i++)
         {
-            if(_attributes[i].next)
-               _attributes[i].next = _attributes[i].next - oldAttr + newAttr;
-            if(_attributes[i].previous)
-                _attributes[i].previous = _attributes[i].previous - oldAttr + newAttr;
+            if(_attributes[i]._next)
+               _attributes[i]._next = _attributes[i]._next - oldAttr + newAttr;
+            if(_attributes[i]._previous)
+                _attributes[i]._previous = _attributes[i]._previous - oldAttr + newAttr;
         }
     }
 }
