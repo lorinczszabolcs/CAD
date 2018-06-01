@@ -72,7 +72,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(Fir
     validateAttributes(old, &_attributes[0]);
     ArcAttributes &newArc = _attributes[size];
     newArc._arc = &trigArc;
-    UpdateArcVBOGenerateImage(newArc);
+    updateArcVBOGenerateImage(newArc);
 
     return GL_TRUE;
 }
@@ -91,7 +91,7 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validateAttributes(ArcAt
     }
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::UpdateArcVBOGenerateImage(ArcAttributes &arc_attr)
+GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::updateArcVBOGenerateImage(ArcAttributes &arc_attr)
 {
     if (!arc_attr._arc->UpdateVertexBufferObjectsOfData()) {
         throw Exception("Could not update the vertex buffer objects of the control polygon in FirstOrderAlgebraicTrigonometricCompositeCurves!");
@@ -129,7 +129,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
 
            arc._next = &added;
            added._previous = &arc;
-           UpdateArcVBOGenerateImage(added);
+           updateArcVBOGenerateImage(added);
        } else {
            if(arc._previous != nullptr)
                return GL_FALSE;
@@ -148,7 +148,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
 
            arc._previous = &added;
            added._next = &arc;
-           UpdateArcVBOGenerateImage(added);
+           updateArcVBOGenerateImage(added);
        }
     return GL_TRUE;
 }
@@ -186,7 +186,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
         arc2._previous = &joiner;
         joiner._next = &arc2;
         joiner._previous = &arc1;
-        UpdateArcVBOGenerateImage(joiner);
+        updateArcVBOGenerateImage(joiner);
     }
     return GL_TRUE;
 }
@@ -226,8 +226,8 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::mergeExistingArc(GLui
          arc2._next = &arc1;
          arc1._previous = &arc2;
     }
-    UpdateArcVBOGenerateImage(arc1);
-    UpdateArcVBOGenerateImage(arc2);
+    updateArcVBOGenerateImage(arc1);
+    updateArcVBOGenerateImage(arc2);
 
     return GL_TRUE;
 }
