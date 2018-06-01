@@ -121,7 +121,11 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
            validatePointersInArcAttr(oldAddrs, &_attributes[0]);
            ArcAttributes &added =  _attributes[size];
 
+<<<<<<< HEAD
            added._arc = new FirstOrderAlgebraicTrigonometricArc3(1.0);
+=======
+           added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
+>>>>>>> 0c4f20504236a0e343fd7c8af34c40e9d20d4c57
            (*added._arc)[0] = (*arc._arc)[3];
            (*added._arc)[1] = 2*(*arc._arc)[3] - (*arc._arc)[2];
            (*added._arc)[2] = 3*(*arc._arc)[3] - 2*(*arc._arc)[2];
@@ -137,10 +141,17 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
            GLuint size = _attributes.size();
            ArcAttributes *oldAddrs = &_attributes[0];
            _attributes.resize(size + 1);
+<<<<<<< HEAD
            validateAttributes(oldAddrs,&_attributes[0]);
            ArcAttributes &added =  _attributes[size];
 
            added._arc = new FirstOrderAlgebraicTrigonometricArc3(1.0);
+=======
+           validatePointersInArcAttr(oldAddrs, &_attributes[0]);
+           ArcAttributes &added =  _attributes[size];
+
+           added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
+>>>>>>> 0c4f20504236a0e343fd7c8af34c40e9d20d4c57
            (*added._arc)[0] = 4*(*arc._arc)[0] - 3*(*arc._arc)[1];
            (*added._arc)[1] = 3*(*arc._arc)[0] - 2*(*arc._arc)[1];
            (*added._arc)[2] = 2*(*arc._arc)[0] - (*arc._arc)[1];
@@ -176,7 +187,11 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
 
         ArcAttributes &joiner = _attributes[size];
 
+<<<<<<< HEAD
         (*joiner._arc) = FirstOrderAlgebraicTrigonometricArc3(1.0);
+=======
+        joiner._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
+>>>>>>> 0c4f20504236a0e343fd7c8af34c40e9d20d4c57
         (*joiner._arc)[0] = (*arc1._arc)[3];
         (*joiner._arc)[1] = 2*(*arc1._arc)[3] - (*arc1._arc)[2];
         (*joiner._arc)[2] = 2*(*arc2._arc)[0] - (*arc2._arc)[1];
