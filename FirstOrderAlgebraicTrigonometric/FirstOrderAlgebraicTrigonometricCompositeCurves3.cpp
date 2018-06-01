@@ -293,7 +293,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::renderCurves(GLuint o
             if (attr._image)
             {
                 if(attr._color)
-                    glColor3f(attr.color->r(),attr.color->g(),attr.color->b());
+                    glColor3f(attr._color->r(),attr._color->g(),attr._color->b());
                 else
                     glColor3f(1.0,1.0,1.0);
 
