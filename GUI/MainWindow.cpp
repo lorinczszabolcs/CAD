@@ -34,9 +34,12 @@ namespace cagd
 
         _gl_widget = new GLWidget(this);
 
+        _gl_widget->adjustSize();
+
         centralWidget()->setLayout(new QHBoxLayout());
         centralWidget()->layout()->addWidget(_gl_widget);
         centralWidget()->layout()->addWidget(_scroll_area);
+
 
         // creating a signal slot mechanism between the rendering context and the side widget
         connect(_side_widget->rotate_x_slider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(set_angle_x(int)));
