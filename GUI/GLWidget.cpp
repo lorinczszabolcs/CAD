@@ -838,12 +838,7 @@ namespace cagd
         _patch->SetData(3, 2, 3.0, 1.0, 0.0);
         _patch->SetData(3, 3, 3.0, 4.0, 0.0);
 
-        DCoordinate3 aux;
-
-        _patch->GetData(_cp_index_u, _cp_index_v, aux);
-        _act_cp_patch_x = aux[0];
-        _act_cp_patch_y = aux[1];
-        _act_cp_patch_z = aux[2];
+        _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
 
         emit xCoordinatePatchChanged(_act_cp_patch_x);
         emit yCoordinatePatchChanged(_act_cp_patch_y);
