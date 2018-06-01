@@ -12,12 +12,12 @@ namespace cagd
         class PatchAttributes
         {
         public:
-            FirstOrderAlgebraicTrigonometricPatch  *patch;
-            TriangulatedMesh3                      *image;
-            Material                               *material;
-            ShaderProgram                          *shader;
+            FirstOrderAlgebraicTrigonometricPatch  *_patch;
+            TriangulatedMesh3                      *_image;
+            Material                               *_material;
+            //ShaderProgram                          *_shader;
             // get-set, ctor, dtor, copy ctor
-            PatchAttributes                        *neighbors[8];
+            PatchAttributes                        *_neighbors[8];
             PatchAttributes();
             ~PatchAttributes();
             PatchAttributes(const PatchAttributes &attr);
