@@ -1,1 +1,3 @@
 *.user
+*.pro
+QtFramework.pro.user

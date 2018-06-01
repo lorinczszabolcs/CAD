@@ -162,6 +162,7 @@ namespace cagd
             }
             else if (_tab_index == 5)
             {
+                cout << _patch->_data;
                 renderFirstOrderAlgebraicTrigonometricPatch();
             }
 
@@ -838,12 +839,7 @@ namespace cagd
         _patch->SetData(3, 2, 3.0, 1.0, 0.0);
         _patch->SetData(3, 3, 3.0, 4.0, 0.0);
 
-        DCoordinate3 aux;
-
-        _patch->GetData(_cp_index_u, _cp_index_v, aux);
-        _act_cp_patch_x = aux[0];
-        _act_cp_patch_y = aux[1];
-        _act_cp_patch_z = aux[2];
+        _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
 
         emit xCoordinatePatchChanged(_act_cp_patch_x);
         emit yCoordinatePatchChanged(_act_cp_patch_y);
@@ -1718,12 +1714,7 @@ namespace cagd
         {
             _cp_index_u = index;
 
-            DCoordinate3 aux;
-            _patch->GetData(_cp_index_u, _cp_index_v, aux);
-
-            _act_cp_patch_x = aux[0];
-            _act_cp_patch_y = aux[1];
-            _act_cp_patch_z = aux[2];
+            _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
 
             emit xCoordinatePatchChanged(_act_cp_patch_x);
             emit yCoordinatePatchChanged(_act_cp_patch_y);
@@ -1736,12 +1727,8 @@ namespace cagd
         if (_cp_index_v != index)
         {
             _cp_index_v = index;
-            DCoordinate3 aux;
-            _patch->GetData(_cp_index_u, _cp_index_v, aux);
 
-            _act_cp_patch_x = aux[0];
-            _act_cp_patch_y = aux[1];
-            _act_cp_patch_z = aux[2];
+            _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
 
             emit xCoordinatePatchChanged(_act_cp_patch_x);
             emit yCoordinatePatchChanged(_act_cp_patch_y);
@@ -1751,6 +1738,11 @@ namespace cagd
 
     void GLWidget::setControlPointPatchX(double value)
     {
+
+        DCoordinate3 aux;
+
+        _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
+
         if (_act_cp_patch_x != value)
         {
             _act_cp_patch_x = value;
@@ -1814,6 +1806,8 @@ namespace cagd
 
     void GLWidget::setControlPointPatchY(double value)
     {
+        _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
+
         if (_act_cp_patch_y != value)
         {
             _act_cp_patch_y = value;
@@ -1877,6 +1871,9 @@ namespace cagd
 
     void GLWidget::setControlPointPatchZ(double value)
     {
+
+        _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
+
         if (_act_cp_patch_z != value)
         {
             _act_cp_patch_z = value;
@@ -2058,6 +2055,7 @@ namespace cagd
                 if(_after_interpolation)
                     _after_interpolation->UpdateVertexBufferObjects();
             }
+
             updateGL();
         }
     }
