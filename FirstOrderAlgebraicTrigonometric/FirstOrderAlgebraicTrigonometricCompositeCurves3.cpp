@@ -193,6 +193,42 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
 
 GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::mergeExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2)
 {
+    ArcAttributes &arc1 = _attributes[index1];
+    ArcAttributes &arc2 = _attributes[index2];
+
+    if(direction1 == RIGHT && direction2 == LEFT)
+    {
+        if(arc1._next != nullptr)
+            return GL_FALSE;
+        if(arc2._previous != nullptr)
+            return GL_FALSE;
+
+            DCoordinate3 mid = ((*arc1._arc)[2]+(*arc2._arc)[1])/2;
+
+            (*arc1._arc)[3] = mid;
+            (*arc2._arc)[0] = mid;
+
+            arc1._next = &arc2;
+            arc2._previous = &arc1;
+
+    } else if(direction1 == LEFT && direction2 == RIGHT){
+
+        if(arc1._previous != nullptr)
+            return GL_FALSE;
+         if(arc2._next != nullptr)
+            return GL_FALSE;
+
+         DCoordinate3 mid = ((*arc1._arc)[1]+(*arc2._arc)[2])/2;
+
+         (*arc1._arc)[0] = mid;
+         (*arc2._arc)[3] = mid;
+
+         arc2._next = &arc1;
+         arc1._previous = &arc2;
+    }
+    UpdateArcVBOGenerateImage(arc1);
+    UpdateArcVBOGenerateImage(arc2);
+
     return GL_TRUE;
 }
 
@@ -217,6 +253,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::eraseExistingArc(GLui
             _attributes[i]._previous--;
     }
     validatePointersInArcAttr(oldAttr, &_attributes[0]);
+
     return GL_TRUE;
 }
 
@@ -233,4 +270,55 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validatePointersInArcAtt
         }
     }
 }
+
+GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::renderControlPolygon()
+{
+    for(GLuint i = 0; i < _attributes.size(); i++)
+    {
+        ArcAttributes& arc = _attributes[i];
+
+        if(arc._arc)
+        {
+            glColor3f(0.0, 0.5, 0.0);
+            arc._arc->RenderData(GL_LINE_STRIP);
+        }
+    }
+}
+
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::renderCurves(GLuint order, GLenum render_mode)
+{
+    for(GLuint i = 0; i < _attributes.size(); ++i)
+        {
+            ArcAttributes &attr = _attributes[i];
+            if (attr._image)
+            {
+                if(attr._color)
+                    glColor3f(attr._color->r(),attr._color->g(),attr._color->b());
+                else
+                    glColor3f(1.0,1.0,1.0);
+
+                glPointSize(1.0);
+                attr._image->RenderDerivatives(0, render_mode);
+                glPointSize(0.5);
+
+                if(order > 0) {
+
+                    glColor3f(0.0, 0.5, 0.0);
+
+                    attr._image->RenderDerivatives(1, GL_POINTS);
+                    attr._image->RenderDerivatives(1, GL_LINES);
+                }
+
+                if(order > 1) {
+                    glColor3f(0.1, 0.5, 0.9);
+
+                    attr._image->RenderDerivatives(2, GL_POINTS);
+                    attr._image->RenderDerivatives(2, GL_LINES);
+                }
+                 glPointSize(1.0);
+            }
+        }
+        return GL_TRUE;
+}
+
 
