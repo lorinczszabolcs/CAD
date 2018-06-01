@@ -16,5 +16,10 @@ namespace cagd
         GLdouble  f3(GLdouble t) const;
         GLdouble  d_f2(GLdouble t) const;
         GLdouble  d_f3(GLdouble t) const;
+
+        GLdouble getAlphaU() const;
+        GLvoid setAlphaU(GLdouble alpha_u);
+        GLdouble getAlphaV() const;
+        GLvoid setAlphaV(GLdouble alpha_v);
     };
 }

@@ -9,6 +9,26 @@ FirstOrderAlgebraicTrigonometricPatch::FirstOrderAlgebraicTrigonometricPatch(GLd
     this->_alpha_v = _alpha_v;
 }
 
+GLdouble FirstOrderAlgebraicTrigonometricPatch::getAlphaU() const
+{
+    return _alpha_u;
+}
+
+void FirstOrderAlgebraicTrigonometricPatch::setAlphaU(GLdouble alpha_u)
+{
+    _alpha_u = alpha_u;
+}
+
+GLdouble FirstOrderAlgebraicTrigonometricPatch::getAlphaV() const
+{
+    return _alpha_v;
+}
+
+void FirstOrderAlgebraicTrigonometricPatch::setAlphaV(GLdouble alpha_v)
+{
+    _alpha_v = alpha_v;
+}
+
 GLdouble FirstOrderAlgebraicTrigonometricPatch::f2(GLdouble t) const
 {
 

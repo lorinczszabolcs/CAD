@@ -1579,29 +1579,126 @@ namespace cagd
         }
     }
 
-    void GLWidget::setAlphaArc(double value)
+    void GLWidget::setAlphaUPatch(double value)
     {
-        if (_arc->getAlpha() != value)
+        if (_patch->getAlphaU() != value)
         {
-            _arc->setAlpha(value);
+            _patch->setAlphaU(value);
 
-            if (!_arc->UpdateVertexBufferObjectsOfData())
+            if (! _patch->UpdateVertexBufferObjectsOfData())
             {
-                throw Exception("Could not create arc!\n");
+                throw Exception("Could not create patch!\n");
             }
 
-            delete _image_of_arc, _image_of_arc = nullptr;
+            _before_interpolation = nullptr;
+            _after_interpolation = nullptr;
+            _u_lines = nullptr;
+            _v_lines = nullptr;
 
-            _image_of_arc = _arc->GenerateImage(2,200);
+            _before_int = true;
+            _after_int = true;
+            _u_lin = true;
+            _v_lin = true;
 
-            if (!_image_of_arc)
+            _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
+            _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for(GLuint i = 0; i < 5; i++)
             {
-                throw Exception ("Could not create image of arc!\n");
+                (*_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_v_lines)[i]->UpdateVertexBufferObjects();
             }
 
-            if (!_image_of_arc->UpdateVertexBufferObjects())
+            _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            if(_before_interpolation)
+                _before_interpolation->UpdateVertexBufferObjects();
+
+            RowMatrix<GLdouble> u_knot_vector(4);
+            u_knot_vector(0) = 0.0;
+            u_knot_vector(1) = 1.0 / 3.0;
+            u_knot_vector(2) = 2.0 / 3.0;
+            u_knot_vector(3) = 1.0;
+
+            ColumnMatrix<GLdouble> v_knot_vector(4);
+            v_knot_vector(0) = 0.0;
+            v_knot_vector(1) = 1.0 / 3.0;
+            v_knot_vector(2) = 2.0 / 3.0;
+            v_knot_vector(3) = 1.0;
+
+            Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
+            for (int row = 0; row < 4; ++row)
+                for (int column = 0; column < 4; ++column)
+                    _patch->GetData(row, column, data_points_to_interpolate(row, column));
+
+            if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
             {
-                throw Exception ("Could not create vertex buffer object of arc!\n");
+                _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+                if(_after_interpolation)
+                    _after_interpolation->UpdateVertexBufferObjects();
+            }
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setAlphaVPatch(double value)
+    {
+        if (_patch->getAlphaV() != value)
+        {
+            _patch->setAlphaV(value);
+
+            if (! _patch->UpdateVertexBufferObjectsOfData())
+            {
+                throw Exception("Could not create patch!\n");
+            }
+
+            _before_interpolation = nullptr;
+            _after_interpolation = nullptr;
+            _u_lines = nullptr;
+            _v_lines = nullptr;
+
+            _before_int = true;
+            _after_int = true;
+            _u_lin = true;
+            _v_lin = true;
+
+            _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
+            _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for(GLuint i = 0; i < 5; i++)
+            {
+                (*_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_v_lines)[i]->UpdateVertexBufferObjects();
+            }
+
+            _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            if(_before_interpolation)
+                _before_interpolation->UpdateVertexBufferObjects();
+
+            RowMatrix<GLdouble> u_knot_vector(4);
+            u_knot_vector(0) = 0.0;
+            u_knot_vector(1) = 1.0 / 3.0;
+            u_knot_vector(2) = 2.0 / 3.0;
+            u_knot_vector(3) = 1.0;
+
+            ColumnMatrix<GLdouble> v_knot_vector(4);
+            v_knot_vector(0) = 0.0;
+            v_knot_vector(1) = 1.0 / 3.0;
+            v_knot_vector(2) = 2.0 / 3.0;
+            v_knot_vector(3) = 1.0;
+
+            Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
+            for (int row = 0; row < 4; ++row)
+                for (int column = 0; column < 4; ++column)
+                    _patch->GetData(row, column, data_points_to_interpolate(row, column));
+
+            if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
+            {
+                _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+                if(_after_interpolation)
+                    _after_interpolation->UpdateVertexBufferObjects();
             }
 
             updateGL();
@@ -1613,9 +1710,11 @@ namespace cagd
         if (_cp_index_arc != index)
         {
             _cp_index_arc = index;
+
             _act_cp_arc_x = _arc->GetData(_cp_index_arc)[0];
             _act_cp_arc_y = _arc->GetData(_cp_index_arc)[1];
             _act_cp_arc_z = _arc->GetData(_cp_index_arc)[2];
+
             emit xCoordinateArcChanged(_arc->GetData(_cp_index_arc)[0]);
             emit yCoordinateArcChanged(_arc->GetData(_cp_index_arc)[1]);
             emit zCoordinateArcChanged(_arc->GetData(_cp_index_arc)[2]);
@@ -1707,6 +1806,71 @@ namespace cagd
                 throw Exception ("Could not create vertex buffer object of arc!\n");
             }
             updateGL();
+        }
+    }
+
+    void GLWidget::setAlphaArc(double value)
+    {
+        if (_arc->getAlpha() != value)
+        {
+            _arc->setAlpha(value);
+
+            if (!_arc->UpdateVertexBufferObjectsOfData())
+            {
+                throw Exception("Could not create arc!\n");
+            }
+
+            delete _image_of_arc, _image_of_arc = nullptr;
+
+            _image_of_arc = _arc->GenerateImage(2,200);
+
+            if (!_image_of_arc)
+            {
+                throw Exception ("Could not create image of arc!\n");
+            }
+
+            if (!_image_of_arc->UpdateVertexBufferObjects())
+            {
+                throw Exception ("Could not create vertex buffer object of arc!\n");
+            }
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointUPatchIndex(int index)
+    {
+        if (_cp_index_u != index)
+        {
+            _cp_index_u = index;
+            DCoordinate3 aux;
+            _patch->GetData(_cp_index_u, _cp_index_v, aux);
+
+            _act_cp_patch_x = aux[0];
+            _act_cp_patch_y = aux[1];
+            _act_cp_patch_z = aux[2];
+
+            emit xCoordinateArcChanged(_act_cp_patch_x);
+            emit yCoordinateArcChanged(_act_cp_patch_y);
+            emit zCoordinateArcChanged(_act_cp_patch_z);
+        }
+    }
+
+    void GLWidget::setControlPointVPatchIndex(int index)
+    {
+        if (_cp_index_v != index)
+        {
+            _cp_index_v = index;
+            DCoordinate3 aux;
+            _patch->GetData(_cp_index_u, _cp_index_v, aux);
+
+            _act_cp_patch_x = aux[0];
+            _act_cp_patch_y = aux[1];
+            _act_cp_patch_z = aux[2];
+
+            emit xCoordinateArcChanged(_act_cp_patch_x);
+            emit yCoordinateArcChanged(_act_cp_patch_y);
+            emit zCoordinateArcChanged(_act_cp_patch_z);
         }
     }
 
@@ -1895,7 +2059,6 @@ namespace cagd
             }
         }
     }
-
 
     //-----------
     // Destructor
