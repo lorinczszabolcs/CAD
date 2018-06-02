@@ -37,7 +37,7 @@ namespace cagd
             // insert, join, merge, continue, erase, stb.
             //megvan
             GLvoid insertIsolatedSurface(FirstOrderAlgebraicTrigonometricPatch &patch);
-            GLvoid continueExistingSurface(GLuint index, Direction direction);
+            GLboolean continueExistingSurface(GLuint index, Direction direction);
             //megvan
             GLboolean joinExistingSurface(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
             //megvan

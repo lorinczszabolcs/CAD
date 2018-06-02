@@ -1223,3 +1223,57 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(
     joiner._neighbors[NW] = &patchSW2;
     UpdatePatchVBOGenerateImage(joiner);
 }
+
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLuint index, Direction direction)
+{
+
+    PatchAttributes &patch = _attributes[index];
+
+        if(direction == E)
+        {
+            if(patch._neighbors[E] != nullptr)
+                return GL_FALSE;
+
+            GLuint size = _attributes.size();
+            PatchAttributes *oldAddrs = &_attributes[0];
+            _attributes.resize(size + 1);
+            ValidatePointersInPatchAttrs(oldAddrs, &_attributes[0]);
+            PatchAttributes &added =  _attributes[size];
+
+            added._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+            for(GLuint i = 0; i < 4; i++)
+            {
+                (*added._patch)(0, i) = (*patch._patch)(3,i);
+                (*added._patch)(1, i) = 2*(*patch._patch)(3,i) - (*patch._patch)(2,i);
+                (*added._patch)(2, i) = 3*(*patch._patch)(3,i) - 2*(*patch._patch)(2,i);
+                (*added._patch)(3, i) = 4*(*patch._patch)(3,i) - 3*(*patch._patch)(2,i);
+            }
+
+            patch._neighbors[E] = &added;
+            added._neighbors[W] = &patch;
+            UpdatePatchVBOGenerateImage(added);
+
+        } else {
+            if(patch._neighbors[W] != nullptr)
+                return GL_FALSE;
+
+            GLuint size = _attributes.size();
+            PatchAttributes *oldAddrs = &_attributes[0];
+            _attributes.resize(size + 1);
+            ValidatePointersInPatchAttrs(oldAddrs, &_attributes[0]);
+            PatchAttributes &added = _attributes[size];
+
+            added._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+            for(GLuint i = 0; i < 4; i++)
+            {
+                (*added._patch)(0, i) = 4*(*patch._patch)(0, i) - 3*(*patch._patch)(1, i);
+                (*added._patch)(1, i) = 3*(*patch._patch)(0, i) - 2*(*patch._patch)(1, i);
+                (*added._patch)(2, i) = 2*(*patch._patch)(0, i) - (*patch._patch)(1, i);
+                (*added._patch)(3, i) = (*patch._patch)(0, i);
+            }
+            patch._neighbors[W] = &added;
+            added._neighbors[E] = &patch;
+            UpdatePatchVBOGenerateImage(added);
+        }
+        return GL_TRUE;
+}
