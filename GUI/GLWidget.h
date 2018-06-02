@@ -103,6 +103,7 @@ namespace cagd
         GLdouble                              _act_cp_arc_x, _act_cp_arc_y, _act_cp_arc_z;
 
         // Patch
+        FirstOrderAlgebraicTrigonometricPatch *_patch_aux;
         FirstOrderAlgebraicTrigonometricPatch *_patch;
         RowMatrix<GenericCurve3*>             *_u_lines, *_v_lines;
         TriangulatedMesh3                     *_before_interpolation, *_after_interpolation;
