@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>456</width>
+    <width>600</width>
     <height>555</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>280</width>
+    <width>260</width>
     <height>0</height>
    </size>
   </property>
@@ -33,7 +33,7 @@
     <rect>
      <x>10</x>
      <y>0</y>
-     <width>441</width>
+     <width>581</width>
      <height>221</height>
     </rect>
    </property>
@@ -48,7 +48,7 @@
      <rect>
       <x>3</x>
       <y>21</y>
-      <width>431</width>
+      <width>571</width>
       <height>191</height>
      </rect>
     </property>
@@ -240,7 +240,7 @@
     <rect>
      <x>10</x>
      <y>230</y>
-     <width>441</width>
+     <width>581</width>
      <height>301</height>
     </rect>
    </property>
@@ -1407,6 +1407,16 @@
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="checkBoxAfterInt">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_14">
         <property name="text">
@@ -1424,23 +1434,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QCheckBox" name="checkBoxAfterInt">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_41">
-        <property name="text">
-         <string>U lines</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QCheckBox" name="checkBoxULines">
         <property name="text">
@@ -1451,6 +1444,20 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_51">
+        <property name="text">
+         <string>AlphaU</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_41">
+        <property name="text">
+         <string>U lines</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="2">
        <widget class="QLabel" name="label_42">
         <property name="text">
@@ -1458,14 +1465,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_51">
-        <property name="text">
-         <string>AlphaU</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBoxPatchAlphaU">
         <property name="minimum">
          <double>0.000000000000000</double>
@@ -1481,14 +1481,34 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_55">
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_54">
         <property name="text">
-         <string>AlphaV</string>
+         <string>Select point U</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="3" colspan="2">
+      <item row="4" column="2">
+       <widget class="QLabel" name="label_56">
+        <property name="text">
+         <string>Select point V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QSlider" name="controlPointPatchSliderU">
+        <property name="maximum">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3" colspan="2">
        <widget class="QDoubleSpinBox" name="doubleSpinBoxPatchAlphaV">
         <property name="minimum">
          <double>0.000000000000000</double>
@@ -1504,54 +1524,28 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_54">
-        <property name="text">
-         <string>Select point U</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QSlider" name="controlPointPatchSliderU">
-        <property name="maximum">
-         <number>3</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="2">
-       <widget class="QLabel" name="label_56">
+       <widget class="QLabel" name="label_55">
         <property name="text">
-         <string>Select point V</string>
+         <string>AlphaV</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="3" colspan="2">
-       <widget class="QSlider" name="controlPointPatchSliderV">
-        <property name="maximum">
-         <number>3</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksBelow</enum>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_53">
+        <property name="text">
+         <string>Translate along y</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="label_50">
         <property name="text">
          <string>Translate along x</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
+      <item row="5" column="1">
        <widget class="QDoubleSpinBox" name="controlPointTranslatePatchX">
         <property name="enabled">
          <bool>true</bool>
@@ -1570,14 +1564,46 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_53">
-        <property name="text">
-         <string>Translate along y</string>
+      <item row="4" column="3" colspan="2">
+       <widget class="QSlider" name="controlPointPatchSliderV">
+        <property name="maximum">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="7" column="1">
+       <widget class="QDoubleSpinBox" name="controlPointTranslatePatchZ">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>5</number>
+        </property>
+        <property name="minimum">
+         <double>-100000000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_40">
+        <property name="text">
+         <string>After interpolation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
        <widget class="QDoubleSpinBox" name="controlPointTranslatePatchY">
         <property name="enabled">
          <bool>true</bool>
@@ -1599,29 +1625,10 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="7" column="0">
        <widget class="QLabel" name="label_52">
         <property name="text">
          <string>Translate along z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QDoubleSpinBox" name="controlPointTranslatePatchZ">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="decimals">
-         <number>5</number>
-        </property>
-        <property name="minimum">
-         <double>-100000000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
         </property>
        </widget>
       </item>
@@ -1635,10 +1642,20 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_40">
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="controlNetPatchCheckBox">
         <property name="text">
-         <string>After interpolation</string>
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_57">
+        <property name="text">
+         <string>Control net</string>
         </property>
        </widget>
       </item>
@@ -1647,7 +1664,7 @@
    </widget>
    <widget class="QWidget" name="compositeCurve">
     <attribute name="title">
-     <string>CC</string>
+     <string>Comp Curve</string>
     </attribute>
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="geometry">
@@ -1700,6 +1717,11 @@
       </attribute>
      </widget>
     </widget>
+   </widget>
+   <widget class="QWidget" name="compositeSurface">
+    <attribute name="title">
+     <string>Comp Surf</string>
+    </attribute>
    </widget>
   </widget>
  </widget>

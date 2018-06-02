@@ -36,6 +36,8 @@ namespace cagd
 
         _gl_widget->adjustSize();
 
+        _scroll_area->setFixedWidth(600);
+
         centralWidget()->setLayout(new QHBoxLayout());
         centralWidget()->layout()->addWidget(_gl_widget);
         centralWidget()->layout()->addWidget(_scroll_area);
@@ -125,6 +127,7 @@ namespace cagd
         connect(_side_widget->checkBoxAfterInt, SIGNAL(toggled(bool)), _gl_widget, SLOT(setAfterInterpolate(bool)));
         connect(_side_widget->checkBoxULines, SIGNAL(toggled(bool)), _gl_widget, SLOT(setULines(bool)));
         connect(_side_widget->checkBoxVLines, SIGNAL(toggled(bool)), _gl_widget, SLOT(setVLines(bool)));
+        connect(_side_widget->controlNetPatchCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleControlNetPatch(bool)));
 
         // alpha parameter along u and v
         connect(_side_widget->doubleSpinBoxPatchAlphaU, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setAlphaUPatch(double)));
@@ -134,14 +137,12 @@ namespace cagd
         connect(_side_widget->controlPointPatchSliderU, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointUPatchIndex(int)));
         connect(_side_widget->controlPointPatchSliderV, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointVPatchIndex(int)));
 
-
-
+        // controlpoint coordinate
         connect(_side_widget->controlPointTranslatePatchX, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointPatchX(double)));
         connect(_side_widget->controlPointTranslatePatchY, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointPatchY(double)));
         connect(_side_widget->controlPointTranslatePatchZ, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointPatchZ(double)));
 
-
-
+        // signal emitter - update spinbox
         connect(_gl_widget, SIGNAL(xCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchX(double)));
         connect(_gl_widget, SIGNAL(yCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchY(double)));
         connect(_gl_widget, SIGNAL(zCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchZ(double)));

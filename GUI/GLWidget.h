@@ -106,7 +106,7 @@ namespace cagd
         FirstOrderAlgebraicTrigonometricPatch *_patch;
         RowMatrix<GenericCurve3*>             *_u_lines, *_v_lines;
         TriangulatedMesh3                     *_before_interpolation, *_after_interpolation;
-        GLboolean                             _before_int, _after_int, _u_lin, _v_lin;
+        GLboolean                             _before_int, _after_int, _u_lin, _v_lin, _control_patch;
         GLint                                 _cp_index_u, _cp_index_v;
         GLdouble                              _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z;
         GLdouble                              _alpha_u_patch, _alpha_v_patch;
@@ -253,6 +253,7 @@ namespace cagd
         void setAlphaVPatch(double value);
         void setControlPointUPatchIndex(int index);
         void setControlPointVPatchIndex(int index);
+        void toggleControlNetPatch(bool value);
         void setControlPointPatchX (double value);
         void setControlPointPatchY (double value);
         void setControlPointPatchZ (double value);
