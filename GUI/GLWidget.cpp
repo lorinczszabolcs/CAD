@@ -103,6 +103,8 @@ namespace cagd
             buildFirstOrderAlgebraicTrigonometricArc();
             buildFirstOrderAlgebraicTrigonometricPatch();
         }
+
+
         catch (Exception &e)
         {
             cout << e << endl;
@@ -162,7 +164,6 @@ namespace cagd
             }
             else if (_tab_index == 5)
             {
-                cout << _patch->_data;
                 renderFirstOrderAlgebraicTrigonometricPatch();
             }
 
@@ -839,16 +840,19 @@ namespace cagd
         _patch->SetData(3, 2, 3.0, 1.0, 0.0);
         _patch->SetData(3, 3, 3.0, 4.0, 0.0);
 
-        _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
+        cout << "\n\n---0---\n\n";
+        cout << _patch->_data << "\n\n";
 
-        emit xCoordinatePatchChanged(_act_cp_patch_x);
-        emit yCoordinatePatchChanged(_act_cp_patch_y);
-        emit zCoordinatePatchChanged(_act_cp_patch_z);
+        cout << "\n\n---0.1---\n\n";
+        cout << _patch->_data << "\n\n";
 
         if (! _patch->UpdateVertexBufferObjectsOfData())
         {
             throw Exception("Could not create patch!\n");
         }
+
+        cout << "\n\n---0.2---\n\n";
+        cout << _patch->_data << "\n\n";
 
         _before_interpolation = nullptr;
         _after_interpolation = nullptr;
@@ -863,16 +867,25 @@ namespace cagd
         _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
         _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
 
+        cout << "\n\n---0.3---\n\n";
+        cout << _patch->_data << "\n\n";
+
         for(GLuint i = 0; i < 5; i++)
         {
             (*_u_lines)[i]->UpdateVertexBufferObjects();
             (*_v_lines)[i]->UpdateVertexBufferObjects();
         }
 
+        cout << "\n\n---0.4---\n\n";
+        cout << _patch->_data << "\n\n";
+
         _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
 
         if(_before_interpolation)
             _before_interpolation->UpdateVertexBufferObjects();
+
+        cout << "\n\n---0.5---\n\n";
+        cout << _patch->_data << "\n\n";
 
         RowMatrix<GLdouble> u_knot_vector(4);
         u_knot_vector(0) = 0.0;
@@ -891,12 +904,34 @@ namespace cagd
             for (int column = 0; column < 4; ++column)
                 _patch->GetData(row, column, data_points_to_interpolate(row, column));
 
+        cout << "\n\n---0.6---\n\n";
+        cout << _patch->_data << "\n\n";
+
         if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
         {
+            cout << "\n\n---0.6.1---\n\n";
+            cout << _patch->_data << "\n\n";
+
             _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            cout << "\n\n---0.6.2---\n\n";
+            cout << _patch->_data << "\n\n";
             if(_after_interpolation)
                 _after_interpolation->UpdateVertexBufferObjects();
+
+            cout << "\n\n---0.6.3---\n\n";
+            cout << _patch->_data << "\n\n";
+
+            _patch->GetData(_cp_index_u, _cp_index_v, _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z);
+
+            emit xCoordinatePatchChanged(_act_cp_patch_x);
+            emit yCoordinatePatchChanged(_act_cp_patch_y);
+            emit zCoordinatePatchChanged(_act_cp_patch_z);
+
         }
+
+        cout << "\n\n---0.7---\n\n";
+        cout << _patch->_data << "\n\n";
     }
 
     void GLWidget::renderFirstOrderAlgebraicTrigonometricPatch()
@@ -1753,15 +1788,10 @@ namespace cagd
                 throw Exception("Could not create patch!\n");
             }
 
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
-
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
+            delete _before_interpolation, _before_interpolation = nullptr;
+            delete _after_interpolation, _after_interpolation = nullptr;
+            delete _u_lines, _u_lines = nullptr;
+            delete _v_lines, _v_lines = nullptr;
 
             _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
             _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
@@ -1818,15 +1848,10 @@ namespace cagd
                 throw Exception("Could not create patch!\n");
             }
 
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
-
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
+            delete _before_interpolation, _before_interpolation = nullptr;
+            delete _after_interpolation, _after_interpolation = nullptr;
+            delete _u_lines, _u_lines = nullptr;
+            delete _v_lines, _v_lines = nullptr;
 
             _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
             _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
@@ -1884,15 +1909,10 @@ namespace cagd
                 throw Exception("Could not create patch!\n");
             }
 
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
-
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
+            delete _before_interpolation, _before_interpolation = nullptr;
+            delete _after_interpolation, _after_interpolation = nullptr;
+            delete _u_lines, _u_lines = nullptr;
+            delete _v_lines, _v_lines = nullptr;
 
             _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
             _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
@@ -1937,38 +1957,64 @@ namespace cagd
 
     void GLWidget::setAlphaUPatch(double value)
     {
+        cout << "\n\n---1---\n\n";
+        cout << _patch->_data << "\n\n";
+
         if (_patch->getAlphaU() != value)
         {
+            cout << "\n\n---2---\n\n";
+            cout << _patch->_data << "\n\n";
             _patch->setAlphaU(value);
+            cout << "\n\n---3---\n\n";
+            cout << _patch->_data << "\n\n";
 
             if (! _patch->UpdateVertexBufferObjectsOfData())
             {
                 throw Exception("Could not create patch!\n");
             }
+            cout << "\n\n---4---\n\n";
+            cout << _patch->_data << "\n\n";
 
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
+            delete _before_interpolation, _before_interpolation = nullptr;
+            delete _after_interpolation, _after_interpolation = nullptr;
+            delete _u_lines, _u_lines = nullptr;
+            delete _v_lines, _v_lines = nullptr;
 
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
+            cout << "\n\n---5---\n\n";
+            cout << _patch->_data << "\n\n";
 
             _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
+
+            cout << "\n\n---6---\n\n";
+            cout << _patch->_data << "\n\n";
             _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            cout << "\n\n---7---\n\n";
+            cout << _patch->_data << "\n\n";
 
             for(GLuint i = 0; i < 5; i++)
             {
+                cout << "\n\n---8.---" << i << "---\n\n";
+                cout << _patch->_data << "\n\n";
                 (*_u_lines)[i]->UpdateVertexBufferObjects();
+                cout << "\n\n---9.---" << i << "---\n\n";
+                cout << _patch->_data << "\n\n";
                 (*_v_lines)[i]->UpdateVertexBufferObjects();
             }
 
+            cout << "\n\n---10---\n\n";
+            cout << _patch->_data << "\n\n";
+
             _before_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+            cout << "\n\n---11---\n\n";
+            cout << _patch->_data << "\n\n";
 
             if(_before_interpolation)
                 _before_interpolation->UpdateVertexBufferObjects();
+
+            cout << "\n\n---12---\n\n";
+            cout << _patch->_data << "\n\n";
 
             RowMatrix<GLdouble> u_knot_vector(4);
             u_knot_vector(0) = 0.0;
@@ -1982,17 +2028,23 @@ namespace cagd
             v_knot_vector(2) = 2.0 / 3.0;
             v_knot_vector(3) = 1.0;
 
+            cout << "\n\n---13---\n\n";
+            cout << _patch->_data << "\n\n";
             Matrix<DCoordinate3> data_points_to_interpolate(4, 4);
             for (int row = 0; row < 4; ++row)
                 for (int column = 0; column < 4; ++column)
                     _patch->GetData(row, column, data_points_to_interpolate(row, column));
 
+            cout << "\n\n---14---\n\n";
+            cout << _patch->_data << "\n\n";
             if(_patch->UpdateDataForInterpolation(u_knot_vector, v_knot_vector, data_points_to_interpolate))
             {
                 _after_interpolation = _patch->GenerateImage(30, 30, GL_STATIC_DRAW);
                 if(_after_interpolation)
                     _after_interpolation->UpdateVertexBufferObjects();
             }
+            cout << "\n\n---15---\n\n";
+            cout << _patch->_data << "\n\n";
             updateGL();
         }
     }
@@ -2008,15 +2060,10 @@ namespace cagd
                 throw Exception("Could not create patch!\n");
             }
 
-            _before_interpolation = nullptr;
-            _after_interpolation = nullptr;
-            _u_lines = nullptr;
-            _v_lines = nullptr;
-
-            _before_int = true;
-            _after_int = true;
-            _u_lin = true;
-            _v_lin = true;
+            delete _before_interpolation, _before_interpolation = nullptr;
+            delete _after_interpolation, _after_interpolation = nullptr;
+            delete _u_lines, _u_lines = nullptr;
+            delete _v_lines, _v_lines = nullptr;
 
             _u_lines = _patch->GenerateUIsoparametricLines(5, 1, 100);
             _v_lines = _patch->GenerateVIsoparametricLines(5, 1, 100);

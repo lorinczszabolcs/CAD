@@ -3,7 +3,7 @@
 
 using namespace cagd;
 
-FirstOrderAlgebraicTrigonometricPatch::FirstOrderAlgebraicTrigonometricPatch(GLdouble _alpha_u, GLdouble _alpha_v): TensorProductSurface3(0.0, 1.0, 0.0, 1.0, 4, 4, GL_TRUE, GL_TRUE)
+FirstOrderAlgebraicTrigonometricPatch::FirstOrderAlgebraicTrigonometricPatch(GLdouble _alpha_u, GLdouble _alpha_v): TensorProductSurface3(0.0, 1.0, 0.0, 1.0, 4, 4)
 {
     this->_alpha_u = _alpha_u;
     this->_alpha_v = _alpha_v;
@@ -13,7 +13,8 @@ GLdouble FirstOrderAlgebraicTrigonometricPatch::getAlphaU() const
 {
     return _alpha_u;
 }
-void FirstOrderAlgebraicTrigonometricPatch::setAlphaU(GLdouble alpha_u)
+
+GLvoid FirstOrderAlgebraicTrigonometricPatch::setAlphaU(GLdouble alpha_u)
 {
     _alpha_u = alpha_u;
 }
@@ -23,7 +24,7 @@ GLdouble FirstOrderAlgebraicTrigonometricPatch::getAlphaV() const
     return _alpha_v;
 }
 
-void FirstOrderAlgebraicTrigonometricPatch::setAlphaV(GLdouble alpha_v)
+GLvoid FirstOrderAlgebraicTrigonometricPatch::setAlphaV(GLdouble alpha_v)
 {
     _alpha_v = alpha_v;
 }
