@@ -48,6 +48,7 @@ namespace cagd
         private:
             GLvoid ValidatePointersInPatchAttrs(PatchAttributes *oldAttr, PatchAttributes *newAttr);
 
+            GLboolean mergePatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2);
             GLboolean mergePatchesN_N(FirstOrderAlgebraicTrigonometricPatch &patchN1, FirstOrderAlgebraicTrigonometricPatch &patchN2);
             GLboolean mergePatchesN_E(FirstOrderAlgebraicTrigonometricPatch &patchN, FirstOrderAlgebraicTrigonometricPatch &patchE);
             GLboolean mergePatchesN_S(FirstOrderAlgebraicTrigonometricPatch &patchN, FirstOrderAlgebraicTrigonometricPatch &patchS);
@@ -59,6 +60,7 @@ namespace cagd
             GLboolean mergePatchesE_S(FirstOrderAlgebraicTrigonometricPatch &patchE, FirstOrderAlgebraicTrigonometricPatch &patchS);
             GLboolean mergePatchesS_S(FirstOrderAlgebraicTrigonometricPatch &patchS1, FirstOrderAlgebraicTrigonometricPatch &patchS2);
 
+            GLboolean joinPatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2);
             GLvoid joinPatchesN_N(PatchAttributes &patchN, PatchAttributes &patchN2);
             GLvoid joinPatchesN_E(PatchAttributes &patchN, PatchAttributes &patchE);
             GLvoid joinPatchesN_S(PatchAttributes &patchN, PatchAttributes &patchS);
