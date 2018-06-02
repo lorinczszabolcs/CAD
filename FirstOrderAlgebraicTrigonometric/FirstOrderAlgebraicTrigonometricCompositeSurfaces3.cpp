@@ -675,32 +675,242 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNE2._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
-    (*joiner._patch)(0, 3) = patch_1(3, 3);
-    (*joiner._patch)(0, 2) = 2 * patch_1(3, 3) - patch_1(3, 2);
-    (*joiner._patch)(1, 3) = 2 * patch_1(3, 3) - patch_1(2, 3);
+    (*joiner._patch)(0, 0) = patch_1(3, 3);
+    (*joiner._patch)(0, 1) = 2 * patch_1(3, 3) - patch_1(3, 2);
+    (*joiner._patch)(1, 0) = 2 * patch_1(3, 3) - patch_1(2, 3);
 
-    (*joiner._patch)(3, 0) = patch_2(3, 3);
-    (*joiner._patch)(2, 0) = 2 * patch_2(3, 3) - patch_2(3, 2);
-    (*joiner._patch)(3, 1) = 2 * patch_2(3, 3) - patch_2(2, 3);
+    (*joiner._patch)(3, 3) = patch_2(3, 3);
+    (*joiner._patch)(2, 3) = 2 * patch_2(3, 3) - patch_2(3, 2);
+    (*joiner._patch)(3, 2) = 2 * patch_2(3, 3) - patch_2(2, 3);
 
-    (*joiner._patch)(1, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(3, 0);
-    (*joiner._patch)(0, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(2, 0);
+    (*joiner._patch)(0, 2) = 2 * (*joiner._patch)(0, 1) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(0, 3) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 1);
 
-    (*joiner._patch)(3, 2) = 2 * (*joiner._patch)(3, 1) - (*joiner._patch)(3, 0);
-    (*joiner._patch)(3, 3) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 1);
+    (*joiner._patch)(2, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(3, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(1, 0);
 
-    (*joiner._patch)(0, 1) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 3);
-    (*joiner._patch)(2, 3) = 2 * (*joiner._patch)(1, 3) - (*joiner._patch)(0, 3);
+    (*joiner._patch)(1, 3) = 2 * (*joiner._patch)(2, 3) - (*joiner._patch)(3, 3);
+    (*joiner._patch)(3, 1) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 3);
 
-    (*joiner._patch)(2, 1) = (((*joiner._patch)(0, 3)) / 3.0) + ((*joiner._patch)(3, 0) * 2.0 / 3.0);
-    (*joiner._patch)(1, 2) = (((*joiner._patch)(3, 0)) / 3.0) + ((*joiner._patch)(0, 3) * 2.0 / 3.0);
+    (*joiner._patch)(1, 1) = (((*joiner._patch)(3, 3)) / 3.0) + ((*joiner._patch)(0, 0) * 2.0 / 3.0);
+    (*joiner._patch)(2, 2) = (((*joiner._patch)(0, 0)) / 3.0) + ((*joiner._patch)(3, 3) * 2.0 / 3.0);
 
-    (*joiner._patch)(1, 1) = 2 * (*joiner._patch)(2, 1) - (*joiner._patch)(3, 1);
-    (*joiner._patch)(2, 2) = 2 * (*joiner._patch)(1, 2) - (*joiner._patch)(0, 2);
+    (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(1, 1);
+    (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(2, 3);
 
-    //patchNW._neighbors[NW] = &joiner;
-    //patchNE._neighbors[NE] = &joiner;
-    //joiner._neighbors[SE] = &patchNW;
-    //joiner._neighbors[NW] = &patchNE;
+    patchNE1._neighbors[NE] = &joiner;
+    patchNE2._neighbors[NE] = &joiner;
+    joiner._neighbors[SW] = &patchNE1;
+    joiner._neighbors[NE] = &patchNE2;
+    UpdatePatchVBOGenerateImage(joiner);
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SE(
+        PatchAttributes &patchNE, PatchAttributes &patchSE)
+{
+    GLuint size = _attributes.size();
+
+    PatchAttributes *oldAttr = &_attributes[0];
+    _attributes.resize(size + 1);
+    ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
+    PatchAttributes &joiner =  _attributes[size];
+    FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE._patch);
+    FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSE._patch);
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+    (*joiner._patch)(0, 0) = patch_1(3, 3);
+    (*joiner._patch)(0, 1) = 2 * patch_1(3, 3) - patch_1(3, 2);
+    (*joiner._patch)(1, 0) = 2 * patch_1(3, 3) - patch_1(2, 3);
+
+    (*joiner._patch)(3, 3) = patch_2(0, 3);
+    (*joiner._patch)(2, 3) = 2 * patch_2(0, 3) - patch_2(1, 3);
+    (*joiner._patch)(3, 2) = 2 * patch_2(0, 3) - patch_2(0, 2);
+
+    (*joiner._patch)(0, 2) = 2 * (*joiner._patch)(0, 1) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(0, 3) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 1);
+
+    (*joiner._patch)(2, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(3, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(1, 0);
+
+    (*joiner._patch)(1, 3) = 2 * (*joiner._patch)(2, 3) - (*joiner._patch)(3, 3);
+    (*joiner._patch)(3, 1) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 3);
+
+    (*joiner._patch)(1, 1) = (((*joiner._patch)(3, 3)) / 3.0) + ((*joiner._patch)(0, 0) * 2.0 / 3.0);
+    (*joiner._patch)(2, 2) = (((*joiner._patch)(0, 0)) / 3.0) + ((*joiner._patch)(3, 3) * 2.0 / 3.0);
+
+    (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
+    (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    patchNE._neighbors[NE] = &joiner;
+    patchSE._neighbors[SE] = &joiner;
+    joiner._neighbors[SW] = &patchNE;
+    joiner._neighbors[NE] = &patchSE;
+    UpdatePatchVBOGenerateImage(joiner);
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SW(
+        PatchAttributes &patchNE, PatchAttributes &patchSW)
+{
+    GLuint size = _attributes.size();
+
+    PatchAttributes *oldAttr = &_attributes[0];
+    _attributes.resize(size + 1);
+    ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
+    PatchAttributes &joiner =  _attributes[size];
+    FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE._patch);
+    FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW._patch);
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+    (*joiner._patch)(0, 0) = patch_1(3, 3);
+    (*joiner._patch)(0, 1) = 2 * patch_1(3, 3) - patch_1(3, 2);
+    (*joiner._patch)(1, 0) = 2 * patch_1(3, 3) - patch_1(2, 3);
+
+    (*joiner._patch)(3, 3) = patch_2(0, 0);
+    (*joiner._patch)(2, 3) = 2 * patch_2(0, 0) - patch_2(1, 0);
+    (*joiner._patch)(3, 2) = 2 * patch_2(0, 0) - patch_2(0, 1);
+
+    (*joiner._patch)(0, 2) = 2 * (*joiner._patch)(0, 1) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(0, 3) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 1);
+
+    (*joiner._patch)(2, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(3, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(1, 0);
+
+    (*joiner._patch)(1, 3) = 2 * (*joiner._patch)(2, 3) - (*joiner._patch)(3, 3);
+    (*joiner._patch)(3, 1) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 3);
+
+    (*joiner._patch)(1, 1) = (((*joiner._patch)(3, 3)) / 3.0) + ((*joiner._patch)(0, 0) * 2.0 / 3.0);
+    (*joiner._patch)(2, 2) = (((*joiner._patch)(0, 0)) / 3.0) + ((*joiner._patch)(3, 3) * 2.0 / 3.0);
+
+    (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
+    (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    patchNE._neighbors[NE] = &joiner;
+    patchSW._neighbors[SW] = &joiner;
+    joiner._neighbors[SW] = &patchNE;
+    joiner._neighbors[NE] = &patchSW;
+    UpdatePatchVBOGenerateImage(joiner);
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SE(
+        PatchAttributes &patchSE1, PatchAttributes &patchSE2)
+{
+    GLuint size = _attributes.size();
+
+    PatchAttributes *oldAttr = &_attributes[0];
+    _attributes.resize(size + 1);
+    ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
+    PatchAttributes &joiner =  _attributes[size];
+    FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchSE1._patch);
+    FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSE2._patch);
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+    (*joiner._patch)(0, 0) = patch_1(0, 3);
+    (*joiner._patch)(0, 1) = 2 * patch_1(0, 3) - patch_1(0, 2);
+    (*joiner._patch)(1, 0) = 2 * patch_1(0, 3) - patch_1(1, 3);
+
+    (*joiner._patch)(3, 3) = patch_2(0, 3);
+    (*joiner._patch)(2, 3) = 2 * patch_2(0, 3) - patch_2(1, 3);
+    (*joiner._patch)(3, 2) = 2 * patch_2(0, 3) - patch_2(0, 2);
+
+    (*joiner._patch)(0, 2) = 2 * (*joiner._patch)(0, 1) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(0, 3) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 1);
+
+    (*joiner._patch)(2, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(3, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(1, 0);
+
+    (*joiner._patch)(1, 3) = 2 * (*joiner._patch)(2, 3) - (*joiner._patch)(3, 3);
+    (*joiner._patch)(3, 1) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 3);
+
+    (*joiner._patch)(1, 1) = (((*joiner._patch)(3, 3)) / 3.0) + ((*joiner._patch)(0, 0) * 2.0 / 3.0);
+    (*joiner._patch)(2, 2) = (((*joiner._patch)(0, 0)) / 3.0) + ((*joiner._patch)(3, 3) * 2.0 / 3.0);
+
+    (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
+    (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    patchSE1._neighbors[SE] = &joiner;
+    patchSE2._neighbors[SE] = &joiner;
+    joiner._neighbors[SE] = &patchSE1;
+    joiner._neighbors[NW] = &patchSE2;
+    UpdatePatchVBOGenerateImage(joiner);
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SW(
+        PatchAttributes &patchSE, PatchAttributes &patchSW)
+{
+    GLuint size = _attributes.size();
+
+    PatchAttributes *oldAttr = &_attributes[0];
+    _attributes.resize(size + 1);
+    ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
+    PatchAttributes &joiner =  _attributes[size];
+    FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchSE._patch);
+    FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW._patch);
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+    (*joiner._patch)(0, 0) = patch_1(0, 3);
+    (*joiner._patch)(0, 1) = 2 * patch_1(0, 3) - patch_1(0, 2);
+    (*joiner._patch)(1, 0) = 2 * patch_1(0, 3) - patch_1(1, 3);
+
+    (*joiner._patch)(3, 3) = patch_2(0, 0);
+    (*joiner._patch)(2, 3) = 2 * patch_2(0, 0) - patch_2(1, 0);
+    (*joiner._patch)(3, 2) = 2 * patch_2(0, 0) - patch_2(0, 1);
+
+    (*joiner._patch)(0, 2) = 2 * (*joiner._patch)(0, 1) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(0, 3) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 1);
+
+    (*joiner._patch)(2, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(3, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(1, 0);
+
+    (*joiner._patch)(1, 3) = 2 * (*joiner._patch)(2, 3) - (*joiner._patch)(3, 3);
+    (*joiner._patch)(3, 1) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 3);
+
+    (*joiner._patch)(1, 1) = (((*joiner._patch)(3, 3)) / 3.0) + ((*joiner._patch)(0, 0) * 2.0 / 3.0);
+    (*joiner._patch)(2, 2) = (((*joiner._patch)(0, 0)) / 3.0) + ((*joiner._patch)(3, 3) * 2.0 / 3.0);
+
+    (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
+    (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    patchSE._neighbors[SE] = &joiner;
+    patchSW._neighbors[NW] = &joiner;
+    joiner._neighbors[SE] = &patchSE;
+    joiner._neighbors[NW] = &patchSW;
+    UpdatePatchVBOGenerateImage(joiner);
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(
+        PatchAttributes &patchSW1, PatchAttributes &patchSW2)
+{
+    GLuint size = _attributes.size();
+
+    PatchAttributes *oldAttr = &_attributes[0];
+    _attributes.resize(size + 1);
+    ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
+    PatchAttributes &joiner =  _attributes[size];
+    FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchSW1._patch);
+    FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW2._patch);
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+    (*joiner._patch)(0, 0) = patch_1(0, 3);
+    (*joiner._patch)(0, 1) = 2 * patch_1(0, 3) - patch_1(0, 2);
+    (*joiner._patch)(1, 0) = 2 * patch_1(0, 3) - patch_1(1, 3);
+
+    (*joiner._patch)(3, 3) = patch_2(0, 3);
+    (*joiner._patch)(2, 3) = 2 * patch_2(0, 3) - patch_2(1, 3);
+    (*joiner._patch)(3, 2) = 2 * patch_2(0, 3) - patch_2(0, 2);
+
+    (*joiner._patch)(0, 2) = 2 * (*joiner._patch)(0, 1) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(0, 3) = 2 * (*joiner._patch)(0, 2) - (*joiner._patch)(0, 1);
+
+    (*joiner._patch)(2, 0) = 2 * (*joiner._patch)(1, 0) - (*joiner._patch)(0, 0);
+    (*joiner._patch)(3, 0) = 2 * (*joiner._patch)(2, 0) - (*joiner._patch)(1, 0);
+
+    (*joiner._patch)(1, 3) = 2 * (*joiner._patch)(2, 3) - (*joiner._patch)(3, 3);
+    (*joiner._patch)(3, 1) = 2 * (*joiner._patch)(3, 2) - (*joiner._patch)(3, 3);
+
+    (*joiner._patch)(1, 1) = (((*joiner._patch)(3, 3)) / 3.0) + ((*joiner._patch)(0, 0) * 2.0 / 3.0);
+    (*joiner._patch)(2, 2) = (((*joiner._patch)(0, 0)) / 3.0) + ((*joiner._patch)(3, 3) * 2.0 / 3.0);
+
+    (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
+    (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    patchSW1._neighbors[SE] = &joiner;
+    patchSW2._neighbors[NW] = &joiner;
+    joiner._neighbors[SE] = &patchSW1;
+    joiner._neighbors[NW] = &patchSW2;
     UpdatePatchVBOGenerateImage(joiner);
 }
