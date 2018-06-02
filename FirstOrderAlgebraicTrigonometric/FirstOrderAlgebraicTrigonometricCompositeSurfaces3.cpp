@@ -4,7 +4,7 @@
 using namespace cagd;
 
 FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::PatchAttributes() :
-    _patch(new FirstOrderAlgebraicTrigonometricPatch())
+    _patch(new FirstOrderAlgebraicTrigonometricPatch(1.0,1.0))
 {}
 
 FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::~PatchAttributes()
@@ -53,7 +53,7 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes& FirstOrderAlgebraicTr
         this->_patch = new FirstOrderAlgebraicTrigonometricPatch(*attr._patch);
     } else
     {
-        this->_patch = new FirstOrderAlgebraicTrigonometricPatch();
+        this->_patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     }
 
     if(attr._image != nullptr)
