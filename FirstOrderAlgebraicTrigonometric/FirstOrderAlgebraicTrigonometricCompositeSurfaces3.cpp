@@ -265,7 +265,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_N(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchN1._patch)(3, i);
         (*joiner._patch)(i, 1) = 2*(*patchN1._patch)(3, i) - (*patchN1._patch)(2, i);
@@ -289,7 +289,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_E(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchN._patch)(3, i);
         (*joiner._patch)(i, 1) = 2*(*patchN._patch)(3, i) - (*patchN._patch)(2, i);
@@ -313,7 +313,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_S(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchN._patch)(3, i);
         (*joiner._patch)(i, 1) = 2*(*patchN._patch)(3, i) - (*patchN._patch)(2, i);
@@ -336,7 +336,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_E(PatchAttributes 
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchE._patch)(i, 3);
         (*joiner._patch)(i, 1) = 2*(*patchE._patch)(i, 3) - (*patchE._patch)(i, 2);
@@ -360,7 +360,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_N(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchW._patch)(i, 0);
         (*joiner._patch)(i, 1) = 2*(*patchW._patch)(i, 0) - (*patchW._patch)(i, 1);
@@ -384,7 +384,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_W(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchW1._patch)(i, 0);
         (*joiner._patch)(i, 1) = 2*(*patchW1._patch)(i, 0) - (*patchW1._patch)(i, 1);
@@ -408,7 +408,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_S(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchW._patch)(i, 0);
         (*joiner._patch)(i, 1) = 2*(*patchW._patch)(i, 0) - (*patchW._patch)(i, 1);
@@ -432,7 +432,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_E(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchE1._patch)(i, 3);
         (*joiner._patch)(i, 1) = 2*(*patchE1._patch)(i, 3) - (*patchE1._patch)(i, 2);
@@ -456,7 +456,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_S(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchE._patch)(i, 3);
         (*joiner._patch)(i, 1) = 2*(*patchE._patch)(i, 3) - (*patchE._patch)(i, 2);
@@ -480,7 +480,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesS_S(
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
 
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch;
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
         (*joiner._patch)(i, 0) = (*patchS1._patch)(0, i);
         (*joiner._patch)(i, 1) = 2*(*patchS1._patch)(0, i) - (*patchS1._patch)(1, i);
@@ -505,7 +505,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NW(
     PatchAttributes &joiner =  _attributes[size];
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNW2._patch);
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch();
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     (*joiner._patch)(0, 3) = patch_1(3, 0);
     (*joiner._patch)(0, 2) = 2 * patch_1(3, 0) - patch_1(3, 1);
     (*joiner._patch)(1, 3) = 2 * patch_1(3, 0) - patch_1(2, 0);
@@ -547,7 +547,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NE(
     PatchAttributes &joiner =  _attributes[size];
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNE._patch);
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch();
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     (*joiner._patch)(0, 3) = patch_1(3, 0);
     (*joiner._patch)(0, 2) = 2 * patch_1(3, 0) - patch_1(3, 1);
     (*joiner._patch)(1, 3) = 2 * patch_1(3, 0) - patch_1(2, 0);
@@ -589,7 +589,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SE(
     PatchAttributes &joiner =  _attributes[size];
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSE._patch);
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch();
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     (*joiner._patch)(0, 3) = patch_1(3, 0);
     (*joiner._patch)(0, 2) = 2 * patch_1(3, 0) - patch_1(3, 1);
     (*joiner._patch)(1, 3) = 2 * patch_1(3, 0) - patch_1(2, 0);
@@ -631,7 +631,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SW(
     PatchAttributes &joiner =  _attributes[size];
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW._patch);
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch();
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     (*joiner._patch)(0, 3) = patch_1(3, 0);
     (*joiner._patch)(0, 2) = 2 * patch_1(3, 0) - patch_1(3, 1);
     (*joiner._patch)(1, 3) = 2 * patch_1(3, 0) - patch_1(2, 0);
@@ -673,7 +673,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(
     PatchAttributes &joiner =  _attributes[size];
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNE2._patch);
-    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch();
+    joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     (*joiner._patch)(0, 3) = patch_1(3, 3);
     (*joiner._patch)(0, 2) = 2 * patch_1(3, 3) - patch_1(3, 2);
     (*joiner._patch)(1, 3) = 2 * patch_1(3, 3) - patch_1(2, 3);
