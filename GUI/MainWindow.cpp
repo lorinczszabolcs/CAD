@@ -119,15 +119,29 @@ namespace cagd
         connect(_gl_widget, SIGNAL(zCoordinateArcChanged(double)), _side_widget, SLOT(setControlPointArcZ(double)));
 
         // Patch
+
+        // booleans
         connect(_side_widget->checkBoxBeforeInt, SIGNAL(toggled(bool)), _gl_widget, SLOT(setBeforeInterpolate(bool)));
         connect(_side_widget->checkBoxAfterInt, SIGNAL(toggled(bool)), _gl_widget, SLOT(setAfterInterpolate(bool)));
         connect(_side_widget->checkBoxULines, SIGNAL(toggled(bool)), _gl_widget, SLOT(setULines(bool)));
         connect(_side_widget->checkBoxVLines, SIGNAL(toggled(bool)), _gl_widget, SLOT(setVLines(bool)));
+
+        // alpha parameter along u and v
+        connect(_side_widget->doubleSpinBoxPatchAlphaU, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setAlphaUPatch(double)));
+        connect(_side_widget->doubleSpinBoxPatchAlphaV, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setAlphaVPatch(double)));
+
+        // cp index along u and v
         connect(_side_widget->controlPointPatchSliderU, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointUPatchIndex(int)));
         connect(_side_widget->controlPointPatchSliderV, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointVPatchIndex(int)));
+
+
+
         connect(_side_widget->controlPointTranslatePatchX, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointPatchX(double)));
         connect(_side_widget->controlPointTranslatePatchY, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointPatchY(double)));
         connect(_side_widget->controlPointTranslatePatchZ, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointPatchZ(double)));
+
+
+
         connect(_gl_widget, SIGNAL(xCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchX(double)));
         connect(_gl_widget, SIGNAL(yCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchY(double)));
         connect(_gl_widget, SIGNAL(zCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchZ(double)));

@@ -37,7 +37,7 @@ namespace cagd
         GLboolean insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc);
         GLvoid validateAttributes(ArcAttributes *oldAttr, ArcAttributes *newAttr);
 
-        GLvoid UpdateArcVBOGenerateImage(ArcAttributes &arc);
+        GLvoid updateArcVBOGenerateImage(ArcAttributes &arc);
 
         // continue existing arc -> index, direction, haromszorosan megnyujtani, degeneralodik szakasz
         GLboolean continueExistingArc(GLuint index, Direction direction);
