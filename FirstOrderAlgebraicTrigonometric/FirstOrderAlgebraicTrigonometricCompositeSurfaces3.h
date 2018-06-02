@@ -35,20 +35,28 @@ namespace cagd
             FirstOrderAlgebraicTrigonometricSurface3& operator=(const FirstOrderAlgebraicTrigonometricSurface3 & surface);
 
             // insert, join, merge, continue, erase, stb.
+            //megvan
             GLvoid insertIsolatedSurface(FirstOrderAlgebraicTrigonometricPatch &patch);
             GLvoid continueExistingSurface(GLuint index, Direction direction);
-            GLvoid joinExistingSurface(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
-            GLvoid mergeExistingSurface(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
+            //megvan
+            GLboolean joinExistingSurface(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
+            //megvan
+            GLboolean mergeExistingSurface(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
+            //megvan
             GLvoid eraseExistingSurface(GLuint index);
 
             //render
             GLboolean renderSurfaces();
 
+            //megvan
+            GLvoid setMaterial(GLuint index, Material *material);
+
+            //megvan
             GLvoid UpdatePatchVBOGenerateImage(PatchAttributes &newPatch);
         private:
             GLvoid ValidatePointersInPatchAttrs(PatchAttributes *oldAttr, PatchAttributes *newAttr);
 
-            GLboolean mergePatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2);
+            //GLboolean mergePatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2);
             GLboolean mergePatchesN_N(FirstOrderAlgebraicTrigonometricPatch &patchN1, FirstOrderAlgebraicTrigonometricPatch &patchN2);
             GLboolean mergePatchesN_E(FirstOrderAlgebraicTrigonometricPatch &patchN, FirstOrderAlgebraicTrigonometricPatch &patchE);
             GLboolean mergePatchesN_S(FirstOrderAlgebraicTrigonometricPatch &patchN, FirstOrderAlgebraicTrigonometricPatch &patchS);
@@ -60,7 +68,7 @@ namespace cagd
             GLboolean mergePatchesE_S(FirstOrderAlgebraicTrigonometricPatch &patchE, FirstOrderAlgebraicTrigonometricPatch &patchS);
             GLboolean mergePatchesS_S(FirstOrderAlgebraicTrigonometricPatch &patchS1, FirstOrderAlgebraicTrigonometricPatch &patchS2);
 
-            GLboolean joinPatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2);
+            //GLboolean joinPatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2);
             GLvoid joinPatchesN_N(PatchAttributes &patchN, PatchAttributes &patchN2);
             GLvoid joinPatchesN_E(PatchAttributes &patchN, PatchAttributes &patchE);
             GLvoid joinPatchesN_S(PatchAttributes &patchN, PatchAttributes &patchS);

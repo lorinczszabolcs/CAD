@@ -110,46 +110,46 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::updateArcVBOGenerateImag
 GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(GLuint index, Direction direction)
 {
     ArcAttributes &arc = _attributes[index];
-       if(direction == RIGHT)
-       {
-           if(arc._next != nullptr)
-               return GL_FALSE;
+    if(direction == RIGHT)
+    {
+       if(arc._next != nullptr)
+           return GL_FALSE;
 
-           GLuint size = _attributes.size();
-           ArcAttributes *oldAddrs = &_attributes[0];
-           _attributes.resize(size + 1);
-           validatePointersInArcAttr(oldAddrs, &_attributes[0]);
-           ArcAttributes &added =  _attributes[size];
+       GLuint size = _attributes.size();
+       ArcAttributes *oldAddrs = &_attributes[0];
+       _attributes.resize(size + 1);
+       validatePointersInArcAttr(oldAddrs, &_attributes[0]);
+       ArcAttributes &added =  _attributes[size];
 
-           added._arc = new FirstOrderAlgebraicTrigonometricArc3(1.0);
-           (*added._arc)[0] = (*arc._arc)[3];
-           (*added._arc)[1] = 2*(*arc._arc)[3] - (*arc._arc)[2];
-           (*added._arc)[2] = 3*(*arc._arc)[3] - 2*(*arc._arc)[2];
-           (*added._arc)[3] = 4*(*arc._arc)[3] - 3*(*arc._arc)[2];
+       added._arc = new FirstOrderAlgebraicTrigonometricArc3(1.0);
+       (*added._arc)[0] = (*arc._arc)[3];
+       (*added._arc)[1] = 2*(*arc._arc)[3] - (*arc._arc)[2];
+       (*added._arc)[2] = 3*(*arc._arc)[3] - 2*(*arc._arc)[2];
+       (*added._arc)[3] = 4*(*arc._arc)[3] - 3*(*arc._arc)[2];
 
-           arc._next = &added;
-           added._previous = &arc;
-           updateArcVBOGenerateImage(added);
-       } else {
-           if(arc._previous != nullptr)
-               return GL_FALSE;
+       arc._next = &added;
+       added._previous = &arc;
+       updateArcVBOGenerateImage(added);
+    } else {
+       if(arc._previous != nullptr)
+           return GL_FALSE;
 
-           GLuint size = _attributes.size();
-           ArcAttributes *oldAddrs = &_attributes[0];
-           _attributes.resize(size + 1);
-           validateAttributes(oldAddrs,&_attributes[0]);
-           ArcAttributes &added =  _attributes[size];
+       GLuint size = _attributes.size();
+       ArcAttributes *oldAddrs = &_attributes[0];
+       _attributes.resize(size + 1);
+       validateAttributes(oldAddrs,&_attributes[0]);
+       ArcAttributes &added =  _attributes[size];
 
-           added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
-           (*added._arc)[0] = 4*(*arc._arc)[0] - 3*(*arc._arc)[1];
-           (*added._arc)[1] = 3*(*arc._arc)[0] - 2*(*arc._arc)[1];
-           (*added._arc)[2] = 2*(*arc._arc)[0] - (*arc._arc)[1];
-           (*added._arc)[3] = (*arc._arc)[0];
+       added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
+       (*added._arc)[0] = 4*(*arc._arc)[0] - 3*(*arc._arc)[1];
+       (*added._arc)[1] = 3*(*arc._arc)[0] - 2*(*arc._arc)[1];
+       (*added._arc)[2] = 2*(*arc._arc)[0] - (*arc._arc)[1];
+       (*added._arc)[3] = (*arc._arc)[0];
 
-           arc._previous = &added;
-           added._next = &arc;
-           updateArcVBOGenerateImage(added);
-       }
+       arc._previous = &added;
+       added._next = &arc;
+       updateArcVBOGenerateImage(added);
+    }
     return GL_TRUE;
 }
 

@@ -125,6 +125,11 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::UpdatePatchVBOGenerateImage(
     }
 }
 
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::setMaterial(GLuint index, Material *material)
+{
+    _attributes[index]._material = material;
+}
+
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::ValidatePointersInPatchAttrs(
         PatchAttributes *oldAttr, PatchAttributes *newAttr)
 {
@@ -138,7 +143,174 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::ValidatePointersInPatchAttrs(
     }
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricSurface3::mergePatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2)
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2)
+{
+    PatchAttributes &patch1 = _attributes[ind1];
+    PatchAttributes &patch2 = _attributes[ind2];
+    if((patch1._neighbors[dir1] != nullptr)||(patch2._neighbors[dir2] != nullptr))
+        return GL_FALSE;
+
+    switch (dir1) {
+    case N:
+        switch(dir2) {
+        case N:
+            joinPatchesN_N(patch1, patch2);
+            break;
+        case E:
+            joinPatchesN_E(patch1, patch2);
+            break;
+        case S:
+            joinPatchesN_S(patch1, patch2);
+            break;
+        case W:
+            joinPatchesW_S(patch2, patch1);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case E:
+        switch(dir2) {
+        case N:
+            joinPatchesN_E(patch2, patch1);
+            break;
+        case E:
+            joinPatchesE_E(patch1, patch2);
+            break;
+        case S:
+            joinPatchesE_S(patch1, patch2);
+            break;
+        case W:
+            joinPatchesW_E(patch2, patch1);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case S:
+        switch(dir2) {
+        case N:
+            joinPatchesN_S(patch2, patch1);
+            break;
+        case E:
+            joinPatchesE_S(patch2, patch1);
+            break;
+        case S:
+            joinPatchesS_S(patch1, patch2);
+            break;
+        case W:
+            joinPatchesW_S(patch2, patch1);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case W:
+        switch(dir2) {
+        case N:
+            joinPatchesW_N(patch1, patch2);
+            break;
+        case E:
+            joinPatchesW_E(patch1, patch2);
+            break;
+        case S:
+            joinPatchesW_S(patch1, patch2);
+            break;
+        case W:
+            joinPatchesW_W(patch1, patch2);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case NW:
+        switch(dir2) {
+        case NW:
+            joinPatchesNW_NW(patch1, patch2);
+            break;
+        case NE:
+            joinPatchesNW_NE(patch1, patch2);
+            break;
+        case SE:
+            joinPatchesNW_SE(patch1, patch2);
+            break;
+        case SW:
+            joinPatchesNW_SW(patch1, patch2);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case NE:
+        switch(dir2) {
+        case NW:
+            joinPatchesNW_NE(patch2, patch1);
+            break;
+        case NE:
+            joinPatchesNE_NE(patch1, patch2);
+            break;
+        case SE:
+            joinPatchesNE_SE(patch1, patch2);
+            break;
+        case SW:
+            joinPatchesNE_SW(patch1, patch2);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case SE:
+        switch(dir2) {
+        case NW:
+            joinPatchesNW_SE(patch2, patch1);
+            break;
+        case NE:
+            joinPatchesNE_SE(patch2, patch1);
+            break;
+        case SE:
+            joinPatchesSE_SE(patch1, patch2);
+            break;
+        case SW:
+            joinPatchesSE_SW(patch1, patch2);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    case SW:
+        switch(dir2) {
+        case NW:
+            joinPatchesNW_SW(patch2, patch1);
+            break;
+        case NE:
+            joinPatchesNE_SW(patch2, patch1);
+            break;
+        case SE:
+            joinPatchesSE_SW(patch2, patch1);
+            break;
+        case SW:
+            joinPatchesSW_SW(patch1, patch2);
+            break;
+        default:
+            return GL_FALSE;
+            break;
+        }
+        break;
+    default:
+        return GL_FALSE;
+        break;
+    }
+    return GL_TRUE;
+}
+
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::mergeExistingSurface(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2)
 {
     PatchAttributes &patch1 = _attributes[ind1];
     PatchAttributes &patch2 = _attributes[ind2];
@@ -224,8 +396,51 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::mergePatches(GLuint ind1, GL
     patch1._neighbors[dir1] = &patch2;
     patch2._neighbors[dir2] = &patch1;
     UpdatePatchVBOGenerateImage(patch1);
-    UpdatePatchVBOGenerateImage(patch1);
+    //UpdatePatchVBOGenerateImage(patch1);
     UpdatePatchVBOGenerateImage(patch2);
+    return GL_TRUE;
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::eraseExistingSurface(GLuint index)
+{
+    PatchAttributes *oldAttr = &_attributes[0];
+    PatchAttributes &tmp = _attributes[index];
+    for(int i = N; i <= NW; i++) {
+        if (tmp._neighbors[i] != nullptr)
+            for(int j = N; j <= NW; j++) {
+                if (tmp._neighbors[i]->_neighbors[j] == &tmp)
+                    tmp._neighbors[i]->_neighbors[j] = nullptr;
+            }
+    }
+    _attributes.erase(_attributes.begin() + index);
+    for(GLuint i = 0; i < _attributes.size() - 1; i++)
+    {
+        PatchAttributes *local = &_attributes[i];
+        for(int i = N; i <= NW; i++) {
+            if (local->_neighbors[i] > &tmp)
+                local->_neighbors[i]--;
+        }
+    }
+    ValidatePointersInPatchAttrs(oldAttr,&_attributes[0]);
+}
+
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::renderSurfaces()
+{
+    for(GLuint i = 0; i < _attributes.size(); i++)
+    {
+        PatchAttributes &attr = _attributes[i];
+
+        if (attr._image)
+        {
+            if(attr._material != nullptr)
+                attr._material->Apply();
+            else
+                MatFBBrass.Apply();
+            attr._image ->Render();
+            MatFBPearl.Apply();
+            attr._patch->RenderData(GL_LINE_STRIP);
+        }
+    }
     return GL_TRUE;
 }
 
@@ -348,173 +563,6 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::mergePatchesS_S(
         patchS2(3 - i, 0) = tmp;
     }
     return GL_TRUE;
-}
-
-GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinPatches(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2)
-{
-        PatchAttributes &patch1 = _attributes[ind1];
-        PatchAttributes &patch2 = _attributes[ind2];
-        if((patch1._neighbors[dir1] != nullptr)||(patch2._neighbors[dir2] != nullptr))
-            return GL_FALSE;
-
-        switch (dir1) {
-        case N:
-            switch(dir2) {
-            case N:
-                joinPatchesN_N(patch1, patch2);
-                break;
-            case E:
-                joinPatchesN_E(patch1, patch2);
-                break;
-            case S:
-                joinPatchesN_S(patch1, patch2);
-                break;
-            case W:
-                joinPatchesW_S(patch2, patch1);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case E:
-            switch(dir2) {
-            case N:
-                joinPatchesN_E(patch2, patch1);
-                break;
-            case E:
-                joinPatchesE_E(patch1, patch2);
-                break;
-            case S:
-                joinPatchesE_S(patch1, patch2);
-                break;
-            case W:
-                joinPatchesW_E(patch2, patch1);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case S:
-            switch(dir2) {
-            case N:
-                joinPatchesN_S(patch2, patch1);
-                break;
-            case E:
-                joinPatchesE_S(patch2, patch1);
-                break;
-            case S:
-                joinPatchesS_S(patch1, patch2);
-                break;
-            case W:
-                joinPatchesW_S(patch2, patch1);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case W:
-            switch(dir2) {
-            case N:
-                joinPatchesW_N(patch1, patch2);
-                break;
-            case E:
-                joinPatchesW_E(patch1, patch2);
-                break;
-            case S:
-                joinPatchesW_S(patch1, patch2);
-                break;
-            case W:
-                joinPatchesW_W(patch1, patch2);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case NW:
-            switch(dir2) {
-            case NW:
-                joinPatchesNW_NW(patch1, patch2);
-                break;
-            case NE:
-                joinPatchesNW_NE(patch1, patch2);
-                break;
-            case SE:
-                joinPatchesNW_SE(patch1, patch2);
-                break;
-            case SW:
-                joinPatchesNW_SW(patch1, patch2);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case NE:
-            switch(dir2) {
-            case NW:
-                joinPatchesNW_NE(patch2, patch1);
-                break;
-            case NE:
-                joinPatchesNE_NE(patch1, patch2);
-                break;
-            case SE:
-                joinPatchesNE_SE(patch1, patch2);
-                break;
-            case SW:
-                joinPatchesNE_SW(patch1, patch2);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case SE:
-            switch(dir2) {
-            case NW:
-                joinPatchesNW_SE(patch2, patch1);
-                break;
-            case NE:
-                joinPatchesNE_SE(patch2, patch1);
-                break;
-            case SE:
-                joinPatchesSE_SE(patch1, patch2);
-                break;
-            case SW:
-                joinPatchesSE_SW(patch1, patch2);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        case SW:
-            switch(dir2) {
-            case NW:
-                joinPatchesNW_SW(patch2, patch1);
-                break;
-            case NE:
-                joinPatchesNE_SW(patch2, patch1);
-                break;
-            case SE:
-                joinPatchesSE_SW(patch2, patch1);
-                break;
-            case SW:
-                joinPatchesSW_SW(patch1, patch2);
-                break;
-            default:
-                return GL_FALSE;
-                break;
-            }
-            break;
-        default:
-            return GL_FALSE;
-            break;
-        }
-        return GL_TRUE;
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_N(
