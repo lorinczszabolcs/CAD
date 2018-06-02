@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>590</width>
     <height>555</height>
    </rect>
   </property>
@@ -32,9 +32,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>0</y>
-     <width>581</width>
-     <height>221</height>
+     <y>10</y>
+     <width>571</width>
+     <height>241</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -47,9 +47,9 @@
     <property name="geometry">
      <rect>
       <x>3</x>
-      <y>21</y>
-      <width>571</width>
-      <height>191</height>
+      <y>31</y>
+      <width>561</width>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
@@ -239,16 +239,16 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>230</y>
-     <width>581</width>
-     <height>301</height>
+     <y>260</y>
+     <width>571</width>
+     <height>291</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>7</number>
    </property>
    <widget class="QWidget" name="parametricTab">
     <attribute name="title">
@@ -975,7 +975,7 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_7">
       <attribute name="title">
@@ -1397,26 +1397,16 @@
     <attribute name="title">
      <string>Patch</string>
     </attribute>
-    <widget class="QWidget" name="layoutWidget">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
-       <x>11</x>
-       <y>10</y>
-       <width>421</width>
-       <height>251</height>
+       <x>12</x>
+       <y>17</y>
+       <width>251</width>
+       <height>221</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="4">
-       <widget class="QCheckBox" name="checkBoxAfterInt">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
+     <layout class="QFormLayout" name="formLayout_7">
       <item row="0" column="0">
        <widget class="QLabel" name="label_14">
         <property name="text">
@@ -1434,8 +1424,32 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_41">
+        <property name="text">
+         <string>U lines</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QCheckBox" name="checkBoxULines">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_57">
+        <property name="text">
+         <string>Control net</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="controlNetPatchCheckBox">
         <property name="text">
          <string/>
         </property>
@@ -1448,20 +1462,6 @@
        <widget class="QLabel" name="label_51">
         <property name="text">
          <string>AlphaU</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_41">
-        <property name="text">
-         <string>U lines</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_42">
-        <property name="text">
-         <string>V lines</string>
         </property>
        </widget>
       </item>
@@ -1488,13 +1488,6 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
-       <widget class="QLabel" name="label_56">
-        <property name="text">
-         <string>Select point V</string>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="1">
        <widget class="QSlider" name="controlPointPatchSliderU">
         <property name="maximum">
@@ -1505,36 +1498,6 @@
         </property>
         <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3" colspan="2">
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxPatchAlphaV">
-        <property name="minimum">
-         <double>0.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>3.140000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.050000000000000</double>
-        </property>
-        <property name="value">
-         <double>1.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="label_55">
-        <property name="text">
-         <string>AlphaV</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label_53">
-        <property name="text">
-         <string>Translate along y</string>
         </property>
        </widget>
       </item>
@@ -1564,42 +1527,10 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="3" colspan="2">
-       <widget class="QSlider" name="controlPointPatchSliderV">
-        <property name="maximum">
-         <number>3</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="QDoubleSpinBox" name="controlPointTranslatePatchZ">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="decimals">
-         <number>5</number>
-        </property>
-        <property name="minimum">
-         <double>-100000000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.010000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_40">
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_53">
         <property name="text">
-         <string>After interpolation</string>
+         <string>Translate along y</string>
         </property>
        </widget>
       </item>
@@ -1632,7 +1563,62 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
+      <item row="7" column="1">
+       <widget class="QDoubleSpinBox" name="controlPointTranslatePatchZ">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>5</number>
+        </property>
+        <property name="minimum">
+         <double>-100000000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>30</y>
+       <width>192</width>
+       <height>141</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout_9">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_40">
+        <property name="text">
+         <string>After interpolation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="checkBoxAfterInt">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_42">
+        <property name="text">
+         <string>V lines</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
        <widget class="QCheckBox" name="checkBoxVLines">
         <property name="text">
          <string/>
@@ -1642,20 +1628,46 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="controlNetPatchCheckBox">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_55">
         <property name="text">
-         <string/>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string>AlphaV</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_57">
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxPatchAlphaV">
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>3.140000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.050000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_56">
         <property name="text">
-         <string>Control net</string>
+         <string>Select point V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSlider" name="controlPointPatchSliderV">
+        <property name="maximum">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
         </property>
        </widget>
       </item>
@@ -1666,26 +1678,26 @@
     <attribute name="title">
      <string>Comp Curve</string>
     </attribute>
-    <widget class="QTabWidget" name="tabWidget_2">
+    <widget class="QTabWidget" name="compCurveTabWidget">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>10</x>
        <y>10</y>
-       <width>391</width>
-       <height>121</height>
+       <width>531</width>
+       <height>221</height>
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="insertTab">
       <attribute name="title">
        <string>Insert</string>
       </attribute>
-      <widget class="QPushButton" name="insertButton">
+      <widget class="QPushButton" name="compCurveInsertButton">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>270</x>
          <y>20</y>
          <width>75</width>
          <height>23</height>
@@ -1695,26 +1707,500 @@
         <string>Insert</string>
        </property>
       </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>136</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_17">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_58">
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compCurveInsertComboBoxColor">
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Amethyst</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pomegranate</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="joinTab">
       <attribute name="title">
        <string>Join</string>
       </attribute>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>151</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_10">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_59">
+          <property name="text">
+           <string>First index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compCurveJoinFirstIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_60">
+          <property name="text">
+           <string>Second index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="compCurveJoinSecondIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>20</y>
+         <width>188</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_11">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_61">
+          <property name="text">
+           <string>First direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compCurveJoinFirstDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_62">
+          <property name="text">
+           <string>Second direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="compCurveJoinSecondDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="mergeTab">
       <attribute name="title">
        <string>Merge</string>
       </attribute>
+      <widget class="QWidget" name="layoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>151</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_12">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_63">
+          <property name="text">
+           <string>First index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compCurveMergeFirstIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_64">
+          <property name="text">
+           <string>Second index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="compCurveMergeSecondIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>20</y>
+         <width>188</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_13">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_65">
+          <property name="text">
+           <string>First direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compCurveMergeFirstDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_66">
+          <property name="text">
+           <string>Second direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="compCurveMergeSecondDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="continueTab">
       <attribute name="title">
        <string>Continue</string>
       </attribute>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>20</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_14">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_68">
+          <property name="text">
+           <string>Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compCurveContinueIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>303</x>
+         <y>20</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_15">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_67">
+          <property name="text">
+           <string>Direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compCurveContinueDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="eraseTab">
       <attribute name="title">
        <string>Erase</string>
       </attribute>
+      <widget class="QPushButton" name="Erase">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>20</y>
+         <width>82</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Erase</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>20</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_16">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_69">
+          <property name="text">
+           <string>Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compCurveEraseIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </widget>
    </widget>
@@ -1722,6 +2208,531 @@
     <attribute name="title">
      <string>Comp Surf</string>
     </attribute>
+    <widget class="QTabWidget" name="compCurveTabWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>531</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <widget class="QWidget" name="insertTab_2">
+      <attribute name="title">
+       <string>Insert</string>
+      </attribute>
+      <widget class="QPushButton" name="compSurfaceInsertButton">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>20</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Insert</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_6">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>136</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_18">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_70">
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compSurfaceInsertComboBoxColor">
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Amethyst</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pomegranate</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="joinTab_2">
+      <attribute name="title">
+       <string>Join</string>
+      </attribute>
+      <widget class="QWidget" name="layoutWidget_7">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>151</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_19">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_71">
+          <property name="text">
+           <string>First index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compSurfaceJoinFirstIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_72">
+          <property name="text">
+           <string>Second index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="compSurfaceJoinSecondIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>20</y>
+         <width>188</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_20">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_73">
+          <property name="text">
+           <string>First direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compSurfaceJoinFirstDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_74">
+          <property name="text">
+           <string>Second direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="compSurfaceJoinSecondDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="mergeTab_2">
+      <attribute name="title">
+       <string>Merge</string>
+      </attribute>
+      <widget class="QWidget" name="layoutWidget_9">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>151</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_21">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_75">
+          <property name="text">
+           <string>First index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compSurfaceMergeFirstIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_76">
+          <property name="text">
+           <string>Second index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="compSurfaceMergeSecondIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_10">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>20</y>
+         <width>188</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_22">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_77">
+          <property name="text">
+           <string>First direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compSurfaceMergeFirstDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_78">
+          <property name="text">
+           <string>Second direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="compSurfaceMergeSecondDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="continueTab_2">
+      <attribute name="title">
+       <string>Continue</string>
+      </attribute>
+      <widget class="QWidget" name="layoutWidget_11">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>20</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_23">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_79">
+          <property name="text">
+           <string>Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compSurfaceContinueIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_12">
+       <property name="geometry">
+        <rect>
+         <x>303</x>
+         <y>20</y>
+         <width>144</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_24">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_80">
+          <property name="text">
+           <string>Direction</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="compSurfceContinueDirectionComboBox">
+          <item>
+           <property name="text">
+            <string>North</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>East</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southeast</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>South</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Southwest</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>West</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Northwest</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="eraseTab_2">
+      <attribute name="title">
+       <string>Erase</string>
+      </attribute>
+      <widget class="QPushButton" name="compSurfaceEraseButton">
+       <property name="geometry">
+        <rect>
+         <x>270</x>
+         <y>20</y>
+         <width>82</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Erase</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_13">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>20</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_25">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_81">
+          <property name="text">
+           <string>Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compSurfaceEraseIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
    </widget>
   </widget>
  </widget>

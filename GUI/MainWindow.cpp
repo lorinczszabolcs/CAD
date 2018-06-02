@@ -36,7 +36,7 @@ namespace cagd
 
         _gl_widget->adjustSize();
 
-        _scroll_area->setFixedWidth(600);
+        _scroll_area->setFixedWidth(610);
 
         centralWidget()->setLayout(new QHBoxLayout());
         centralWidget()->layout()->addWidget(_gl_widget);
