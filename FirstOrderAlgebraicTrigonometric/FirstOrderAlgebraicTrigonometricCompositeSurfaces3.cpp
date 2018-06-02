@@ -91,6 +91,7 @@ FirstOrderAlgebraicTrigonometricSurface3& FirstOrderAlgebraicTrigonometricSurfac
     operator =(const FirstOrderAlgebraicTrigonometricSurface3& surface)
 {
     _attributes = surface._attributes;
+    return *this;
 }
 
 FirstOrderAlgebraicTrigonometricSurface3::~FirstOrderAlgebraicTrigonometricSurface3()
@@ -697,9 +698,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(
     (*joiner._patch)(1, 1) = 2 * (*joiner._patch)(2, 1) - (*joiner._patch)(3, 1);
     (*joiner._patch)(2, 2) = 2 * (*joiner._patch)(1, 2) - (*joiner._patch)(0, 2);
 
-    patchNW._neighbors[NW] = &joiner;
-    patchNE._neighbors[NE] = &joiner;
-    joiner._neighbors[SE] = &patchNW;
-    joiner._neighbors[NW] = &patchNE;
+    //patchNW._neighbors[NW] = &joiner;
+    //patchNE._neighbors[NE] = &joiner;
+    //joiner._neighbors[SE] = &patchNW;
+    //joiner._neighbors[NW] = &patchNE;
     UpdatePatchVBOGenerateImage(joiner);
 }
