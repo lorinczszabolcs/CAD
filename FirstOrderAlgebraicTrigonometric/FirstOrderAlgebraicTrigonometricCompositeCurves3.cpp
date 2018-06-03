@@ -166,20 +166,20 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
             return GL_FALSE;
 
         if(arc2._previous != nullptr)
-            return GL_TRUE;
+            return GL_FALSE;
 
         GLuint size = _attributes.size();
 
-        ArcAttributes *oldAddrs = &_attributes[0];
+        ArcAttributes *oldAttr = &_attributes[0];
         _attributes.resize(size + 1);
-        validatePointersInArcAttr(oldAddrs, &_attributes[0]);
+        validatePointersInArcAttr(oldAttr, &_attributes[0]);
 
         ArcAttributes &joiner = _attributes[size];
 
         (*joiner._arc) = FirstOrderAlgebraicTrigonometricArc3(1.0);
         (*joiner._arc)[0] = (*arc1._arc)[3];
-        (*joiner._arc)[1] = 2*(*arc1._arc)[3] - (*arc1._arc)[2];
-        (*joiner._arc)[2] = 2*(*arc2._arc)[0] - (*arc2._arc)[1];
+        (*joiner._arc)[1] = 2 * (*arc1._arc)[3] - (*arc1._arc)[2];
+        (*joiner._arc)[2] = 2 * (*arc2._arc)[0] - (*arc2._arc)[1];
         (*joiner._arc)[3] = (*arc2._arc)[0];
 
         arc1._next = &joiner;
@@ -187,6 +187,48 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
         joiner._next = &arc2;
         joiner._previous = &arc1;
         updateArcVBOGenerateImage(joiner);
+    }
+    else
+    {
+        if(direction1 == RIGHT && direction2 == RIGHT){
+            return GL_FALSE;
+        }
+        else
+        {
+            if(direction1 == LEFT && direction2 == LEFT)
+            {
+                return GL_FALSE;
+            }
+            else
+            {
+                //direction1 == LEFT && direction2 == RIGHT
+                if(arc1._previous != nullptr)
+                    return GL_FALSE;
+
+                if(arc2._next != nullptr)
+                    return GL_FALSE;
+
+                GLuint size = _attributes.size();
+
+                ArcAttributes *oldAttr = &_attributes[0];
+                _attributes.resize(size + 1);
+                validatePointersInArcAttr(oldAttr, &_attributes[0]);
+
+                ArcAttributes &joiner = _attributes[size];
+
+                (*joiner._arc) = FirstOrderAlgebraicTrigonometricArc3(1.0);
+                (*joiner._arc)[0] = (*arc2._arc)[3];
+                (*joiner._arc)[1] = 2 * (*arc2._arc)[3] - (*arc2._arc)[2];
+                (*joiner._arc)[2] = 2 * (*arc1._arc)[0] - (*arc1._arc)[1];
+                (*joiner._arc)[3] = (*arc1._arc)[0];
+
+                arc1._previous = &joiner;
+                arc2._next = &joiner;
+                joiner._previous = &arc2;
+                joiner._next = &arc1;
+                updateArcVBOGenerateImage(joiner);
+            }
+        }
     }
     return GL_TRUE;
 }
