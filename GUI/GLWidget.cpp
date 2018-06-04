@@ -827,6 +827,8 @@ namespace cagd
 
         _mod_curve = 0;
         _color_index_curve = 0;
+        _continue_index_c = _erase_index_c = _join_index1_c = _join_index2_c = _merge_index1_c = _merge_index2_c = 0;
+        _merge_direction1_c = _merge_direction2_c = _join_direction1_c = _join_direction2_c = _continue_direction_c = 0;
     }
 
     void GLWidget::renderFirstOrderAlgebraicTrigonometricCurve()
@@ -1255,6 +1257,9 @@ namespace cagd
         }
     }
 
+    // ------------------------------ Model + Parametric surface --------------------------------
+
+
     void GLWidget::setModelIndex(int index)
     {
         if (index != _model_index)
@@ -1547,41 +1552,8 @@ namespace cagd
         }
     }
 
-    void GLWidget::setBeforeInterpolate(bool value)
-    {
-        if (_before_int != value)
-        {
-            _before_int = value;
-            updateGL();
-        }
-    }
+    // ------------------------------ Arc --------------------------------
 
-    void GLWidget::setAfterInterpolate(bool value)
-    {
-        if (_after_int != value)
-        {
-            _after_int = value;
-            updateGL();
-        }
-    }
-
-    void GLWidget::setULines(bool value)
-    {
-        if (_u_lin != value)
-        {
-            _u_lin = value;
-            updateGL();
-        }
-    }
-
-    void GLWidget::setVLines(bool value)
-    {
-        if (_v_lin != value)
-        {
-            _v_lin = value;
-            updateGL();
-        }
-    }
 
     void GLWidget::toggleFirstOrderDerivativesArc(bool b)
     {
@@ -1743,6 +1715,9 @@ namespace cagd
         }
     }
 
+    // ------------------------------ Curve --------------------------------
+
+    // rendering
     void GLWidget::setMaxOrderOfDerivativesCurve(int value)
     {
         if (_mod_curve != value)
@@ -1752,15 +1727,15 @@ namespace cagd
         }
     }
 
+    // insert
     void GLWidget::setColorCurveInsert(int value)
     {
         if (value != _color_index_curve)
         {
             _color_index_curve = value;
-            updateGL();
+            //updateGL();                                             // TO DO: Kell ez?
         }
     }
-
     void GLWidget::insertArc(bool value)
     {
         if (! _curve->insert(_colors[_color_index_curve]))
@@ -1769,7 +1744,164 @@ namespace cagd
         }
         else
         {
-            cout << "Succesful curve!\n";
+            emit arcNumberChanged(_curve->getAttributesSize());
+            cout << "Succesfull curve!\n";
+        }
+    }
+
+    // continue
+
+    void GLWidget::setContinueIndexCurve(int value)
+    {
+        _continue_index_c = value;
+    }
+
+    void GLWidget::setContinueDirectionCurve(int value)
+    {
+        _continue_direction_c = value;
+    }
+
+    void GLWidget::continueArc(bool value)
+    {
+        if (! _curve->continueExistingArc(_continue_index_c, (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_continue_direction_c))
+        {
+            cout << "Could not continue existing arc!\n";
+        }
+        else
+        {
+            emit arcNumberChanged(_curve->getAttributesSize());
+            cout << "Succesfull continue!\n";
+        }
+    }
+
+    // join
+
+    void GLWidget::setJoinIndex1Curve(int value)
+    {
+        _join_index1_c = value;
+    }
+
+    void GLWidget::setJoinIndex2Curve(int value)
+    {
+        _join_index2_c = value;
+    }
+
+    void GLWidget::setJoinDirection1Curve(int value)
+    {
+        _join_direction1_c = value;
+    }
+
+    void GLWidget::setJoinDirection2Curve(int value)
+    {
+        _join_direction2_c = value;
+    }
+
+    void GLWidget::joinArc(bool value)
+    {
+        if (!_curve->joinExistingArc(_join_index1_c, _join_index2_c,
+                                     (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_join_direction1_c,
+                                     (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_join_direction2_c))
+        {
+            cout << "Could not join arc!\n";
+        }
+        else
+        {
+            emit arcNumberChanged(_curve->getAttributesSize());
+            cout << "Succesfull join!\n";
+        }
+    }
+
+    // merge
+
+    void GLWidget::setMergeIndex1Curve(int value)
+    {
+        _merge_index1_c = value;
+    }
+
+    void GLWidget::setMergeDirection1Curve(int value)
+    {
+        _merge_direction1_c = value;
+    }
+
+    void GLWidget::setMergeDirection2Curve(int value)
+    {
+        _merge_direction2_c = value;
+    }
+
+    void GLWidget::setMergeIndex2Curve(int value)
+    {
+        _merge_index2_c = value;
+    }
+
+    void GLWidget::mergeArc(bool value)
+    {
+        if (!_curve->mergeExistingArc(_merge_index1_c, _merge_index2_c,
+                                      (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_merge_direction1_c,
+                                      (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_merge_direction2_c))
+        {
+            cout << "Could not join arc!\n";
+        }
+        else
+        {
+            emit arcNumberChanged(_curve->getAttributesSize());
+            cout << "Succesfull merge!\n";
+        }
+    }
+
+    void GLWidget::setEraseIndexCurve(int value)
+    {
+        _erase_index_c = value;
+    }
+
+    void GLWidget::eraseArc(bool value)
+    {
+        if (!_curve->eraseExistingArc(_erase_index_c))
+        {
+            cout << "Could not erase arc!\n";
+        }
+        else
+        {
+            emit arcNumberChanged(_curve->getAttributesSize());
+            cout << "Succesfull erase!\n";
+        }
+    }
+
+    // ------------------------------ Patch --------------------------------
+
+
+    void GLWidget::setBeforeInterpolate(bool value)
+    {
+        if (_before_int != value)
+        {
+            _before_int = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setAfterInterpolate(bool value)
+    {
+        if (_after_int != value)
+        {
+            _after_int = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setULines(bool value)
+    {
+        if (_u_lin != value)
+        {
+            _u_lin = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setVLines(bool value)
+    {
+        if (_v_lin != value)
+        {
+            _v_lin = value;
+            updateGL();
         }
     }
 

@@ -6,7 +6,7 @@ namespace cagd
     class FirstOrderAlgebraicTrigonometricCompositeCurve3
     {
     public:
-        enum Direction{LEFT = 0, RIGHT};
+        enum Direction{LEFT, RIGHT};
         class ArcAttributes
         {
         public:
@@ -61,6 +61,8 @@ namespace cagd
 
         // get-set -> GUI
 
+        GLint getAttributesSize();
+
         // dtor
         ~FirstOrderAlgebraicTrigonometricCompositeCurve3();
 
@@ -69,5 +71,7 @@ namespace cagd
 
         // operator=
         FirstOrderAlgebraicTrigonometricCompositeCurve3& operator=(const FirstOrderAlgebraicTrigonometricCompositeCurve3 &curve);
+
+        // getsize
     };
 }

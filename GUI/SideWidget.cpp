@@ -85,6 +85,16 @@ namespace cagd
         }
     }
 
+    void SideWidget::setArcNumber(int value)
+    {
+        compCurveJoinFirstIndexSpinBox->setMaximum(value);
+        compCurveJoinSecondIndexSpinBox->setMaximum(value);
+        compCurveMergeFirstIndexSpinBox->setMaximum(value);
+        compCurveMergeSecondIndexSpinBox->setMaximum(value);
+        compCurveContinueIndexSpinBox->setMaximum(value);
+        compCurveEraseIndexSpinBox->setMaximum(value);
+    }
+
     void SideWidget::setControlPointPatchX(double value)
     {
         if (controlPointTranslatePatchX->value() != value)

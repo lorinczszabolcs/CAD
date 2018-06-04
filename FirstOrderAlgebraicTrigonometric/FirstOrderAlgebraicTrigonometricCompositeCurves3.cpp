@@ -455,4 +455,9 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::renderCurves(GLuint o
         return GL_TRUE;
 }
 
+GLint FirstOrderAlgebraicTrigonometricCompositeCurve3::getAttributesSize()
+{
+    return _attributes.size();
+}
+
 

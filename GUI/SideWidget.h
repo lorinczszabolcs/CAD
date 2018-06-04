@@ -15,15 +15,24 @@ namespace cagd
             SideWidget(QWidget *parent = 0);
 
         public slots:
+
+            // cylic
             void setControlPointTranslateEnabled(int value);
             void setControlPointX(double value);
             void setControlPointY(double value);
             void setControlPointZ(double value);
 
+
+            // arc
             void setControlPointArcX(double value);
             void setControlPointArcY(double value);
             void setControlPointArcZ(double value);
 
+
+            // curve
+            void setArcNumber(int value);
+
+            // patch
             void setControlPointPatchX(double value);
             void setControlPointPatchY(double value);
             void setControlPointPatchZ(double value);

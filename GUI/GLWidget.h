@@ -106,9 +106,12 @@ namespace cagd
         // curve
         FirstOrderAlgebraicTrigonometricCompositeCurve3 *_curve;
         GLint                                           _mod_curve;
-        GLint                                           _color_index_curve;
         Color4*                                         _colors[3];
-
+        GLint                                           _color_index_curve,
+                                                        _erase_index_c, _continue_index_c, _join_index1_c,
+                                                        _join_index2_c, _merge_index1_c, _merge_index2_c;
+        GLint                                           _continue_direction_c, _join_direction1_c, _join_direction2_c,
+                                                        _merge_direction1_c, _merge_direction2_c;
         // Patch
         FirstOrderAlgebraicTrigonometricPatch *_patch_aux;
         FirstOrderAlgebraicTrigonometricPatch *_patch;
@@ -257,9 +260,37 @@ namespace cagd
         void setControlPointArcZ (double value);
 
         // curve
+
+        // render
         void setMaxOrderOfDerivativesCurve(int value);
+
+        // insert
         void setColorCurveInsert(int value);
         void insertArc(bool value);
+
+        // continue
+        void setContinueIndexCurve(int value);
+        void setContinueDirectionCurve(int value);
+        void continueArc(bool value);
+
+        // join
+        void setJoinIndex1Curve(int value);
+        void setJoinIndex2Curve(int value);
+        void setJoinDirection1Curve(int value);
+        void setJoinDirection2Curve(int value);
+        void joinArc(bool value);
+
+        // merge
+        void setMergeIndex1Curve(int value);
+        void setMergeIndex2Curve(int value);
+        void setMergeDirection1Curve(int value);
+        void setMergeDirection2Curve(int value);
+        void mergeArc(bool value);
+
+        // erase
+        void setEraseIndexCurve(int value);
+        void eraseArc(bool value);
+
 
         // patch
         void setBeforeInterpolate(bool value);
@@ -289,6 +320,9 @@ namespace cagd
         void xCoordinateArcChanged(double);
         void yCoordinateArcChanged(double);
         void zCoordinateArcChanged(double);
+
+        // curve
+        void arcNumberChanged(int);
 
         // patch
         void xCoordinatePatchChanged(double);

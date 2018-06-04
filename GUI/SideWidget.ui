@@ -1684,7 +1684,7 @@
        <x>10</x>
        <y>50</y>
        <width>531</width>
-       <height>151</height>
+       <height>171</height>
       </rect>
      </property>
      <property name="currentIndex">
@@ -1697,8 +1697,8 @@
       <widget class="QPushButton" name="compCurveInsertButton">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>20</y>
+         <x>420</x>
+         <y>100</y>
          <width>75</width>
          <height>23</height>
         </rect>
@@ -1811,42 +1811,12 @@
          <widget class="QComboBox" name="compCurveJoinFirstDirectionComboBox">
           <item>
            <property name="text">
-            <string>North</string>
+            <string>Left</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Northeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>East</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>South</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southwest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>West</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Northwest</string>
+            <string>Right</string>
            </property>
           </item>
          </widget>
@@ -1862,47 +1832,30 @@
          <widget class="QComboBox" name="compCurveJoinSecondDirectionComboBox">
           <item>
            <property name="text">
-            <string>North</string>
+            <string>Left</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Northeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>East</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>South</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southwest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>West</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Northwest</string>
+            <string>Right</string>
            </property>
           </item>
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QPushButton" name="compCurveJoinButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Join</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="mergeTab">
@@ -1970,42 +1923,12 @@
          <widget class="QComboBox" name="compCurveMergeFirstDirectionComboBox">
           <item>
            <property name="text">
-            <string>North</string>
+            <string>Left</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Northeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>East</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>South</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southwest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>West</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Northwest</string>
+            <string>Right</string>
            </property>
           </item>
          </widget>
@@ -2021,47 +1944,30 @@
          <widget class="QComboBox" name="compCurveMergeSecondDirectionComboBox">
           <item>
            <property name="text">
-            <string>North</string>
+            <string>Left</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Northeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>East</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>South</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southwest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>West</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Northwest</string>
+            <string>Right</string>
            </property>
           </item>
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QPushButton" name="compCurveMergeButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Merge</string>
+       </property>
       </widget>
      </widget>
      <widget class="QWidget" name="continueTab">
@@ -2071,9 +1977,9 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>20</x>
          <y>20</y>
-         <width>131</width>
+         <width>151</width>
          <height>31</height>
         </rect>
        </property>
@@ -2097,9 +2003,9 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>303</x>
+         <x>310</x>
          <y>20</y>
-         <width>141</width>
+         <width>191</width>
          <height>31</height>
         </rect>
        </property>
@@ -2115,72 +2021,42 @@
          <widget class="QComboBox" name="compCurveContinueDirectionComboBox">
           <item>
            <property name="text">
-            <string>North</string>
+            <string>Left</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Northeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>East</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southeast</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>South</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Southwest</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>West</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Northwest</string>
+            <string>Right</string>
            </property>
           </item>
          </widget>
         </item>
        </layout>
       </widget>
+      <widget class="QPushButton" name="compCurveContinueButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Continue</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="eraseTab">
       <attribute name="title">
        <string>Erase</string>
       </attribute>
-      <widget class="QPushButton" name="Erase">
-       <property name="geometry">
-        <rect>
-         <x>270</x>
-         <y>20</y>
-         <width>82</width>
-         <height>25</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Erase</string>
-       </property>
-      </widget>
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>20</x>
          <y>20</y>
-         <width>131</width>
+         <width>151</width>
          <height>31</height>
         </rect>
        </property>
@@ -2201,30 +2077,42 @@
         </item>
        </layout>
       </widget>
+      <widget class="QPushButton" name="compCurveEraseButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Erase</string>
+       </property>
+      </widget>
      </widget>
     </widget>
-    <widget class="QSpinBox" name="modCurveSpinBox">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>10</y>
-       <width>42</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_82">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>47</width>
-       <height>13</height>
+       <width>167</width>
+       <height>22</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Mod</string>
-     </property>
+     <layout class="QFormLayout" name="formLayout_26">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_82">
+        <property name="text">
+         <string>Max. order of derivatives</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="modCurveSpinBox"/>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="compositeSurface">

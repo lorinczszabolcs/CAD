@@ -43,35 +43,35 @@ namespace cagd
         centralWidget()->layout()->addWidget(_scroll_area);
 
 
-        // creating a signal slot mechanism between the rendering context and the side widget
+        // ------------------- Rendering -------------------
         connect(_side_widget->rotate_x_slider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(set_angle_x(int)));
         connect(_side_widget->rotate_y_slider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(set_angle_y(int)));
         connect(_side_widget->rotate_z_slider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(set_angle_z(int)));
 
-        // zoom
+        // ------------------- Zoom -------------------
         connect(_side_widget->zoom_factor_spin_box, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_zoom_factor(double)));
 
-        // translation
+        // ------------------- Translation -------------------
         connect(_side_widget->trans_x_spin_box, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_trans_x(double)));
         connect(_side_widget->trans_y_spin_box, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_trans_y(double)));
         connect(_side_widget->trans_z_spin_box, SIGNAL(valueChanged(double)), _gl_widget, SLOT(set_trans_z(double)));
 
-        // tabulator
+        // ------------------- Tabs -------------------
         connect(_side_widget->tabWidget, SIGNAL(currentChanged(int)), _gl_widget, SLOT(setTabIndex(int)));
 
-        // Parametric
+        // ------------------- Parametric -------------------
         connect(_side_widget->ParametricCurveCombo, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setParametricCurveIndex(int)));
         connect(_side_widget->firstOrderDerivativeCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleFirstOrderDerivativesParametric(bool)));
         connect(_side_widget->secondOrderDerivativeCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleSecondOrderDerivativesParametric(bool)));
 
-        // Cyclic
+        // ------------------- Cyclic -------------------
         connect(_side_widget->CyclicCurveCombo, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setCyclicCurveIndex(int)));
         connect(_side_widget->firstOrderDerivativeCheckBox_2, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleFirstOrderDerivativesCyclic(bool)));
         connect(_side_widget->secondOrderDerivativeCheckBox_2, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleSecondOrderDerivativesCyclic(bool)));
         connect(_side_widget->controlPolygonCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleControlPolygonCyclic(bool)));
         connect(_side_widget->CyclicCurveCombo, SIGNAL(currentIndexChanged(int)), _side_widget, SLOT(setControlPointTranslateEnabled(int)));
 
-        // Interpolating
+        // ------------------- Interpolating -------------------
         connect(_side_widget->controlPointSlider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointIndex(int)));
         connect(_side_widget->controlPointTranslateX, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointX(double)));
         connect(_side_widget->controlPointTranslateY, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointY(double)));
@@ -80,13 +80,13 @@ namespace cagd
         connect(_gl_widget, SIGNAL(yCoordinateChanged(double)), _side_widget, SLOT(setControlPointY(double)));
         connect(_gl_widget, SIGNAL(zCoordinateChanged(double)), _side_widget, SLOT(setControlPointZ(double)));
 
-        // Triangulated objects
+        // ------------------- Models -------------------
         connect(_side_widget->modelComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setModelIndex(int)));
 
-        // Parametric surfaces
+        // ------------------- Parametric surfaces -------------------
         connect(_side_widget->ParametricSurfaceCombo, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setParametricSurfaceIndex(int)));
 
-        // Shaders and materials
+        // ------------------- Shader + materials -------------------
         connect(_side_widget->shaderTab, SIGNAL(currentChanged(int)), _gl_widget, SLOT(setShaderIndex(int)));
         connect(_side_widget->shaderTab_2, SIGNAL(currentChanged(int)), _gl_widget, SLOT(setShaderIndex2(int)));
         connect(_side_widget->materialCombo, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialIndex(int)));
@@ -120,13 +120,41 @@ namespace cagd
         connect(_gl_widget, SIGNAL(yCoordinateArcChanged(double)), _side_widget, SLOT(setControlPointArcY(double)));
         connect(_gl_widget, SIGNAL(zCoordinateArcChanged(double)), _side_widget, SLOT(setControlPointArcZ(double)));
 
-        // Curve
+        // ------------------- Curve -------------------
 
+        // arc number
+        connect(_gl_widget, SIGNAL(arcNumberChanged(int)), _side_widget, SLOT(setArcNumber(int)));
+
+        // rendering
         connect(_side_widget->modCurveSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMaxOrderOfDerivativesCurve(int)));
+
+        // insert
         connect(_side_widget->compCurveInsertComboBoxColor, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setColorCurveInsert(int)));
         connect(_side_widget->compCurveInsertButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(insertArc(bool)));
 
-        // Patch
+        // continue
+        connect(_side_widget->compCurveContinueButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(continueArc(bool)));
+        connect(_side_widget->compCurveContinueIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setContinueIndexCurve(int)));
+
+        // join
+        connect(_side_widget->compCurveJoinButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(joinArc(bool)));
+        connect(_side_widget->compCurveJoinFirstIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setJoinIndex1Curve(int)));
+        connect(_side_widget->compCurveJoinSecondIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setJoinIndex1Curve(int)));
+        connect(_side_widget->compCurveJoinFirstDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection1Curve(int)));
+        connect(_side_widget->compCurveJoinSecondDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection2Curve(int)));
+
+        // merge
+        connect(_side_widget->compCurveMergeButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(mergeArc(bool)));
+        connect(_side_widget->compCurveMergeFirstIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMergeIndex1Curve(int)));
+        connect(_side_widget->compCurveMergeSecondIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMergeIndex1Curve(int)));
+        connect(_side_widget->compCurveMergeFirstDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMergeDirection1Curve(int)));
+        connect(_side_widget->compCurveMergeSecondDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMergeDirection2Curve(int)));
+
+        // erase
+        connect(_side_widget->compCurveEraseButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(eraseArc(bool)));
+        connect(_side_widget->compCurveEraseIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setEraseIndexCurve(int)));
+
+        // ------------------- Patch -------------------
 
         // booleans
         connect(_side_widget->checkBoxBeforeInt, SIGNAL(toggled(bool)), _gl_widget, SLOT(setBeforeInterpolate(bool)));
