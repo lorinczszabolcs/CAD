@@ -1,5 +1,10 @@
 #include "FirstOrderAlgebraicTrigonometricCompositeCurve3.h"
 #include "Core/Exceptions.h"
+#include <iostream>
+#include <ctime>
+
+
+using namespace std;
 
 using namespace cagd;
 
@@ -55,8 +60,6 @@ FirstOrderAlgebraicTrigonometricCompositeCurve3::FirstOrderAlgebraicTrigonometri
 {
     _attributes.reserve(max_arc_count);
     _alpha = alpha;
-    _mod = 5;
-    _div_point_count = 200;
 }
 
 FirstOrderAlgebraicTrigonometricCompositeCurve3::~FirstOrderAlgebraicTrigonometricCompositeCurve3()
@@ -64,17 +67,88 @@ FirstOrderAlgebraicTrigonometricCompositeCurve3::~FirstOrderAlgebraicTrigonometr
     _attributes.clear();
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insert(Color4* color)
 {
-    GLuint size = _attributes.size();
-    ArcAttributes *old = &_attributes[0];
-    _attributes.resize(size + 1);
-    validateAttributes(old, &_attributes[0]);
-    ArcAttributes &newArc = _attributes[size];
-    newArc._arc = &trigArc;
-    updateArcVBOGenerateImage(newArc);
+
+    cout << "A2\n";
+
+    GLdouble z = -2.0 + 4.0 * (GLdouble) rand() / RAND_MAX;
+
+    cout << "z" << z << "\n";
+
+    FirstOrderAlgebraicTrigonometricArc3 *temp = new FirstOrderAlgebraicTrigonometricArc3(1.0);
+    temp->SetData(0, 0.0, 0.0, z);
+    temp->SetData(1, 1.0, 0.0, z);
+    temp->SetData(2, 2.0, 0.0, z);
+    temp->SetData(3, 3.0, 0.0, z);
+
+    cout << "A3\n";
+
+
+    if (!temp->UpdateVertexBufferObjectsOfData())
+    {
+        cout << "Could not update vertex buffer objects of data!\n";
+        return GL_FALSE;
+    }
+
+    cout << "A4\n";
+
+
+    if (! insertIsolatedArc(*temp, color))
+    {
+        cout << "Could not insert isolated arc!\n";
+        return GL_FALSE;
+    }
+
+    cout << "A5\n";
+
 
     return GL_TRUE;
+}
+
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc, Color4* color)
+{
+    GLuint n = _attributes.size();
+    if (n > 0)
+    {
+        cout << "Itt vagyok: >0\n";
+        ArcAttributes *old = &_attributes[0];
+        _attributes.resize(n + 1);
+        validateAttributes(old, &_attributes[0]);
+        ArcAttributes &newArc = _attributes[n - 1];
+        newArc._arc = &trigArc;
+        newArc._mod = 2;
+        newArc._div_point_count = 200;
+        newArc._color = color;
+        if (! updateArcVBOGenerateImage(newArc))
+        {
+            _attributes.pop_back();
+            cout << "Could not update vertex buffer object or generate image!\n";
+            return GL_FALSE;
+        }
+        return GL_TRUE;
+    }
+    else
+    {
+        cout << "Itt vagyok: =0\n";
+        _attributes.resize(n + 1);
+        cout << "Resize\n";
+        ArcAttributes &newArc = _attributes[n];
+        cout << "Olyat akarok elerni, amit nem lehet\n";
+        newArc._arc = &trigArc;
+        newArc._mod = 2;
+        newArc._div_point_count = 200;
+        newArc._color = new Color4(0.3, 0.2, 0.5, 1.0);
+        cout << "Referencia\n";
+        if (! updateArcVBOGenerateImage(newArc))
+        {
+            _attributes.pop_back();
+            return GL_FALSE;
+        }
+        cout << "Sikerult updatelni!\n";
+        return GL_TRUE;
+    }
+
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validateAttributes(ArcAttributes *oldAttr, ArcAttributes *newAttr)
@@ -91,20 +165,29 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validateAttributes(ArcAt
     }
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::updateArcVBOGenerateImage(ArcAttributes &arc_attr)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::updateArcVBOGenerateImage(ArcAttributes &arc_attr)
 {
+    cout << "Bent vagyok\n";
     if (!arc_attr._arc->UpdateVertexBufferObjectsOfData()) {
-        throw Exception("Could not update the vertex buffer objects of the control polygon in FirstOrderAlgebraicTrigonometricCompositeCurves!");
+        return GL_FALSE;
     }
 
-    arc_attr._image = arc_attr._arc->GenerateImage(_mod, _div_point_count);
+    cout << "Update1kesz\n";
+
+    arc_attr._image = arc_attr._arc->GenerateImage(arc_attr._mod, arc_attr._div_point_count);
     if (!arc_attr._image) {
-        throw Exception("Could not generate the image of arc in FirstOrderAlgebraicTrigonometricCompositeCurves!");
+        return GL_FALSE;
     }
+
+    cout << "Generatimage kesz\n";
 
     if (!arc_attr._image->UpdateVertexBufferObjects()) {
-        throw Exception("Could not update the VBOS arc of image in FirstOrderAlgebraicTrigonometricCompositeCurves");
+        return GL_FALSE;
     }
+
+    cout << "Update2kesz\n";
+
+    return GL_TRUE;
 }
 
 GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(GLuint index, Direction direction)
@@ -329,15 +412,24 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::renderControlPolygon()
 
 GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::renderCurves(GLuint order, GLenum render_mode)
 {
+
+//    cout << "Size: " << _attributes.size() << "\n";
+
     for(GLuint i = 0; i < _attributes.size(); ++i)
         {
             ArcAttributes &attr = _attributes[i];
             if (attr._image)
             {
+
                 if(attr._color)
                     glColor3f(attr._color->r(),attr._color->g(),attr._color->b());
                 else
                     glColor3f(1.0,1.0,1.0);
+
+//                glPointSize(10.0);
+//                attr._image->RenderDerivatives(0, GL_POINTS);
+//                glPointSize(1.0);
+
 
                 glPointSize(1.0);
                 attr._image->RenderDerivatives(0, render_mode);

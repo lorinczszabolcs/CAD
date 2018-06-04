@@ -13,6 +13,9 @@ namespace cagd
             FirstOrderAlgebraicTrigonometricArc3 *_arc;
             GenericCurve3                        *_image;
             Color4                               *_color;
+            GLuint                               _mod; //max order of derivates
+            GLuint                               _div_point_count; //div point count = 200
+
 
             ArcAttributes                        *_next, *_previous;
             ArcAttributes();
@@ -25,19 +28,17 @@ namespace cagd
         std::vector<ArcAttributes> _attributes;
         GLdouble                   _alpha;
 
-        GLuint                     _mod; //max order of derivates
-        GLuint                     _div_point_count; //div point count = 200
-
     public:
         FirstOrderAlgebraicTrigonometricCompositeCurve3(GLdouble alpha, GLuint max_arc_count = 1000);
 
         FirstOrderAlgebraicTrigonometricCompositeCurve3();
 
         // insert new isolated arc
-        GLboolean insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc);
+        GLboolean insert(Color4 *color = new Color4());
+        GLboolean insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc, Color4 *color = new Color4());
         GLvoid validateAttributes(ArcAttributes *oldAttr, ArcAttributes *newAttr);
 
-        GLvoid updateArcVBOGenerateImage(ArcAttributes &arc);
+        GLboolean updateArcVBOGenerateImage(ArcAttributes &arc);
 
         // continue existing arc -> index, direction, haromszorosan megnyujtani, degeneralodik szakasz
         GLboolean continueExistingArc(GLuint index, Direction direction);
@@ -56,7 +57,7 @@ namespace cagd
         // render
         GLvoid renderControlPolygon();
         GLboolean renderCurves(GLuint order, GLenum render_mode);
-        GLboolean renderDerivatives(GLuint order, GLenum render_mode);
+//        GLboolean renderDerivatives(GLuint order, GLenum render_mode);
 
         // get-set -> GUI
 

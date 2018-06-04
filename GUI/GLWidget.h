@@ -12,8 +12,9 @@
 #include "../Core/ShaderPrograms.h"
 #include "../Core/Materials.h"
 #include "../Core/Colors4.h"
-#include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricPatches3.h"
 #include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricArcs3.h"
+#include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricCompositeCurve3.h"
+#include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricPatches3.h"
 
 namespace cagd
 {
@@ -102,6 +103,12 @@ namespace cagd
         GLint                                 _cp_index_arc;
         GLdouble                              _act_cp_arc_x, _act_cp_arc_y, _act_cp_arc_z;
 
+        // curve
+        FirstOrderAlgebraicTrigonometricCompositeCurve3 *_curve;
+        GLint                                           _mod_curve;
+        GLint                                           _color_index_curve;
+        Color4*                                         _colors[3];
+
         // Patch
         FirstOrderAlgebraicTrigonometricPatch *_patch_aux;
         FirstOrderAlgebraicTrigonometricPatch *_patch;
@@ -165,6 +172,10 @@ namespace cagd
         // arc
         void buildFirstOrderAlgebraicTrigonometricArc();
         void renderFirstOrderAlgebraicTrigonometricArc();
+
+        // curve
+        void buildFirstOrderAlgebraicTrigonometricCurve();
+        void renderFirstOrderAlgebraicTrigonometricCurve();
 
         // patch
         void buildFirstOrderAlgebraicTrigonometricPatch();
@@ -244,6 +255,11 @@ namespace cagd
         void setControlPointArcX (double value);
         void setControlPointArcY (double value);
         void setControlPointArcZ (double value);
+
+        // curve
+        void setMaxOrderOfDerivativesCurve(int value);
+        void setColorCurveInsert(int value);
+        void insertArc(bool value);
 
         // patch
         void setBeforeInterpolate(bool value);

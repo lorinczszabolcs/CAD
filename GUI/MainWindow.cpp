@@ -120,6 +120,12 @@ namespace cagd
         connect(_gl_widget, SIGNAL(yCoordinateArcChanged(double)), _side_widget, SLOT(setControlPointArcY(double)));
         connect(_gl_widget, SIGNAL(zCoordinateArcChanged(double)), _side_widget, SLOT(setControlPointArcZ(double)));
 
+        // Curve
+
+        connect(_side_widget->modCurveSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMaxOrderOfDerivativesCurve(int)));
+        connect(_side_widget->compCurveInsertComboBoxColor, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setColorCurveInsert(int)));
+        connect(_side_widget->compCurveInsertButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(insertArc(bool)));
+
         // Patch
 
         // booleans

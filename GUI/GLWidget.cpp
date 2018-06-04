@@ -25,6 +25,10 @@ namespace cagd
 
         // initial value for tab
         _tab_index = 0;
+
+        _colors[0] = new Color4(0.180392157, 0.8, 0.443137255, 1.0);
+        _colors[1]= new Color4(0.607843137, 0.349019608, 0.71372549, 1.0);
+        _colors[2] = new Color4(0.752941176, 0.752941176, 0.168627451, 1.0);
     }
 
     //--------------------------------------------------------------------------------------
@@ -101,6 +105,7 @@ namespace cagd
             initializeShaders();
             initializeMaterials();
             buildFirstOrderAlgebraicTrigonometricArc();
+            buildFirstOrderAlgebraicTrigonometricCurve();
             buildFirstOrderAlgebraicTrigonometricPatch();
         }
 
@@ -165,6 +170,10 @@ namespace cagd
             else if (_tab_index == 5)
             {
                 renderFirstOrderAlgebraicTrigonometricPatch();
+            }
+            else if (_tab_index == 6)
+            {
+                renderFirstOrderAlgebraicTrigonometricCurve();
             }
 
         // pops the current matrix stack, replacing the current matrix with the one below it on the stack,
@@ -805,6 +814,26 @@ namespace cagd
                     _image_of_arc->RenderDerivatives(2, GL_POINTS);
                 glPointSize(1.0);
             }
+        }
+    }
+
+    void GLWidget::buildFirstOrderAlgebraicTrigonometricCurve()
+    {
+        _curve = new FirstOrderAlgebraicTrigonometricCompositeCurve3(1.0);
+
+        cout << "A1\n";
+
+        _curve->insert();
+
+        _mod_curve = 0;
+        _color_index_curve = 0;
+    }
+
+    void GLWidget::renderFirstOrderAlgebraicTrigonometricCurve()
+    {
+        if (_curve)
+        {
+            _curve->renderCurves(_mod_curve, GL_LINE_STRIP);
         }
     }
 
@@ -1711,6 +1740,36 @@ namespace cagd
             }
 
             updateGL();
+        }
+    }
+
+    void GLWidget::setMaxOrderOfDerivativesCurve(int value)
+    {
+        if (_mod_curve != value)
+        {
+            _mod_curve = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setColorCurveInsert(int value)
+    {
+        if (value != _color_index_curve)
+        {
+            _color_index_curve = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::insertArc(bool value)
+    {
+        if (! _curve->insert(_colors[_color_index_curve]))
+        {
+            cout << "Could not insert curve!";
+        }
+        else
+        {
+            cout << "Succesful curve!\n";
         }
     }
 

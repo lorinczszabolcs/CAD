@@ -12,7 +12,7 @@ namespace cagd
     public:
         Color4()
         {
-            _data[0] = _data[1] = _data[2] = 0.0;
+            _data[0] = _data[1] = _data[2] = 1.0;
             _data[3] = 1.0;
         }
 
