@@ -15,6 +15,7 @@
 #include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricArcs3.h"
 #include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricCompositeCurve3.h"
 #include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricPatches3.h"
+#include "../FirstOrderAlgebraicTrigonometric/FirstOrderAlgebraicTrigonometricCompositeSurfaces3.h"
 
 namespace cagd
 {
@@ -107,7 +108,8 @@ namespace cagd
         FirstOrderAlgebraicTrigonometricCompositeCurve3 *_curve;
         GLint                                           _mod_curve;
         Color4*                                         _colors[3];
-        GLint                                           _color_index_curve,
+        GLint                                           _color_index_insert_curve, _color_index_continue_curve,
+                                                        _color_index_join_curve, _color_index_curve,    // for color setting
                                                         _erase_index_c, _continue_index_c, _join_index1_c,
                                                         _join_index2_c, _merge_index1_c, _merge_index2_c;
         GLint                                           _continue_direction_c, _join_direction1_c, _join_direction2_c,
@@ -122,6 +124,15 @@ namespace cagd
         GLdouble                              _act_cp_patch_x, _act_cp_patch_y, _act_cp_patch_z;
         GLdouble                              _alpha_u_patch, _alpha_v_patch;
 
+        // surface
+        FirstOrderAlgebraicTrigonometricSurface3 *_surface;
+        GLboolean                                _surf, _u_lin_surf, _v_lin_surf, _control_surf;
+        GLint                                    _material_index_insert_surf, _material_index_continue_surf,
+                                                 _material_index_join_surf, _material_index_surf,
+                                                 _continue_index_s, _erase_index_s, _join_index1_s,
+                                                 _join_index2_s, _merge_index1_s, _merge_index2_s,
+                                                 _merge_direction1_s, _merge_direction2_s, _join_direction1_s,
+                                                 _join_direction2_s, _continue_direction_s;
         // Lights
         DirectionalLight *_dl;
         PointLight       *_pl;
@@ -183,6 +194,10 @@ namespace cagd
         // patch
         void buildFirstOrderAlgebraicTrigonometricPatch();
         void renderFirstOrderAlgebraicTrigonometricPatch();
+
+        // surface
+        void buildFirstOrderAlgebraicTrigonometricSurface();
+        void renderFirstOrderAlgebraicTrigonometricSurface();
 
 
     public slots:
@@ -271,6 +286,7 @@ namespace cagd
         // continue
         void setContinueIndexCurve(int value);
         void setContinueDirectionCurve(int value);
+        void setColorCurveContinue(int value);
         void continueArc(bool value);
 
         // join
@@ -278,6 +294,7 @@ namespace cagd
         void setJoinIndex2Curve(int value);
         void setJoinDirection1Curve(int value);
         void setJoinDirection2Curve(int value);
+        void setColorCurveJoin(int value);
         void joinArc(bool value);
 
         // merge
@@ -306,6 +323,43 @@ namespace cagd
         void setControlPointPatchY (double value);
         void setControlPointPatchZ (double value);
 
+        // surface
+
+        // render
+        void toggleULinesSurface(bool value);
+        void toggleVLinesSurface(bool value);
+        void toggleControlNetSurface(bool value);
+        void toggleSurfaceSurface(bool value);
+
+        // insert
+        void setMaterialSurfaceInsert(int value);
+        void insertPatch(bool value);
+
+        // continue
+        void setContinueIndexSurface(int value);
+        void setContinueDirectionSurface(int value);
+        void setMaterialSurfaceContinue(int value);
+        void continuePatch(bool value);
+
+        // join
+        void setJoinIndex1Surface(int value);
+        void setJoinIndex2Surface(int value);
+        void setJoinDirection1Surface(int value);
+        void setJoinDirection2Surface(int value);
+        void setMaterialSurfaceJoin(int value);
+        void joinPatch(bool value);
+
+        // merge
+        void setMergeIndex1Surface(int value);
+        void setMergeIndex2Surface(int value);
+        void setMergeDirection1Surface(int value);
+        void setMergeDirection2Surface(int value);
+        void mergePatch(bool value);
+
+        // erase
+        void setEraseIndexSurface(int value);
+        void erasePatch(bool value);
+
     private slots:
         void _animate();
 
@@ -323,6 +377,7 @@ namespace cagd
 
         // curve
         void arcNumberChanged(int);
+        void patchNumberChanged(int);
 
         // patch
         void xCoordinatePatchChanged(double);

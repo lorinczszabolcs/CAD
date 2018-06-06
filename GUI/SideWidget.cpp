@@ -87,6 +87,30 @@ namespace cagd
 
     void SideWidget::setArcNumber(int value)
     {
+        if (value < 0)
+        {
+            compCurveEraseButton->setDisabled(true);
+            compCurveContinueButton->setDisabled(true);
+            compCurveMergeButton->setDisabled(true);
+            compCurveJoinButton->setDisabled(true);
+        }
+        else
+        {
+            compCurveEraseButton->setDisabled(false);
+            compCurveContinueButton->setDisabled(false);
+            compCurveMergeButton->setDisabled(true);
+            compCurveJoinButton->setDisabled(true);
+            if (value >= 1)
+            {
+                compCurveJoinButton->setDisabled(false);
+                compCurveMergeButton->setDisabled(false);
+            }
+        }
+
+        if (value < 0)
+        {
+            value = 0;
+        }
         compCurveJoinFirstIndexSpinBox->setMaximum(value);
         compCurveJoinSecondIndexSpinBox->setMaximum(value);
         compCurveMergeFirstIndexSpinBox->setMaximum(value);
@@ -117,6 +141,40 @@ namespace cagd
         {
             controlPointTranslatePatchZ->setValue(value);
         }
+    }
+
+    void SideWidget::setPatchNumber(int value)
+    {
+        if (value < 0)
+        {
+            compSurfaceEraseButton->setDisabled(true);
+            compSurfaceContinueButton->setDisabled(true);
+            compSurfaceMergeButton->setDisabled(true);
+            compSurfaceJoinButton->setDisabled(true);
+        }
+        else
+        {
+            compSurfaceEraseButton->setDisabled(false);
+            compSurfaceContinueButton->setDisabled(false);
+            compSurfaceMergeButton->setDisabled(true);
+            compSurfaceJoinButton->setDisabled(true);
+            if (value >= 1)
+            {
+                compSurfaceJoinButton->setDisabled(false);
+                compSurfaceMergeButton->setDisabled(false);
+            }
+        }
+
+        if (value < 0)
+        {
+            value = 0;
+        }
+        compSurfaceJoinFirstIndexSpinBox->setMaximum(value);
+        compSurfaceJoinSecondIndexSpinBox->setMaximum(value);
+        compSurfaceMergeFirstIndexSpinBox->setMaximum(value);
+        compSurfaceMergeSecondIndexSpinBox->setMaximum(value);
+        compSurfaceContinueIndexSpinBox->setMaximum(value);
+        compSurfaceEraseIndexSpinBox->setMaximum(value);
     }
 
 }

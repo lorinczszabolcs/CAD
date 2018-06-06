@@ -124,7 +124,6 @@ namespace cagd
 
         // arc number
         connect(_gl_widget, SIGNAL(arcNumberChanged(int)), _side_widget, SLOT(setArcNumber(int)));
-
         // rendering
         connect(_side_widget->modCurveSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMaxOrderOfDerivativesCurve(int)));
 
@@ -134,6 +133,8 @@ namespace cagd
 
         // continue
         connect(_side_widget->compCurveContinueButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(continueArc(bool)));
+        connect(_side_widget->compCurveContinueComboBoxColor, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setColorCurveContinue(int)));
+        connect(_side_widget->compCurveContinueDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setContinueDirectionCurve(int)));
         connect(_side_widget->compCurveContinueIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setContinueIndexCurve(int)));
 
         // join
@@ -142,6 +143,7 @@ namespace cagd
         connect(_side_widget->compCurveJoinSecondIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setJoinIndex1Curve(int)));
         connect(_side_widget->compCurveJoinFirstDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection1Curve(int)));
         connect(_side_widget->compCurveJoinSecondDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection2Curve(int)));
+        connect(_side_widget->compCurveJoinComboBoxColor, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setColorCurveJoin(int)));
 
         // merge
         connect(_side_widget->compCurveMergeButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(mergeArc(bool)));
@@ -180,6 +182,46 @@ namespace cagd
         connect(_gl_widget, SIGNAL(xCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchX(double)));
         connect(_gl_widget, SIGNAL(yCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchY(double)));
         connect(_gl_widget, SIGNAL(zCoordinatePatchChanged(double)), _side_widget, SLOT(setControlPointPatchZ(double)));
+
+        // ------------------- Surface -------------------
+
+        // arc number
+        connect(_gl_widget, SIGNAL(patchNumberChanged(int)), _side_widget, SLOT(setPatchNumber(int)));
+
+        // rendering
+        connect(_side_widget->compSurfaceULinesCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleULinesSurface(bool)));
+        connect(_side_widget->compSurfaceVLinesCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleVLinesSurface(bool)));
+        connect(_side_widget->compSurfaceControlCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleControlNetSurface(bool)));
+        connect(_side_widget->compSurfaceSurfaceCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleSurfaceSurface(bool)));
+
+        // insert
+        connect(_side_widget->compSurfaceInsertComboBoxMaterial, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialSurfaceInsert(int)));
+        connect(_side_widget->compSurfaceInsertButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(insertPatch(bool)));
+
+        // continue
+        connect(_side_widget->compSurfaceContinueButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(continuePatch(bool)));
+        connect(_side_widget->compSurfaceContinueComboBoxMaterial, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialSurfaceContinue(int)));
+        connect(_side_widget->compSurfaceContinueDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setContinueDirectionSurface(int)));
+        connect(_side_widget->compSurfaceContinueIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setContinueIndexSurface(int)));
+
+        // join
+        connect(_side_widget->compSurfaceJoinButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(joinPatch(bool)));
+        connect(_side_widget->compSurfaceJoinFirstIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setJoinIndex1Surface(int)));
+        connect(_side_widget->compSurfaceJoinSecondIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setJoinIndex1Surface(int)));
+        connect(_side_widget->compSurfaceJoinFirstDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection1Surface(int)));
+        connect(_side_widget->compSurfaceJoinSecondDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection2Surface(int)));
+        connect(_side_widget->compSurfaceJoinComboBoxMaterial, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialSurfaceJoin(int)));
+
+        // merge
+        connect(_side_widget->compSurfaceMergeButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(mergeArc(bool)));
+        connect(_side_widget->compSurfaceMergeFirstIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMergeIndex1Surface(int)));
+        connect(_side_widget->compSurfaceMergeSecondIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setMergeIndex1Surface(int)));
+        connect(_side_widget->compSurfaceMergeFirstDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMergeDirection1Surface(int)));
+        connect(_side_widget->compSurfaceMergeSecondDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMergeDirection2Surface(int)));
+
+        // erase
+        connect(_side_widget->compSurfaceEraseButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(erasePatch(bool)));
+        connect(_side_widget->compSurfaceEraseIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setEraseIndexSurface(int)));
     }
 
     //--------------------------------

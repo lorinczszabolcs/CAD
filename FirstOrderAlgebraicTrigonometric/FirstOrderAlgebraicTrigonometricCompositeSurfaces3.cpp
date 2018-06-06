@@ -1,5 +1,8 @@
 #include "FirstOrderAlgebraicTrigonometricCompositeSurfaces3.h"
 #include "Core/Materials.h"
+#include <iostream>
+
+using namespace std;
 
 using namespace cagd;
 
@@ -8,6 +11,13 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::PatchAttributes() :
 {
     this->_image = nullptr;
     this->_material = nullptr;
+    this->_u_lines = nullptr;
+    this->_v_lines = nullptr;
+
+    for(int i = N; i <= NW; i++)
+    {
+        this->_neighbors[i] = nullptr;
+    }
 }
 
 FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::~PatchAttributes()
@@ -20,13 +30,23 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::~PatchAttributes()
     {
         delete this->_image;
     }
+    if (this->_u_lines)
+    {
+        delete this->_u_lines;
+    }
+    if (this->_v_lines)
+    {
+        delete this->_v_lines;
+    }
 }
 
 FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::PatchAttributes(
         const PatchAttributes &attr) :
             _patch(new FirstOrderAlgebraicTrigonometricPatch(*attr._patch)),
             _image(new TriangulatedMesh3(*attr._image)),
-            _material(attr._material)
+            _material(attr._material),
+            _u_lines(attr._u_lines),
+            _v_lines(attr._v_lines)
 {
     for(int i = N; i <= NW; i++)
     {
@@ -42,11 +62,13 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes&
     {
         return *this;
     }
+
     if(this->_patch)
     {
         delete this->_patch;
         this->_patch = nullptr;
     }
+
     if(this->_image)
     {
         delete this->_image;
@@ -56,7 +78,8 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes&
     if(attr._patch != nullptr)
     {
         this->_patch = new FirstOrderAlgebraicTrigonometricPatch(*attr._patch);
-    } else
+    }
+    else
     {
         this->_patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     }
@@ -64,17 +87,23 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes&
     if(attr._image != nullptr)
     {
         this->_image = new TriangulatedMesh3(*attr._image);
-    } else
+    }
+    else
     {
         this->_image = new TriangulatedMesh3();
     }
 
     this->_material = attr._material;
 
+    this->_u_lines = attr._u_lines;
+
+    this->_v_lines = attr._v_lines;
+
     for(int i = N; i <= NW; i++)
     {
         this->_neighbors[i] = attr._neighbors[i];
     }
+
     return *this;
 }
 
@@ -102,32 +131,144 @@ FirstOrderAlgebraicTrigonometricSurface3::~FirstOrderAlgebraicTrigonometricSurfa
     _attributes.clear();
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::insertIsolatedSurface(
-        FirstOrderAlgebraicTrigonometricPatch &patch)
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::insert(Material *material)
 {
-    GLuint size = _attributes.size();
-    PatchAttributes *oldAttr = &_attributes[0];
-    _attributes.resize(size + 1);
-    ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
-    PatchAttributes &newPatch = _attributes[size];
-    newPatch._patch = &patch;
-    UpdatePatchVBOGenerateImage(newPatch);
+    GLdouble dy = -4.0 + 8.0 * (GLdouble) rand() / RAND_MAX;
+
+    FirstOrderAlgebraicTrigonometricPatch *temp = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
+    temp->SetData(0, 0, -3.0, -4.0 + dy, 0.0);
+    temp->SetData(0, 1, -3.0, -1.0 + dy, 0.0);
+    temp->SetData(0, 2, -3.0, 1.0 + dy, 0.0);
+    temp->SetData(0, 3, -3.0, 4.0 + dy, 0.0);
+
+    temp->SetData(1, 0, -1.0, -4.0 + dy, 0.0);
+    temp->SetData(1, 1, -1.0, -1.0 + dy, 2.0);
+    temp->SetData(1, 2, -1.0, 1.0 + dy, 2.0);
+    temp->SetData(1, 3, -1.0, 3.0 + dy, 0.0);
+
+    temp->SetData(2, 0, 1.0, -4.0 + dy, 0.0);
+    temp->SetData(2, 1, 1.0, -1.0 + dy, 2.0);
+    temp->SetData(2, 2, 1.0, 1.0 + dy, 2.0);
+    temp->SetData(2, 3, 1.0, 3.0 + dy, 0.0);
+
+    temp->SetData(3, 0, 3.0, -4.0 + dy, 0.0);
+    temp->SetData(3, 1, 3.0, -1.0 + dy, 0.0);
+    temp->SetData(3, 2, 3.0, 1.0 + dy, 0.0);
+    temp->SetData(3, 3, 3.0, 4.0 + dy, 0.0);
+
+    if (!temp->UpdateVertexBufferObjectsOfData())
+    {
+        cout << "Could not update vertex buffer objects of data!\n";
+        return GL_FALSE;
+    }
+
+    if (! insertIsolatedSurface(*temp, material))
+    {
+        cout <<"Could not insert surface!\n";
+        return GL_FALSE;
+    }
+
+    return GL_TRUE;
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::UpdatePatchVBOGenerateImage(
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::insertIsolatedSurface(
+        FirstOrderAlgebraicTrigonometricPatch &patch,
+        Material *material)
+{
+    GLuint n = _attributes.size();
+
+    if (n > 0)
+    {
+        cout << "Itt vagyok: >0\n";
+        PatchAttributes *oldAttr = &_attributes[0];
+        _attributes.resize(n + 1);
+        ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
+        PatchAttributes &newPatch = _attributes[n];
+        newPatch._patch = &patch;
+        newPatch._material = material;
+        newPatch._u_lines = newPatch._patch->GenerateUIsoparametricLines(5,1,100);
+        newPatch._v_lines = newPatch._patch->GenerateVIsoparametricLines(5,1,100);
+
+        for(GLuint i = 0; i < 5; i++)
+        {
+            (*newPatch._u_lines)[i]->UpdateVertexBufferObjects();
+            (*newPatch._v_lines)[i]->UpdateVertexBufferObjects();
+        }
+
+        if (!UpdatePatchVBOGenerateImage(newPatch))
+        {
+            _attributes.pop_back();
+            cout << "Could not update vertex buffer object or generate image!\n";
+            return GL_FALSE;
+        }
+        cout << "Sikerult updatelni!\n";
+    }
+    else
+    {
+        cout << "Itt vagyok: =0\n";
+        _attributes.resize(n + 1);
+        PatchAttributes &newPatch = _attributes[n];
+        newPatch._patch = &patch;
+        newPatch._material = material;
+        newPatch._u_lines = newPatch._patch->GenerateUIsoparametricLines(5,1,100);
+        newPatch._v_lines = newPatch._patch->GenerateVIsoparametricLines(5,1,100);
+
+        for(GLuint i = 0; i < 5; i++)
+        {
+            (*newPatch._u_lines)[i]->UpdateVertexBufferObjects();
+            (*newPatch._v_lines)[i]->UpdateVertexBufferObjects();
+        }
+
+        if (!UpdatePatchVBOGenerateImage(newPatch))
+        {
+            _attributes.pop_back();
+            cout << "Could not update vertex buffer object or generate image!\n";
+            return GL_FALSE;
+        }
+        cout << "Sikerult updatelni!\n";
+    }
+
+    return GL_TRUE;
+}
+
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::UpdatePatchVBOGenerateImage(
         PatchAttributes &newPatch)
 {
-    newPatch._patch->UpdateVertexBufferObjectsOfData();
-    newPatch._image = newPatch._patch->GenerateImage(30, 30, GL_STATIC_DRAW);
-    if(newPatch._image)
+    if (!newPatch._patch->UpdateVertexBufferObjectsOfData())
     {
-        newPatch._image->UpdateVertexBufferObjects();
+        return GL_FALSE;
     }
+
+    cout << "Update1 kesz\n";
+
+    newPatch._image = newPatch._patch->GenerateImage(30, 30, GL_STATIC_DRAW);
+
+    if (!newPatch._image)
+    {
+        return GL_FALSE;
+    }
+
+    cout << "Generate image kesz!\n";
+
+    if (!newPatch._image->UpdateVertexBufferObjects())
+    {
+        return GL_FALSE;
+    }
+
+    cout << "Update2 kesz\n";
+
+    return GL_TRUE;
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::setMaterial(GLuint index, Material *material)
 {
     _attributes[index]._material = material;
+}
+
+
+GLint FirstOrderAlgebraicTrigonometricSurface3::getAttributesSize()
+{
+    return _attributes.size();
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::ValidatePointersInPatchAttrs(
@@ -143,7 +284,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::ValidatePointersInPatchAttrs(
     }
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2)
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint ind1, GLuint ind2, Direction dir1, Direction dir2, Material* material)
 {
     PatchAttributes &patch1 = _attributes[ind1];
     PatchAttributes &patch2 = _attributes[ind2];
@@ -154,16 +295,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case N:
         switch(dir2) {
         case N:
-            joinPatchesN_N(patch1, patch2);
+            joinPatchesN_N(patch1, patch2, material);
             break;
         case E:
-            joinPatchesN_E(patch1, patch2);
+            joinPatchesN_E(patch1, patch2, material);
             break;
         case S:
-            joinPatchesN_S(patch1, patch2);
+            joinPatchesN_S(patch1, patch2, material);
             break;
         case W:
-            joinPatchesW_S(patch2, patch1);
+            joinPatchesW_S(patch2, patch1, material);
             break;
         default:
             return GL_FALSE;
@@ -173,16 +314,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case E:
         switch(dir2) {
         case N:
-            joinPatchesN_E(patch2, patch1);
+            joinPatchesN_E(patch2, patch1, material);
             break;
         case E:
-            joinPatchesE_E(patch1, patch2);
+            joinPatchesE_E(patch1, patch2, material);
             break;
         case S:
-            joinPatchesE_S(patch1, patch2);
+            joinPatchesE_S(patch1, patch2, material);
             break;
         case W:
-            joinPatchesW_E(patch2, patch1);
+            joinPatchesW_E(patch2, patch1, material);
             break;
         default:
             return GL_FALSE;
@@ -192,16 +333,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case S:
         switch(dir2) {
         case N:
-            joinPatchesN_S(patch2, patch1);
+            joinPatchesN_S(patch2, patch1, material);
             break;
         case E:
-            joinPatchesE_S(patch2, patch1);
+            joinPatchesE_S(patch2, patch1, material);
             break;
         case S:
-            joinPatchesS_S(patch1, patch2);
+            joinPatchesS_S(patch1, patch2, material);
             break;
         case W:
-            joinPatchesW_S(patch2, patch1);
+            joinPatchesW_S(patch2, patch1, material);
             break;
         default:
             return GL_FALSE;
@@ -211,16 +352,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case W:
         switch(dir2) {
         case N:
-            joinPatchesW_N(patch1, patch2);
+            joinPatchesW_N(patch1, patch2, material);
             break;
         case E:
-            joinPatchesW_E(patch1, patch2);
+            joinPatchesW_E(patch1, patch2, material);
             break;
         case S:
-            joinPatchesW_S(patch1, patch2);
+            joinPatchesW_S(patch1, patch2, material);
             break;
         case W:
-            joinPatchesW_W(patch1, patch2);
+            joinPatchesW_W(patch1, patch2, material);
             break;
         default:
             return GL_FALSE;
@@ -230,16 +371,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case NW:
         switch(dir2) {
         case NW:
-            joinPatchesNW_NW(patch1, patch2);
+            joinPatchesNW_NW(patch1, patch2, material);
             break;
         case NE:
-            joinPatchesNW_NE(patch1, patch2);
+            joinPatchesNW_NE(patch1, patch2, material);
             break;
         case SE:
-            joinPatchesNW_SE(patch1, patch2);
+            joinPatchesNW_SE(patch1, patch2, material);
             break;
         case SW:
-            joinPatchesNW_SW(patch1, patch2);
+            joinPatchesNW_SW(patch1, patch2, material);
             break;
         default:
             return GL_FALSE;
@@ -249,16 +390,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case NE:
         switch(dir2) {
         case NW:
-            joinPatchesNW_NE(patch2, patch1);
+            joinPatchesNW_NE(patch2, patch1, material);
             break;
         case NE:
-            joinPatchesNE_NE(patch1, patch2);
+            joinPatchesNE_NE(patch1, patch2, material);
             break;
         case SE:
-            joinPatchesNE_SE(patch1, patch2);
+            joinPatchesNE_SE(patch1, patch2, material);
             break;
         case SW:
-            joinPatchesNE_SW(patch1, patch2);
+            joinPatchesNE_SW(patch1, patch2, material);
             break;
         default:
             return GL_FALSE;
@@ -268,16 +409,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case SE:
         switch(dir2) {
         case NW:
-            joinPatchesNW_SE(patch2, patch1);
+            joinPatchesNW_SE(patch2, patch1, material);
             break;
         case NE:
-            joinPatchesNE_SE(patch2, patch1);
+            joinPatchesNE_SE(patch2, patch1, material);
             break;
         case SE:
-            joinPatchesSE_SE(patch1, patch2);
+            joinPatchesSE_SE(patch1, patch2, material);
             break;
         case SW:
-            joinPatchesSE_SW(patch1, patch2);
+            joinPatchesSE_SW(patch1, patch2, material);
             break;
         default:
             return GL_FALSE;
@@ -287,16 +428,16 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::joinExistingSurface(GLuint i
     case SW:
         switch(dir2) {
         case NW:
-            joinPatchesNW_SW(patch2, patch1);
+            joinPatchesNW_SW(patch2, patch1, material);
             break;
         case NE:
-            joinPatchesNE_SW(patch2, patch1);
+            joinPatchesNE_SW(patch2, patch1, material);
             break;
         case SE:
-            joinPatchesSE_SW(patch2, patch1);
+            joinPatchesSE_SW(patch2, patch1, material);
             break;
         case SW:
-            joinPatchesSW_SW(patch1, patch2);
+            joinPatchesSW_SW(patch1, patch2, material);
             break;
         default:
             return GL_FALSE;
@@ -413,18 +554,22 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::eraseExistingSurface(GLuint ind
             }
     }
     _attributes.erase(_attributes.begin() + index);
-    for(GLuint i = 0; i < _attributes.size() - 1; i++)
+
+    if (_attributes.size() != 0)
     {
-        PatchAttributes *local = &_attributes[i];
-        for(int i = N; i <= NW; i++) {
-            if (local->_neighbors[i] > &tmp)
-                local->_neighbors[i]--;
+        for(GLuint i = 0; i < _attributes.size() - 1; i++)
+        {
+            PatchAttributes *local = &_attributes[i];
+            for(int i = N; i <= NW; i++) {
+                if (local->_neighbors[i] > &tmp)
+                    local->_neighbors[i]--;
+            }
         }
+        ValidatePointersInPatchAttrs(oldAttr,&_attributes[0]);
     }
-    ValidatePointersInPatchAttrs(oldAttr,&_attributes[0]);
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricSurface3::renderSurfaces()
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::renderSurfaces(GLboolean u_lin, GLboolean v_lin, GLboolean control, GLboolean surf)
 {
     for(GLuint i = 0; i < _attributes.size(); i++)
     {
@@ -432,13 +577,42 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::renderSurfaces()
 
         if (attr._image)
         {
-            if(attr._material != nullptr)
-                attr._material->Apply();
-            else
-                MatFBBrass.Apply();
-            attr._image ->Render();
-            MatFBPearl.Apply();
-            attr._patch->RenderData(GL_LINE_STRIP);
+            if (surf)
+            {
+                glEnable(GL_LIGHTING);
+                if(attr._material != nullptr)
+                    attr._material->Apply();
+                else
+                    MatFBBrass.Apply();
+                attr._image ->Render();
+            }
+
+            if (control)
+            {
+                glDisable(GL_LIGHTING);
+                glColor3f(0.4 ,0.8, 0.3);
+                attr._patch->RenderData(GL_LINE_STRIP);
+            }
+
+            if (u_lin)
+            {
+                glDisable(GL_LIGHTING);
+                for(GLuint i = 0; i < 5; i++)
+                {
+                    glColor3f(0.2, 0.2, 0.2);
+                    (*attr._u_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
+                }
+            }
+
+            if (v_lin)
+            {
+                glDisable(GL_LIGHTING);
+                for(GLuint i = 0; i < 5; i++)
+                {
+                    glColor3f(0.2, 0.2, 0.2);
+                    (*attr._v_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
+                }
+            }
         }
     }
     return GL_TRUE;
@@ -566,7 +740,7 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::mergePatchesS_S(
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_N(
-        PatchAttributes &patchN1, PatchAttributes &patchN2)
+        PatchAttributes &patchN1, PatchAttributes &patchN2, Material* material)
 {
     GLuint size = _attributes.size();
 
@@ -574,6 +748,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_N(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -590,7 +766,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_N(
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_E(
-        PatchAttributes &patchN, PatchAttributes &patchE)
+        PatchAttributes &patchN, PatchAttributes &patchE, Material* material)
 {
     GLuint size = _attributes.size();
 
@@ -598,6 +774,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_E(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -614,7 +792,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_E(
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_S(
-        PatchAttributes &patchN, PatchAttributes &patchS)
+        PatchAttributes &patchN, PatchAttributes &patchS, Material* material)
 {
     GLuint size = _attributes.size();
 
@@ -622,6 +800,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_S(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -637,7 +817,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_S(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_E(PatchAttributes &patchW, PatchAttributes &patchE)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_E(
+        PatchAttributes &patchW, PatchAttributes &patchE, Material* material)
 {
     GLuint size = _attributes.size();
 
@@ -645,6 +826,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_E(PatchAttributes 
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -661,7 +844,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_E(PatchAttributes 
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_N(
-        PatchAttributes &patchW, PatchAttributes &patchN)
+        PatchAttributes &patchW, PatchAttributes &patchN, Material* material)
 {
     GLuint size = _attributes.size();
 
@@ -669,6 +852,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_N(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -684,8 +869,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_N(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_W(
-        PatchAttributes &patchW1, PatchAttributes &patchW2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_W(PatchAttributes &patchW1, PatchAttributes &patchW2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -693,6 +877,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_W(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -708,8 +894,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_W(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_S(
-        PatchAttributes &patchW, PatchAttributes &patchS)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_S(PatchAttributes &patchW, PatchAttributes &patchS, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -717,6 +902,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_S(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -732,8 +919,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_S(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_E(
-        PatchAttributes &patchE1, PatchAttributes &patchE2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_E(PatchAttributes &patchE1, PatchAttributes &patchE2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -741,6 +927,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_E(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -756,8 +944,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_E(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_S(
-        PatchAttributes &patchE, PatchAttributes &patchS)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_S(PatchAttributes &patchE, PatchAttributes &patchS, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -765,6 +952,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_S(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -780,8 +969,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_S(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesS_S(
-        PatchAttributes &patchS1, PatchAttributes &patchS2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesS_S(PatchAttributes &patchS1, PatchAttributes &patchS2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -789,6 +977,8 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesS_S(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
 
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
     for (int i = 0; i < 4; i++) {
@@ -804,8 +994,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesS_S(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NW(
-        PatchAttributes &patchNW1, PatchAttributes &patchNW2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NW(PatchAttributes &patchNW1, PatchAttributes &patchNW2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -813,6 +1002,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NW(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNW2._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -846,8 +1038,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NW(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NE(
-        PatchAttributes &patchNW, PatchAttributes &patchNE)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NE(PatchAttributes &patchNW, PatchAttributes &patchNE, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -855,6 +1046,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NE(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNE._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -888,8 +1082,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NE(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SE(
-        PatchAttributes &patchNW, PatchAttributes &patchSE)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SE(PatchAttributes &patchNW, PatchAttributes &patchSE, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -897,6 +1090,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SE(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSE._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -930,8 +1126,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SE(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SW(
-        PatchAttributes &patchNW, PatchAttributes &patchSW)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SW(PatchAttributes &patchNW, PatchAttributes &patchSW, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -939,6 +1134,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SW(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNW._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -972,8 +1170,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SW(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(
-        PatchAttributes &patchNE1, PatchAttributes &patchNE2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(PatchAttributes &patchNE1, PatchAttributes &patchNE2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -981,6 +1178,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchNE2._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -1014,8 +1214,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SE(
-        PatchAttributes &patchNE, PatchAttributes &patchSE)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SE(PatchAttributes &patchNE, PatchAttributes &patchSE, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -1023,6 +1222,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SE(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSE._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -1056,8 +1258,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SE(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SW(
-        PatchAttributes &patchNE, PatchAttributes &patchSW)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SW(PatchAttributes &patchNE, PatchAttributes &patchSW, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -1065,6 +1266,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SW(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchNE._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -1098,8 +1302,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SW(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SE(
-        PatchAttributes &patchSE1, PatchAttributes &patchSE2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SE(PatchAttributes &patchSE1, PatchAttributes &patchSE2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -1107,6 +1310,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SE(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchSE1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSE2._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -1140,8 +1346,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SE(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SW(
-        PatchAttributes &patchSE, PatchAttributes &patchSW)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SW(PatchAttributes &patchSE, PatchAttributes &patchSW, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -1149,6 +1354,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SW(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchSE._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -1182,8 +1390,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SW(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(
-        PatchAttributes &patchSW1, PatchAttributes &patchSW2)
+GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(PatchAttributes &patchSW1, PatchAttributes &patchSW2, Material *material)
 {
     GLuint size = _attributes.size();
 
@@ -1191,6 +1398,9 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(
     _attributes.resize(size + 1);
     ValidatePointersInPatchAttrs(oldAttr, &_attributes[0]);
     PatchAttributes &joiner =  _attributes[size];
+
+    joiner._material = material;
+
     FirstOrderAlgebraicTrigonometricPatch &patch_1 = (*patchSW1._patch);
     FirstOrderAlgebraicTrigonometricPatch &patch_2 = (*patchSW2._patch);
     joiner._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
@@ -1224,7 +1434,7 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(
     UpdatePatchVBOGenerateImage(joiner);
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLuint index, Direction direction)
+GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLuint index, Direction direction, Material* material)
 {
 
     PatchAttributes &patch = _attributes[index];
@@ -1240,6 +1450,8 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLui
             ValidatePointersInPatchAttrs(oldAddrs, &_attributes[0]);
             PatchAttributes &added =  _attributes[size];
 
+            added._material = material;
+
             added._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
             for(GLuint i = 0; i < 4; i++)
             {
@@ -1253,7 +1465,9 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLui
             added._neighbors[W] = &patch;
             UpdatePatchVBOGenerateImage(added);
 
-        } else {
+        }
+        else if (direction == W)
+        {
             if(patch._neighbors[W] != nullptr)
                 return GL_FALSE;
 
@@ -1262,6 +1476,8 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLui
             _attributes.resize(size + 1);
             ValidatePointersInPatchAttrs(oldAddrs, &_attributes[0]);
             PatchAttributes &added = _attributes[size];
+
+            added._material = material;
 
             added._patch = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
             for(GLuint i = 0; i < 4; i++)

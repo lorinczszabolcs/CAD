@@ -36,5 +36,8 @@ namespace cagd
             void setControlPointPatchX(double value);
             void setControlPointPatchY(double value);
             void setControlPointPatchZ(double value);
+
+            // surface
+            void setPatchNumber(int value);
     };
 }

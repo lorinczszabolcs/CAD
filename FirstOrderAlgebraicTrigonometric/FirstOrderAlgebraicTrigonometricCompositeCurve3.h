@@ -22,6 +22,7 @@ namespace cagd
             ~ArcAttributes();
             ArcAttributes(const ArcAttributes &arc_atr);
             ArcAttributes& operator =(const ArcAttributes &arc_atr);
+
         };
 
     protected:
@@ -35,16 +36,16 @@ namespace cagd
 
         // insert new isolated arc
         GLboolean insert(Color4 *color = new Color4());
-        GLboolean insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc, Color4 *color = new Color4());
+        GLboolean insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc, GLdouble mod = 2, GLdouble div_point_count = 200, Color4 *color = new Color4(0.4, 0.2, 0.3));
         GLvoid validateAttributes(ArcAttributes *oldAttr, ArcAttributes *newAttr);
 
         GLboolean updateArcVBOGenerateImage(ArcAttributes &arc);
 
         // continue existing arc -> index, direction, haromszorosan megnyujtani, degeneralodik szakasz
-        GLboolean continueExistingArc(GLuint index, Direction direction);
+        GLboolean continueExistingArc(GLuint index, Direction direction, GLdouble mod = 2, GLdouble div_point_count = 200, Color4 *color = new Color4(0.4, 0.2, 0.3));
 
         // join existing arcs -> index1, index2 (attributes), direction1, direction2 -> ketto koze ujat
-        GLboolean joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2);
+        GLboolean joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2, GLdouble mod = 2, GLdouble div_point_count = 200, Color4 *color = new Color4(0.4, 0.2, 0.3));
 
         // merge existing arcs -> index1, index2 (attributes), direction1, direction2 -> rendertex labelekhez -> kettot ossze
         GLboolean mergeExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2);

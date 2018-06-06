@@ -107,6 +107,7 @@ namespace cagd
             buildFirstOrderAlgebraicTrigonometricArc();
             buildFirstOrderAlgebraicTrigonometricCurve();
             buildFirstOrderAlgebraicTrigonometricPatch();
+            buildFirstOrderAlgebraicTrigonometricSurface();
         }
 
 
@@ -174,6 +175,10 @@ namespace cagd
             else if (_tab_index == 6)
             {
                 renderFirstOrderAlgebraicTrigonometricCurve();
+            }
+            else if (_tab_index == 7)
+            {
+                renderFirstOrderAlgebraicTrigonometricSurface();
             }
 
         // pops the current matrix stack, replacing the current matrix with the one below it on the stack,
@@ -826,9 +831,14 @@ namespace cagd
         _curve->insert();
 
         _mod_curve = 0;
+        _color_index_insert_curve = 0;
+        _color_index_continue_curve = 0;
+        _color_index_join_curve = 0;
         _color_index_curve = 0;
         _continue_index_c = _erase_index_c = _join_index1_c = _join_index2_c = _merge_index1_c = _merge_index2_c = 0;
         _merge_direction1_c = _merge_direction2_c = _join_direction1_c = _join_direction2_c = _continue_direction_c = 0;
+
+        emit arcNumberChanged(_curve->getAttributesSize() - 1);
     }
 
     void GLWidget::renderFirstOrderAlgebraicTrigonometricCurve()
@@ -836,6 +846,7 @@ namespace cagd
         if (_curve)
         {
             _curve->renderCurves(_mod_curve, GL_LINE_STRIP);
+            _curve->renderControlPolygon();
         }
     }
 
@@ -975,21 +986,52 @@ namespace cagd
 
         if (_u_lin)
         {
+            glDisable(GL_LIGHTING);
             for(GLuint i = 0; i < 5; i++)
             {
+                glColor3f(0.2, 0.2, 0.2);
                 (*_u_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
             }
         }
 
         if (_v_lin)
         {
+            glDisable(GL_LIGHTING);
             for(GLuint i = 0; i < 5; i++)
             {
+                glColor3f(0.2, 0.2, 0.2);
                 (*_v_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
             }
         }
     }
 
+    void GLWidget::buildFirstOrderAlgebraicTrigonometricSurface()
+    {
+        _surface = new FirstOrderAlgebraicTrigonometricSurface3();
+        cout << "A1\n";
+
+        _surface->insert();
+
+        _u_lin_surf = _v_lin_surf = _control_surf = _surf = GL_TRUE;
+
+        _material_index_insert_surf = 0;
+        _material_index_continue_surf = 0;
+        _material_index_join_surf = 0;
+        _material_index_surf = 0;
+        _continue_index_s = _erase_index_s = _join_index1_s = _join_index2_s = _merge_index1_s = _merge_index2_s = 0;
+        _merge_direction1_s = _merge_direction2_s = _join_direction1_s = _join_direction2_s = _continue_direction_s = 0;
+
+        emit patchNumberChanged(_surface->getAttributesSize() - 1);
+    }
+
+    void GLWidget::renderFirstOrderAlgebraicTrigonometricSurface()
+    {
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_NORMALIZE);
+
+        _surface->renderSurfaces(_u_lin_surf, _v_lin_surf, _control_surf, _surf);
+    }
 
     //-----------------------------------
     // implementation of the public slots
@@ -1730,26 +1772,34 @@ namespace cagd
     // insert
     void GLWidget::setColorCurveInsert(int value)
     {
-        if (value != _color_index_curve)
+        if (value != _color_index_insert_curve)
         {
-            _color_index_curve = value;
-            //updateGL();                                             // TO DO: Kell ez?
+            _color_index_insert_curve = value;
         }
     }
+
     void GLWidget::insertArc(bool value)
     {
-        if (! _curve->insert(_colors[_color_index_curve]))
+        if (! _curve->insert(_colors[_color_index_insert_curve]))
         {
             cout << "Could not insert curve!";
         }
         else
         {
-            emit arcNumberChanged(_curve->getAttributesSize());
+            emit arcNumberChanged(_curve->getAttributesSize() - 1);
             cout << "Succesfull curve!\n";
+            updateGL();
         }
     }
 
     // continue
+    void GLWidget::setColorCurveContinue(int value)
+    {
+        if (value != _color_index_continue_curve)
+        {
+            _color_index_continue_curve = value;
+        }
+    }
 
     void GLWidget::setContinueIndexCurve(int value)
     {
@@ -1763,13 +1813,16 @@ namespace cagd
 
     void GLWidget::continueArc(bool value)
     {
-        if (! _curve->continueExistingArc(_continue_index_c, (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_continue_direction_c))
+        cout << _continue_direction_c << "\n";
+        if (! _curve->continueExistingArc(_continue_index_c,
+                                          (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_continue_direction_c,
+                                          2, 200, _colors[_color_index_continue_curve]))
         {
             cout << "Could not continue existing arc!\n";
         }
         else
         {
-            emit arcNumberChanged(_curve->getAttributesSize());
+            emit arcNumberChanged(_curve->getAttributesSize() - 1);
             cout << "Succesfull continue!\n";
         }
     }
@@ -1796,17 +1849,23 @@ namespace cagd
         _join_direction2_c = value;
     }
 
+    void GLWidget::setColorCurveJoin(int value)
+    {
+        _color_index_join_curve = value;
+    }
+
     void GLWidget::joinArc(bool value)
     {
         if (!_curve->joinExistingArc(_join_index1_c, _join_index2_c,
                                      (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_join_direction1_c,
-                                     (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_join_direction2_c))
+                                     (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_join_direction2_c,
+                                     2, 200, _colors[_color_index_join_curve]))
         {
             cout << "Could not join arc!\n";
         }
         else
         {
-            emit arcNumberChanged(_curve->getAttributesSize());
+            emit arcNumberChanged(_curve->getAttributesSize() - 1);
             cout << "Succesfull join!\n";
         }
     }
@@ -1839,11 +1898,11 @@ namespace cagd
                                       (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_merge_direction1_c,
                                       (FirstOrderAlgebraicTrigonometricCompositeCurve3::Direction)_merge_direction2_c))
         {
-            cout << "Could not join arc!\n";
+            cout << "Could not merge arc!\n";
         }
         else
         {
-            emit arcNumberChanged(_curve->getAttributesSize());
+            emit arcNumberChanged(_curve->getAttributesSize() - 1);
             cout << "Succesfull merge!\n";
         }
     }
@@ -1855,14 +1914,16 @@ namespace cagd
 
     void GLWidget::eraseArc(bool value)
     {
+        cout << _erase_index_c << "\n --- ASD --- \n";
         if (!_curve->eraseExistingArc(_erase_index_c))
         {
             cout << "Could not erase arc!\n";
         }
         else
         {
-            emit arcNumberChanged(_curve->getAttributesSize());
+            emit arcNumberChanged(_curve->getAttributesSize() - 1);
             cout << "Succesfull erase!\n";
+            updateGL();
         }
     }
 
@@ -2283,6 +2344,202 @@ namespace cagd
 
             updateGL();
         }
+    }
+
+
+    // ------------------------------ Surface ------------------------------
+
+    // rendering
+
+    void GLWidget::toggleULinesSurface(bool value)
+    {
+        if (_u_lin_surf != value)
+        {
+            _u_lin_surf = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::toggleVLinesSurface(bool value)
+    {
+        if (_v_lin_surf != value)
+        {
+            _v_lin_surf = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::toggleControlNetSurface(bool value)
+    {
+        if (_control_surf != value)
+        {
+            _control_surf = value;
+            updateGL();
+        }
+    }
+
+
+    void GLWidget::toggleSurfaceSurface(bool value)
+    {
+        if (_surf != value)
+        {
+            _surf = value;
+            updateGL();
+        }
+    }
+
+
+    // insert
+    void GLWidget::setMaterialSurfaceInsert(int value)
+    {
+        if (value != _material_index_insert_surf)
+        {
+            _material_index_insert_surf = value;
+        }
+    }
+
+    void GLWidget::insertPatch(bool value)
+    {
+        if (! _surface->insert(_materials[_material_index_insert_surf]))
+        {
+            cout << "Could not insert curve!";
+        }
+        else
+        {
+            emit patchNumberChanged(_surface->getAttributesSize() - 1);
+            cout << "Succesfull patch!\n";
+            updateGL();
+        }
+    }
+
+    // continue
+    void GLWidget::setMaterialSurfaceContinue(int value)
+    {
+        if (value != _material_index_continue_surf)
+        {
+            _material_index_continue_surf = value;
+        }
+    }
+
+    void GLWidget::setContinueIndexSurface(int value)
+    {
+        _continue_index_s = value;
+    }
+
+    void GLWidget::setContinueDirectionSurface(int value)
+    {
+        _continue_direction_s = value;
+    }
+
+    void GLWidget::continuePatch(bool value)
+    {
+        cout << _continue_direction_s << "\n";
+        if (! _surface->continueExistingSurface(_continue_index_s,
+                                          (FirstOrderAlgebraicTrigonometricSurface3::Direction)_continue_direction_s,
+                                          _materials[_material_index_continue_surf]))
+        {
+            cout << "Could not continue existing arc!\n";
+        }
+        else
+        {
+            emit patchNumberChanged(_surface->getAttributesSize() - 1);
+            cout << "Succesfull continue!\n";
+        }
+    }
+
+    // join
+
+    void GLWidget::setJoinIndex1Surface(int value)
+    {
+        _join_index1_s = value;
+    }
+
+    void GLWidget::setJoinIndex2Surface(int value)
+    {
+        _join_index2_s = value;
+    }
+
+    void GLWidget::setJoinDirection1Surface(int value)
+    {
+        _join_direction1_s = value;
+    }
+
+    void GLWidget::setJoinDirection2Surface(int value)
+    {
+        _join_direction2_s = value;
+    }
+
+    void GLWidget::setMaterialSurfaceJoin(int value)
+    {
+        _material_index_join_surf = value;
+    }
+
+    void GLWidget::joinPatch(bool value)
+    {
+        if (!_surface->joinExistingSurface(_join_index1_s, _join_index2_s,
+                                     (FirstOrderAlgebraicTrigonometricSurface3::Direction)_join_direction1_s,
+                                     (FirstOrderAlgebraicTrigonometricSurface3::Direction)_join_direction2_s,
+                                     _materials[_material_index_join_surf]))
+        {
+            cout << "Could not join arc!\n";
+        }
+        else
+        {
+            emit patchNumberChanged(_surface->getAttributesSize() - 1);
+            cout << "Succesfull join!\n";
+        }
+    }
+
+    // merge
+
+    void GLWidget::setMergeIndex1Surface(int value)
+    {
+        _merge_index1_s = value;
+    }
+
+    void GLWidget::setMergeDirection1Surface(int value)
+    {
+        _merge_direction1_s = value;
+    }
+
+    void GLWidget::setMergeDirection2Surface(int value)
+    {
+        _merge_direction2_s = value;
+    }
+
+    void GLWidget::setMergeIndex2Surface(int value)
+    {
+        _merge_index2_s = value;
+    }
+
+    void GLWidget::mergePatch(bool value)
+    {
+        if (!_surface->mergeExistingSurface(_merge_index1_s, _merge_index2_s,
+                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_merge_direction1_c,
+                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_merge_direction2_c))
+        {
+            cout << "Could not merge arc!\n";
+        }
+        else
+        {
+            emit patchNumberChanged(_surface->getAttributesSize() - 1);
+            cout << "Succesfull merge!\n";
+        }
+    }
+
+    void GLWidget::setEraseIndexSurface(int value)
+    {
+        _erase_index_s = value;
+    }
+
+    void GLWidget::erasePatch(bool value)
+    {
+        cout << _erase_index_s << "\n --- ASD --- \n";
+        _surface->eraseExistingSurface(_erase_index_s);
+
+        emit patchNumberChanged(_surface->getAttributesSize() - 1);
+        cout << "Succesfull erase!\n";
+        updateGL();
     }
 
 

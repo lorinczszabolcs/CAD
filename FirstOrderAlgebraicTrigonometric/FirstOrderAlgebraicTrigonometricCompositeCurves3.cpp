@@ -19,9 +19,9 @@ FirstOrderAlgebraicTrigonometricCompositeCurve3::ArcAttributes::ArcAttributes()
 
 FirstOrderAlgebraicTrigonometricCompositeCurve3::ArcAttributes::~ArcAttributes()
 {
-    delete this->_arc;
-    delete this->_image;
-    delete this->_color;
+    delete this->_arc, this->_arc = nullptr;
+    delete this->_image, this->_image = nullptr;
+    //delete this->_color;
 }
 
 FirstOrderAlgebraicTrigonometricCompositeCurve3::ArcAttributes::ArcAttributes(
@@ -40,18 +40,19 @@ FirstOrderAlgebraicTrigonometricCompositeCurve3::ArcAttributes& FirstOrderAlgebr
     {
         return *this;
     }
+
     if(this->_arc)
     {
         delete this->_arc;
     }
-    if(this->_color)
-    {
-        delete this->_color;
-    }
+//    if(this->_color)
+//    {
+//        delete this->_color;
+//    }
 
     this->_arc = new FirstOrderAlgebraicTrigonometricArc3(*arc_atr._arc);
     this->_image = new GenericCurve3(*arc_atr._image);
-    this->_color = new Color4(*arc_atr._color);
+    this->_color = arc_atr._color;
 
     return *this;
 }
@@ -94,7 +95,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insert(Color4* color)
     cout << "A4\n";
 
 
-    if (! insertIsolatedArc(*temp, color))
+    if (! insertIsolatedArc(*temp, 2, 200, color))
     {
         cout << "Could not insert isolated arc!\n";
         return GL_FALSE;
@@ -106,7 +107,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insert(Color4* color)
     return GL_TRUE;
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc, Color4* color)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(FirstOrderAlgebraicTrigonometricArc3 &trigArc, GLdouble mod, GLdouble div_point_count, Color4* color)
 {
     GLuint n = _attributes.size();
     if (n > 0)
@@ -115,10 +116,10 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(Fir
         ArcAttributes *old = &_attributes[0];
         _attributes.resize(n + 1);
         validateAttributes(old, &_attributes[0]);
-        ArcAttributes &newArc = _attributes[n - 1];
+        ArcAttributes &newArc = _attributes[n];
         newArc._arc = &trigArc;
-        newArc._mod = 2;
-        newArc._div_point_count = 200;
+        newArc._mod = mod;
+        newArc._div_point_count = div_point_count;
         newArc._color = color;
         if (! updateArcVBOGenerateImage(newArc))
         {
@@ -126,7 +127,6 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(Fir
             cout << "Could not update vertex buffer object or generate image!\n";
             return GL_FALSE;
         }
-        return GL_TRUE;
     }
     else
     {
@@ -138,7 +138,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(Fir
         newArc._arc = &trigArc;
         newArc._mod = 2;
         newArc._div_point_count = 200;
-        newArc._color = new Color4(0.3, 0.2, 0.5, 1.0);
+        newArc._color = color;
         cout << "Referencia\n";
         if (! updateArcVBOGenerateImage(newArc))
         {
@@ -146,8 +146,11 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::insertIsolatedArc(Fir
             return GL_FALSE;
         }
         cout << "Sikerult updatelni!\n";
-        return GL_TRUE;
     }
+
+    cout << "Meret: " << _attributes.size()  << "\n";
+
+    return GL_TRUE;
 
 }
 
@@ -190,11 +193,15 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::updateArcVBOGenerateI
     return GL_TRUE;
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(GLuint index, Direction direction)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(GLuint index, Direction direction, GLdouble mod, GLdouble div_point_count, Color4* color)
 {
     ArcAttributes &arc = _attributes[index];
+
+    cout << "Itt vagyok: continue; Dircetion: " << direction << "\n";
+
     if(direction == RIGHT)
     {
+        cout << "RIIIGHT\n";
        if(arc._next != nullptr)
            return GL_FALSE;
 
@@ -205,6 +212,9 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
        ArcAttributes &added =  _attributes[size];
 
        added._arc = new FirstOrderAlgebraicTrigonometricArc3(1.0);
+       added._color = color;
+       added._div_point_count = div_point_count;
+       added._mod = mod;
        (*added._arc)[0] = (*arc._arc)[3];
        (*added._arc)[1] = 2*(*arc._arc)[3] - (*arc._arc)[2];
        (*added._arc)[2] = 3*(*arc._arc)[3] - 2*(*arc._arc)[2];
@@ -213,7 +223,10 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
        arc._next = &added;
        added._previous = &arc;
        updateArcVBOGenerateImage(added);
-    } else {
+    }
+    else
+    {
+        cout << "LEEEFT\n";
        if(arc._previous != nullptr)
            return GL_FALSE;
 
@@ -224,6 +237,9 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
        ArcAttributes &added =  _attributes[size];
 
        added._arc = new FirstOrderAlgebraicTrigonometricArc3(_alpha);
+       added._color = color;
+       added._div_point_count = div_point_count;
+       added._mod = mod;
        (*added._arc)[0] = 4*(*arc._arc)[0] - 3*(*arc._arc)[1];
        (*added._arc)[1] = 3*(*arc._arc)[0] - 2*(*arc._arc)[1];
        (*added._arc)[2] = 2*(*arc._arc)[0] - (*arc._arc)[1];
@@ -236,7 +252,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::continueExistingArc(G
     return GL_TRUE;
 }
 
-GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2)
+GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuint index1, GLuint index2, Direction direction1, Direction direction2, GLdouble mod, GLdouble div_point_count, Color4* color)
 {
 
     ArcAttributes &arc1 = _attributes[index1];
@@ -258,6 +274,10 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
         validatePointersInArcAttr(oldAttr, &_attributes[0]);
 
         ArcAttributes &joiner = _attributes[size];
+
+        joiner._color = color;
+        joiner._div_point_count = div_point_count;
+        joiner._mod = mod;
 
         (*joiner._arc) = FirstOrderAlgebraicTrigonometricArc3(1.0);
         (*joiner._arc)[0] = (*arc1._arc)[3];
@@ -298,6 +318,10 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::joinExistingArc(GLuin
                 validatePointersInArcAttr(oldAttr, &_attributes[0]);
 
                 ArcAttributes &joiner = _attributes[size];
+
+                joiner._color = color;
+                joiner._div_point_count = div_point_count;
+                joiner._mod = mod;
 
                 (*joiner._arc) = FirstOrderAlgebraicTrigonometricArc3(1.0);
                 (*joiner._arc)[0] = (*arc2._arc)[3];
@@ -359,33 +383,63 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::mergeExistingArc(GLui
 
 GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::eraseExistingArc(GLuint index)
 {
+    cout << "Bent: " << index << " \n";
+
     ArcAttributes *oldAttr = &_attributes[0];
     ArcAttributes &tmp = _attributes[index];
+
+    cout << "Elerem s minden\n";
+
     if(tmp._next != nullptr) {
         tmp._next->_previous = nullptr;
     }
-    if(tmp._previous->_next != nullptr)
+
+    cout << "tempnext megoldva\n";
+
+
+    if (tmp._previous != nullptr)
     {
-        tmp._previous->_next = nullptr;
+        if(tmp._previous->_next != nullptr)
+        {
+            tmp._previous->_next = nullptr;
+        }
     }
-    _attributes.erase(_attributes.begin() + index);
+
+    cout << "tempprevious megoldva\n";
+
+    _attributes.erase(_attributes.begin() + index, _attributes.begin() + index + 1);
+
+    cout << "torles megoldva\n";
 
     for(GLuint i = 0; i < _attributes.size(); i++)
     {
+        cout << i << ". iteracio next-previous\n";
         if(_attributes[i]._next > &tmp)
             _attributes[i]._next--;
         if(_attributes[i]._previous > &tmp)
             _attributes[i]._previous--;
+
+        updateArcVBOGenerateImage(_attributes[i]);
     }
-    validatePointersInArcAttr(oldAttr, &_attributes[0]);
+
+    cout << "vegeztem az iteracioval\n";
+
+    if (_attributes.size() > 0)
+    {
+        validatePointersInArcAttr(oldAttr, &_attributes[0]);
+    }
+
+    cout << "validacio kesz\n";
 
     return GL_TRUE;
 }
 
 GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validatePointersInArcAttr(ArcAttributes *oldAttr, ArcAttributes *newAttr)
 {
+    cout << "Mar megint bent\n";
     if(oldAttr != newAttr)
     {
+        cout << "Meg bennebb\n";
         for(GLuint i = 0; i < _attributes.size(); i++)
         {
             if(_attributes[i]._next)
@@ -404,8 +458,10 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::renderControlPolygon()
 
         if(arc._arc)
         {
+            //glPointSize(10.0);
             glColor3f(0.0, 0.5, 0.0);
             arc._arc->RenderData(GL_LINE_STRIP);
+            //glPointSize(1.0);
         }
     }
 }

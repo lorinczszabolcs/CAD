@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../Core/TensorProductSurfaces3.h"
 
 namespace cagd

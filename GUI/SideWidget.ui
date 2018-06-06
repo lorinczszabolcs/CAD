@@ -248,7 +248,7 @@
     <string notr="true"/>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="parametricTab">
     <attribute name="title">
@@ -1712,7 +1712,7 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>136</width>
+         <width>181</width>
          <height>22</height>
         </rect>
        </property>
@@ -1755,8 +1755,8 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>151</width>
-         <height>71</height>
+         <width>181</width>
+         <height>121</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_10">
@@ -1786,6 +1786,32 @@
           <property name="maximum">
            <number>1000</number>
           </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_84">
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="compCurveJoinComboBoxColor">
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Amethyst</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pomegranate</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
@@ -1867,7 +1893,7 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>151</width>
+         <width>181</width>
          <height>71</height>
         </rect>
        </property>
@@ -1977,32 +2003,6 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>20</x>
-         <y>20</y>
-         <width>151</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <layout class="QFormLayout" name="formLayout_14">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_68">
-          <property name="text">
-           <string>Index</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="compCurveContinueIndexSpinBox">
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <property name="geometry">
-        <rect>
          <x>310</x>
          <y>20</y>
          <width>191</width>
@@ -2046,6 +2046,58 @@
         <string>Continue</string>
        </property>
       </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>181</width>
+         <height>48</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_14">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_68">
+          <property name="text">
+           <string>Index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compCurveContinueIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_83">
+          <property name="text">
+           <string>Color</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="compCurveContinueComboBoxColor">
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Amethyst</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pomegranate</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="eraseTab">
       <attribute name="title">
@@ -2056,7 +2108,7 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>151</width>
+         <width>181</width>
          <height>31</height>
         </rect>
        </property>
@@ -2096,9 +2148,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>11</y>
        <width>167</width>
-       <height>22</height>
+       <height>31</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_26">
@@ -2119,13 +2171,13 @@
     <attribute name="title">
      <string>Comp Surf</string>
     </attribute>
-    <widget class="QTabWidget" name="compCurveTabWidget_2">
+    <widget class="QTabWidget" name="compSurfaceTabWidget">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>40</y>
+       <x>10</x>
+       <y>50</y>
        <width>531</width>
-       <height>221</height>
+       <height>171</height>
       </rect>
      </property>
      <property name="currentIndex">
@@ -2138,8 +2190,8 @@
       <widget class="QPushButton" name="compSurfaceInsertButton">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>20</y>
+         <x>420</x>
+         <y>100</y>
          <width>75</width>
          <height>23</height>
         </rect>
@@ -2153,7 +2205,7 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>136</width>
+         <width>181</width>
          <height>22</height>
         </rect>
        </property>
@@ -2161,12 +2213,27 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_70">
           <property name="text">
-           <string>Color</string>
+           <string>Material</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="compSurfaceInsertComboBoxColor">
+         <widget class="QComboBox" name="compSurfaceInsertComboBoxMaterial">
+          <item>
+           <property name="text">
+            <string>Brass</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Gold</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Silver</string>
+           </property>
+          </item>
           <item>
            <property name="text">
             <string>Emerald</string>
@@ -2174,12 +2241,17 @@
           </item>
           <item>
            <property name="text">
-            <string>Amethyst</string>
+            <string>Pearl</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Pomegranate</string>
+            <string>Ruby</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Turquoise</string>
            </property>
           </item>
          </widget>
@@ -2196,8 +2268,8 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>151</width>
-         <height>71</height>
+         <width>181</width>
+         <height>111</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_19">
@@ -2227,6 +2299,52 @@
           <property name="maximum">
            <number>1000</number>
           </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_85">
+          <property name="text">
+           <string>Material</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="compSurfaceJoinComboBoxMaterial">
+          <item>
+           <property name="text">
+            <string>Brass</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Gold</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Silver</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pearl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ruby</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Turquoise</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
@@ -2345,6 +2463,19 @@
         </item>
        </layout>
       </widget>
+      <widget class="QPushButton" name="compSurfaceJoinButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Join</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="mergeTab_2">
       <attribute name="title">
@@ -2355,7 +2486,7 @@
         <rect>
          <x>20</x>
          <y>20</y>
-         <width>151</width>
+         <width>181</width>
          <height>71</height>
         </rect>
        </property>
@@ -2504,6 +2635,19 @@
         </item>
        </layout>
       </widget>
+      <widget class="QPushButton" name="compSurfaceMergeButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Merge</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="continueTab_2">
       <attribute name="title">
@@ -2512,10 +2656,10 @@
       <widget class="QWidget" name="layoutWidget_11">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>20</x>
          <y>20</y>
-         <width>131</width>
-         <height>31</height>
+         <width>181</width>
+         <height>67</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_23">
@@ -2533,14 +2677,60 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_86">
+          <property name="text">
+           <string>Material</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="compSurfaceContinueComboBoxMaterial">
+          <item>
+           <property name="text">
+            <string>Brass</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Gold</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Silver</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pearl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ruby</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Turquoise</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget_12">
        <property name="geometry">
         <rect>
-         <x>303</x>
+         <x>310</x>
          <y>20</y>
-         <width>144</width>
+         <width>181</width>
          <height>31</height>
         </rect>
        </property>
@@ -2553,7 +2743,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="compSurfceContinueDirectionComboBox">
+         <widget class="QComboBox" name="compSurfaceContinueDirectionComboBox">
           <item>
            <property name="text">
             <string>North</string>
@@ -2598,6 +2788,19 @@
         </item>
        </layout>
       </widget>
+      <widget class="QPushButton" name="compSurfaceContinueButton">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
+         <y>100</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Continue</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="eraseTab_2">
       <attribute name="title">
@@ -2606,10 +2809,10 @@
       <widget class="QPushButton" name="compSurfaceEraseButton">
        <property name="geometry">
         <rect>
-         <x>270</x>
-         <y>20</y>
-         <width>82</width>
-         <height>25</height>
+         <x>420</x>
+         <y>100</y>
+         <width>71</width>
+         <height>21</height>
         </rect>
        </property>
        <property name="text">
@@ -2619,9 +2822,9 @@
       <widget class="QWidget" name="layoutWidget_13">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>20</x>
          <y>20</y>
-         <width>131</width>
+         <width>181</width>
          <height>31</height>
         </rect>
        </property>
@@ -2643,6 +2846,58 @@
        </layout>
       </widget>
      </widget>
+    </widget>
+    <widget class="QWidget" name="layoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>371</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="compSurfaceULinesCheckBox">
+        <property name="text">
+         <string>U lines</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="compSurfaceVLinesCheckBox">
+        <property name="text">
+         <string>V lines</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="compSurfaceControlCheckBox">
+        <property name="text">
+         <string>Control net</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="compSurfaceSurfaceCheckBox">
+        <property name="text">
+         <string>Surface</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>
