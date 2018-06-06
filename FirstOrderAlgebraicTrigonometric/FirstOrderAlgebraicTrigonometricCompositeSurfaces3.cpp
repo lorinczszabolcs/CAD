@@ -30,14 +30,6 @@ FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::~PatchAttributes()
     {
         delete this->_image;
     }
-    if (this->_u_lines)
-    {
-        delete this->_u_lines;
-    }
-    if (this->_v_lines)
-    {
-        delete this->_v_lines;
-    }
 }
 
 FirstOrderAlgebraicTrigonometricSurface3::PatchAttributes::PatchAttributes(
@@ -133,28 +125,28 @@ FirstOrderAlgebraicTrigonometricSurface3::~FirstOrderAlgebraicTrigonometricSurfa
 
 GLboolean FirstOrderAlgebraicTrigonometricSurface3::insert(Material *material)
 {
-    GLdouble dy = -4.0 + 8.0 * (GLdouble) rand() / RAND_MAX;
+    GLdouble dy = -16.0 + 32.0 * (GLdouble) rand() / RAND_MAX;
 
     FirstOrderAlgebraicTrigonometricPatch *temp = new FirstOrderAlgebraicTrigonometricPatch(1.0, 1.0);
-    temp->SetData(0, 0, -3.0, -4.0 + dy, 0.0);
-    temp->SetData(0, 1, -3.0, -1.0 + dy, 0.0);
-    temp->SetData(0, 2, -3.0, 1.0 + dy, 0.0);
-    temp->SetData(0, 3, -3.0, 4.0 + dy, 0.0);
+    temp->SetData(0, 0, -3.0, -4.0 + dy, 0.0 + dy);
+    temp->SetData(0, 1, -3.0, -1.0 + dy, 0.0 + dy);
+    temp->SetData(0, 2, -3.0, 1.0 + dy, 0.0 + dy);
+    temp->SetData(0, 3, -3.0, 4.0 + dy, 0.0 + dy);
 
-    temp->SetData(1, 0, -1.0, -4.0 + dy, 0.0);
-    temp->SetData(1, 1, -1.0, -1.0 + dy, 2.0);
-    temp->SetData(1, 2, -1.0, 1.0 + dy, 2.0);
-    temp->SetData(1, 3, -1.0, 3.0 + dy, 0.0);
+    temp->SetData(1, 0, -1.0, -4.0 + dy, 0.0 + dy);
+    temp->SetData(1, 1, -1.0, -1.0 + dy, 2.0 + dy);
+    temp->SetData(1, 2, -1.0, 1.0 + dy, 2.0 + dy);
+    temp->SetData(1, 3, -1.0, 3.0 + dy, 0.0 + dy);
 
-    temp->SetData(2, 0, 1.0, -4.0 + dy, 0.0);
-    temp->SetData(2, 1, 1.0, -1.0 + dy, 2.0);
-    temp->SetData(2, 2, 1.0, 1.0 + dy, 2.0);
-    temp->SetData(2, 3, 1.0, 3.0 + dy, 0.0);
+    temp->SetData(2, 0, 1.0, -4.0 + dy, 0.0 + dy);
+    temp->SetData(2, 1, 1.0, -1.0 + dy, 2.0 + dy);
+    temp->SetData(2, 2, 1.0, 1.0 + dy, 2.0 + dy);
+    temp->SetData(2, 3, 1.0, 3.0 + dy, 0.0 + dy);
 
-    temp->SetData(3, 0, 3.0, -4.0 + dy, 0.0);
-    temp->SetData(3, 1, 3.0, -1.0 + dy, 0.0);
-    temp->SetData(3, 2, 3.0, 1.0 + dy, 0.0);
-    temp->SetData(3, 3, 3.0, 4.0 + dy, 0.0);
+    temp->SetData(3, 0, 3.0, -4.0 + dy, 0.0 + dy);
+    temp->SetData(3, 1, 3.0, -1.0 + dy, 0.0 + dy);
+    temp->SetData(3, 2, 3.0, 1.0 + dy, 0.0 + dy);
+    temp->SetData(3, 3, 3.0, 4.0 + dy, 0.0 + dy);
 
     if (!temp->UpdateVertexBufferObjectsOfData())
     {
@@ -186,6 +178,7 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::insertIsolatedSurface(
         PatchAttributes &newPatch = _attributes[n];
         newPatch._patch = &patch;
         newPatch._material = material;
+
         newPatch._u_lines = newPatch._patch->GenerateUIsoparametricLines(5,1,100);
         newPatch._v_lines = newPatch._patch->GenerateVIsoparametricLines(5,1,100);
 
@@ -534,11 +527,21 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::mergeExistingSurface(GLuint 
     default:
         return GL_FALSE;
     }
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*patch1._u_lines)[i]->UpdateVertexBufferObjects();
+        (*patch1._v_lines)[i]->UpdateVertexBufferObjects();
+        (*patch2._u_lines)[i]->UpdateVertexBufferObjects();
+        (*patch2._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patch1._neighbors[dir1] = &patch2;
     patch2._neighbors[dir2] = &patch1;
     UpdatePatchVBOGenerateImage(patch1);
-    //UpdatePatchVBOGenerateImage(patch1);
     UpdatePatchVBOGenerateImage(patch2);
+
+
     return GL_TRUE;
 }
 
@@ -553,64 +556,82 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::eraseExistingSurface(GLuint ind
                     tmp._neighbors[i]->_neighbors[j] = nullptr;
             }
     }
-    _attributes.erase(_attributes.begin() + index);
+    _attributes.erase(_attributes.begin() + index, _attributes.begin() + index + 1);
 
-    if (_attributes.size() != 0)
+    for(GLuint i = 0; i < _attributes.size(); i++)
     {
-        for(GLuint i = 0; i < _attributes.size() - 1; i++)
-        {
-            PatchAttributes *local = &_attributes[i];
-            for(int i = N; i <= NW; i++) {
-                if (local->_neighbors[i] > &tmp)
-                    local->_neighbors[i]--;
-            }
+        PatchAttributes &local = _attributes[i];
+
+        for(GLuint j = N; j <= NW; j++) {
+            if (local._neighbors[j] > &tmp)
+                local._neighbors[j]--;
         }
-        ValidatePointersInPatchAttrs(oldAttr,&_attributes[0]);
+
+        if ((*local._u_lines).GetColumnCount() == 0)
+        {
+            local._u_lines = local._patch->GenerateUIsoparametricLines(5, 5, 100);
+        }
+
+        if ((*local._v_lines).GetColumnCount() == 0)
+        {
+            local._v_lines = local._patch->GenerateVIsoparametricLines(5, 5, 100);
+        }
+
+        for (GLuint j = 0; j < 5; j++)
+        {
+            (*local._u_lines)[j]->UpdateVertexBufferObjects();
+            (*local._v_lines)[j]->UpdateVertexBufferObjects();
+        }
+
+        UpdatePatchVBOGenerateImage(_attributes[i]);
     }
+
+    if(_attributes.size())
+        ValidatePointersInPatchAttrs(oldAttr,&_attributes[0]);
 }
 
 GLboolean FirstOrderAlgebraicTrigonometricSurface3::renderSurfaces(GLboolean u_lin, GLboolean v_lin, GLboolean control, GLboolean surf)
 {
     for(GLuint i = 0; i < _attributes.size(); i++)
     {
-        PatchAttributes &attr = _attributes[i];
+//        PatchAttributes &attr = _attributes[i];
 
-        if (attr._image)
+        if (_attributes[i]._image)
         {
             if (surf)
             {
                 glEnable(GL_LIGHTING);
-                if(attr._material != nullptr)
-                    attr._material->Apply();
+                if(_attributes[i]._material != nullptr)
+                    _attributes[i]._material->Apply();
                 else
                     MatFBBrass.Apply();
-                attr._image ->Render();
+                _attributes[i]._image ->Render();
             }
 
             if (control)
             {
                 glDisable(GL_LIGHTING);
                 glColor3f(0.4 ,0.8, 0.3);
-                attr._patch->RenderData(GL_LINE_STRIP);
+                _attributes[i]._patch->RenderData(GL_LINE_STRIP);
             }
 
             if (u_lin)
             {
                 glDisable(GL_LIGHTING);
-                for(GLuint i = 0; i < 5; i++)
+                for(GLuint j = 0; j < 5; j++)
                 {
                     glColor3f(0.2, 0.2, 0.2);
-                    (*attr._u_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
+                    (*_attributes[i]._u_lines)[j]->RenderDerivatives(0, GL_LINE_STRIP);
                 }
             }
 
             if (v_lin)
             {
                 glDisable(GL_LIGHTING);
-                for(GLuint i = 0; i < 5; i++)
+                for(GLuint j = 0; j < 5; j++)
                 {
                     glColor3f(0.2, 0.2, 0.2);
-                    (*attr._v_lines)[i]->RenderDerivatives(0, GL_LINE_STRIP);
+                    (*_attributes[i]._v_lines)[j]->RenderDerivatives(0, GL_LINE_STRIP);
                 }
             }
         }
@@ -758,6 +779,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_N(
         (*joiner._patch)(i, 2) = 2*(*patchN2._patch)(3, i) - (*patchN2._patch)(2, i);
         (*joiner._patch)(i, 3) = (*patchN2._patch)(3, i);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchN1._neighbors[N] = &joiner;
     patchN2._neighbors[N] = &joiner;
     joiner._neighbors[N] = &patchN1;
@@ -784,6 +815,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_E(
         (*joiner._patch)(i, 2) = 2*(*patchE._patch)(i, 3) - (*patchE._patch)(i, 2);
         (*joiner._patch)(i, 3) = (*patchE._patch)(i, 3);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchN._neighbors[N] = &joiner;
     patchE._neighbors[E] = &joiner;
     joiner._neighbors[W] = &patchN;
@@ -810,6 +851,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesN_S(
         (*joiner._patch)(i, 2) = 2*(*patchS._patch)(0, i) - (*patchS._patch)(1, i);
         (*joiner._patch)(i, 3) = (*patchS._patch)(0, i);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchN._neighbors[N] = &joiner;
     patchS._neighbors[S] = &joiner;
     joiner._neighbors[W] = &patchN;
@@ -836,6 +887,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_E(
         (*joiner._patch)(i, 2) = 2*(*patchW._patch)(i, 0) - (*patchW._patch)(i, 1);
         (*joiner._patch)(i, 3) = (*patchW._patch)(i, 0);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchW._neighbors[W] = &joiner;
     patchE._neighbors[E] = &joiner;
     joiner._neighbors[W] = &patchE;
@@ -862,6 +923,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_N(
         (*joiner._patch)(i, 2) = 2*(*patchN._patch)(3, i) - (*patchN._patch)(2, i);
         (*joiner._patch)(i, 3) = (*patchN._patch)(3, i);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchW._neighbors[W] = &joiner;
     patchN._neighbors[N] = &joiner;
     joiner._neighbors[W] = &patchN;
@@ -887,6 +958,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_W(PatchAttributes 
         (*joiner._patch)(i, 2) = 2*(*patchW2._patch)(i, 0) - (*patchW2._patch)(i, 1);
         (*joiner._patch)(i, 3) = (*patchW2._patch)(i, 0);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchW1._neighbors[W] = &joiner;
     patchW2._neighbors[W] = &joiner;
     joiner._neighbors[W] = &patchW1;
@@ -912,6 +993,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesW_S(PatchAttributes 
         (*joiner._patch)(i, 2) = 2*(*patchS._patch)(0, i) - (*patchS._patch)(1, i);
         (*joiner._patch)(i, 3) = (*patchS._patch)(0, i);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchW._neighbors[W] = &joiner;
     patchS._neighbors[S] = &joiner;
     joiner._neighbors[W] = &patchW;
@@ -937,6 +1028,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_E(PatchAttributes 
         (*joiner._patch)(i, 2) = 2*(*patchE2._patch)(i, 3) - (*patchE2._patch)(i, 2);
         (*joiner._patch)(i, 3) = (*patchE2._patch)(i, 3);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchE1._neighbors[E] = &joiner;
     patchE2._neighbors[E] = &joiner;
     joiner._neighbors[W] = &patchE1;
@@ -962,6 +1063,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesE_S(PatchAttributes 
         (*joiner._patch)(i, 2) = 2*(*patchS._patch)(0, i) - (*patchS._patch)(1, i);
         (*joiner._patch)(i, 3) = (*patchS._patch)(0, i);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchE._neighbors[E] = &joiner;
     patchS._neighbors[S] = &joiner;
     joiner._neighbors[W] = &patchE;
@@ -987,6 +1098,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesS_S(PatchAttributes 
         (*joiner._patch)(i, 2) = 2*(*patchS2._patch)(0, i) - (*patchS2._patch)(1, i);
         (*joiner._patch)(i, 3) = (*patchS2._patch)(0, i);
     }
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchS1._neighbors[E] = &joiner;
     patchS2._neighbors[S] = &joiner;
     joiner._neighbors[W] = &patchS1;
@@ -1030,6 +1151,16 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NW(PatchAttribute
 
     (*joiner._patch)(1, 1) = 2 * (*joiner._patch)(2, 1) - (*joiner._patch)(3, 1);
     (*joiner._patch)(2, 2) = 2 * (*joiner._patch)(1, 2) - (*joiner._patch)(0, 2);
+
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
 
     patchNW1._neighbors[NW] = &joiner;
     patchNW2._neighbors[NW] = &joiner;
@@ -1075,6 +1206,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_NE(PatchAttribute
     (*joiner._patch)(1, 1) = 2 * (*joiner._patch)(2, 1) - (*joiner._patch)(3, 1);
     (*joiner._patch)(2, 2) = 2 * (*joiner._patch)(1, 2) - (*joiner._patch)(0, 2);
 
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchNW._neighbors[NW] = &joiner;
     patchNE._neighbors[NE] = &joiner;
     joiner._neighbors[SE] = &patchNW;
@@ -1118,6 +1258,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SE(PatchAttribute
 
     (*joiner._patch)(1, 1) = 2 * (*joiner._patch)(2, 1) - (*joiner._patch)(3, 1);
     (*joiner._patch)(2, 2) = 2 * (*joiner._patch)(1, 2) - (*joiner._patch)(0, 2);
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
 
     patchNW._neighbors[NW] = &joiner;
     patchSE._neighbors[SE] = &joiner;
@@ -1163,6 +1312,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNW_SW(PatchAttribute
     (*joiner._patch)(1, 1) = 2 * (*joiner._patch)(2, 1) - (*joiner._patch)(3, 1);
     (*joiner._patch)(2, 2) = 2 * (*joiner._patch)(1, 2) - (*joiner._patch)(0, 2);
 
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchNW._neighbors[NW] = &joiner;
     patchSW._neighbors[SW] = &joiner;
     joiner._neighbors[SE] = &patchNW;
@@ -1206,6 +1364,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_NE(PatchAttribute
 
     (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(1, 1);
     (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(2, 3);
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
 
     patchNE1._neighbors[NE] = &joiner;
     patchNE2._neighbors[NE] = &joiner;
@@ -1251,6 +1418,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SE(PatchAttribute
     (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
     (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
 
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchNE._neighbors[NE] = &joiner;
     patchSE._neighbors[SE] = &joiner;
     joiner._neighbors[SW] = &patchNE;
@@ -1294,6 +1470,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesNE_SW(PatchAttribute
 
     (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
     (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
 
     patchNE._neighbors[NE] = &joiner;
     patchSW._neighbors[SW] = &joiner;
@@ -1339,6 +1524,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SE(PatchAttribute
     (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
     (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
 
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchSE1._neighbors[SE] = &joiner;
     patchSE2._neighbors[SE] = &joiner;
     joiner._neighbors[SE] = &patchSE1;
@@ -1383,6 +1577,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSE_SW(PatchAttribute
     (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
     (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
 
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
+
     patchSE._neighbors[SE] = &joiner;
     patchSW._neighbors[NW] = &joiner;
     joiner._neighbors[SE] = &patchSE;
@@ -1426,6 +1629,15 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::joinPatchesSW_SW(PatchAttribute
 
     (*joiner._patch)(2, 1) = 2 * (*joiner._patch)(1, 1) - (*joiner._patch)(0, 1);
     (*joiner._patch)(1, 2) = 2 * (*joiner._patch)(2, 2) - (*joiner._patch)(3, 2);
+
+    joiner._u_lines = joiner._patch->GenerateUIsoparametricLines(5,1,100);
+    joiner._v_lines = joiner._patch->GenerateVIsoparametricLines(5,1,100);
+
+    for(GLuint i = 0; i < 5; i++)
+    {
+        (*joiner._u_lines)[i]->UpdateVertexBufferObjects();
+        (*joiner._v_lines)[i]->UpdateVertexBufferObjects();
+    }
 
     patchSW1._neighbors[SE] = &joiner;
     patchSW2._neighbors[NW] = &joiner;

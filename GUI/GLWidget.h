@@ -377,11 +377,13 @@ namespace cagd
 
         // curve
         void arcNumberChanged(int);
-        void patchNumberChanged(int);
 
         // patch
         void xCoordinatePatchChanged(double);
         void yCoordinatePatchChanged(double);
         void zCoordinatePatchChanged(double);
+
+        // surface
+        void patchNumberChanged(int);
     };
 }

@@ -2515,8 +2515,8 @@ namespace cagd
     void GLWidget::mergePatch(bool value)
     {
         if (!_surface->mergeExistingSurface(_merge_index1_s, _merge_index2_s,
-                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_merge_direction1_c,
-                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_merge_direction2_c))
+                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_merge_direction1_s,
+                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_merge_direction2_s))
         {
             cout << "Could not merge arc!\n";
         }
