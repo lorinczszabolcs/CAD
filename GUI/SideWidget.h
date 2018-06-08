@@ -31,6 +31,9 @@ namespace cagd
 
             // curve
             void setArcNumber(int value);
+            void setControlPointCurveX(double value);
+            void setControlPointCurveY(double value);
+            void setControlPointCurveZ(double value);
 
             // patch
             void setControlPointPatchX(double value);
@@ -39,5 +42,8 @@ namespace cagd
 
             // surface
             void setPatchNumber(int value);
+            void setControlPointSurfaceX(double value);
+            void setControlPointSurfaceY(double value);
+            void setControlPointSurfaceZ(double value);
     };
 }

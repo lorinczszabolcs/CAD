@@ -103,33 +103,34 @@ GLboolean FirstOrderAlgebraicTrigonometricPatch::CalculatePartialDerivatives(GLu
     d1_u_blending_values(2) = d_f2(u);
     d1_u_blending_values(3) = d_f3(u);
 
-     RowMatrix<GLdouble> v_blending_values(4), d1_v_blending_values(4);
+    RowMatrix<GLdouble> v_blending_values(4), d1_v_blending_values(4);
 
-     v_blending_values(0) = f3(_alpha_v - v);
-     v_blending_values(1) = f2(_alpha_v - v);
-     v_blending_values(2) = f2(v);
-     v_blending_values(3) = f3(v);
+    v_blending_values(0) = f3(_alpha_v - v);
+    v_blending_values(1) = f2(_alpha_v - v);
+    v_blending_values(2) = f2(v);
+    v_blending_values(3) = f3(v);
 
-     d1_v_blending_values(0) = -d_f3(_alpha_v - v);
-     d1_v_blending_values(1) = -d_f2(_alpha_v - v);
-     d1_v_blending_values(2) = d_f2(v);
-     d1_v_blending_values(3) = d_f3(v);
+    d1_v_blending_values(0) = -d_f3(_alpha_v - v);
+    d1_v_blending_values(1) = -d_f2(_alpha_v - v);
+    d1_v_blending_values(2) = d_f2(v);
+    d1_v_blending_values(3) = d_f3(v);
 
-     pd.ResizeRows(2);
-     pd.LoadNullVectors();
-     for(GLuint row = 0; row < 4; ++row)
-     {
-         DCoordinate3 aux_d0_v, aux_d1_v;
-         for(GLuint column = 0; column < 4; ++column)
-         {
+    pd.ResizeRows(2);
+    pd.LoadNullVectors();
+
+    for(GLuint row = 0; row < 4; ++row)
+    {
+        DCoordinate3 aux_d0_v, aux_d1_v;
+        for(GLuint column = 0; column < 4; ++column)
+        {
             aux_d0_v += _data(row, column) * v_blending_values(column);
             aux_d1_v += _data(row, column) *d1_v_blending_values(column);
-         }
-         pd(0, 0) += aux_d0_v * u_blending_values(row);
-         pd(1, 0) += aux_d0_v * d1_u_blending_values(row);
-         pd(1, 1) += aux_d1_v * u_blending_values(row);
-     }
-     return GL_TRUE;
+        }
+        pd(0, 0) += aux_d0_v * u_blending_values(row);
+        pd(1, 0) += aux_d0_v * d1_u_blending_values(row);
+        pd(1, 1) += aux_d1_v * u_blending_values(row);
+    }
+    return GL_TRUE;
 }
 
 

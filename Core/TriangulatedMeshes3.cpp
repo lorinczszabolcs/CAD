@@ -123,6 +123,22 @@ GLboolean TriangulatedMesh3::Render(GLenum render_mode) const
     return GL_TRUE;
 }
 
+GLboolean TriangulatedMesh3::RenderNormalVectors(GLenum render_mode) const
+{
+    if (!_vbo_normals)
+        return GL_FALSE;
+    if (render_mode != GL_LINES)
+        return GL_FALSE;
+
+    for (int i = 0; i < _normal.size(); i++)
+    {
+        glBegin(GL_LINES);
+          glVertex3f(_vertex[i].x(), _vertex[i].y(), _vertex[i].z());
+          glVertex3f(_normal[i].x() + _vertex[i].x(), _normal[i].y() + _vertex[i].y(), _normal[i].z() + _vertex[i].z());
+        glEnd();
+    }
+}
+
 GLboolean TriangulatedMesh3::UpdateVertexBufferObjects(GLenum usage_flag)
 {
     if (usage_flag != GL_STREAM_DRAW  && usage_flag != GL_STREAM_READ  && usage_flag != GL_STREAM_COPY

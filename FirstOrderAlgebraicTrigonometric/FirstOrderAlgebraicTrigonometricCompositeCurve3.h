@@ -58,10 +58,10 @@ namespace cagd
         // render
         GLvoid renderControlPolygon();
         GLboolean renderCurves(GLuint order, GLenum render_mode);
-//        GLboolean renderDerivatives(GLuint order, GLenum render_mode);
 
         // get-set -> GUI
-
+        DCoordinate3 getData(GLint arc_index, GLint point_index);
+        GLvoid setData(GLint arc_index, GLint point_index, GLdouble x, GLdouble y, GLdouble z);
         GLint getAttributesSize();
 
         // dtor
@@ -73,6 +73,5 @@ namespace cagd
         // operator=
         FirstOrderAlgebraicTrigonometricCompositeCurve3& operator=(const FirstOrderAlgebraicTrigonometricCompositeCurve3 &curve);
 
-        // getsize
     };
 }

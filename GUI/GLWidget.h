@@ -113,7 +113,9 @@ namespace cagd
                                                         _erase_index_c, _continue_index_c, _join_index1_c,
                                                         _join_index2_c, _merge_index1_c, _merge_index2_c;
         GLint                                           _continue_direction_c, _join_direction1_c, _join_direction2_c,
-                                                        _merge_direction1_c, _merge_direction2_c;
+                                                        _merge_direction1_c, _merge_direction2_c,
+                                                        _selected_arc_index, _selected_arc_point_index;
+        GLdouble                                        _selected_arc_pointX, _selected_arc_pointY, _selected_arc_pointZ;
         // Patch
         FirstOrderAlgebraicTrigonometricPatch *_patch_aux;
         FirstOrderAlgebraicTrigonometricPatch *_patch;
@@ -126,13 +128,31 @@ namespace cagd
 
         // surface
         FirstOrderAlgebraicTrigonometricSurface3 *_surface;
-        GLboolean                                _surf, _u_lin_surf, _v_lin_surf, _control_surf;
+        GLboolean                                _surf, _u_lin_surf, _v_lin_surf, _u_der_surf, _v_der_surf,
+                                                 _control_surf, _normal_surf;
         GLint                                    _material_index_insert_surf, _material_index_continue_surf,
                                                  _material_index_join_surf, _material_index_surf,
                                                  _continue_index_s, _erase_index_s, _join_index1_s,
                                                  _join_index2_s, _merge_index1_s, _merge_index2_s,
                                                  _merge_direction1_s, _merge_direction2_s, _join_direction1_s,
-                                                 _join_direction2_s, _continue_direction_s;
+                                                 _join_direction2_s, _continue_direction_s,
+                                                 _selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index;
+        GLdouble                                 _selected_patch_pointX, _selected_patch_pointY, _selected_patch_pointZ;
+
+        // Shaders
+        RowMatrix<ShaderProgram*>      _shaders3;
+        GLboolean                      _shader_enabled3;
+        GLint                          _shader_index_insert3;
+        GLint                          _shader_index_join3;
+        GLint                          _shader_index_continue3;
+
+        GLdouble                       _scale_factor3;
+        GLdouble                       _smoothing3;
+        GLdouble                       _shading3;
+
+
+        Color4                         _outline3;
+
         // Lights
         DirectionalLight *_dl;
         PointLight       *_pl;
@@ -198,6 +218,8 @@ namespace cagd
         // surface
         void buildFirstOrderAlgebraicTrigonometricSurface();
         void renderFirstOrderAlgebraicTrigonometricSurface();
+        void enableShader3();
+        void disableShader3();
 
 
     public slots:
@@ -219,32 +241,36 @@ namespace cagd
         // tabindex
         void setTabIndex(int index);
 
-        // parametric
+        // --------- parametric ---------
         void setParametricCurveIndex(int index);
         void toggleFirstOrderDerivativesParametric(bool b);
         void toggleSecondOrderDerivativesParametric(bool b);
 
-        // cyclic
+        // --------- cyclic ---------
         void setCyclicCurveIndex(int index);
         void toggleFirstOrderDerivativesCyclic(bool b);
         void toggleSecondOrderDerivativesCyclic(bool b);
         void toggleControlPolygonCyclic(bool b);
 
-        // interpolating
+        // --------- interpolating ---------
         void setControlPointIndex(int index);
         void setControlPointX (double value);
         void setControlPointY (double value);
         void setControlPointZ (double value);
 
-        // model
+        // --------- model ---------
         void setModelIndex(int index);
 
         // parametric surface
         void setParametricSurfaceIndex(int index);
 
-        // shaders
+        // --------- shaders ---------
         void setShaderIndex(int index);
         void setShaderIndex2(int index);
+        void setShaderInsertIndex3(int index);
+        void setShaderJoinIndex3(int index);
+        void setShaderContinueIndex3(int index);
+
         void setMaterialIndex(int index);
         void setMaterialIndex2(int index);
 
@@ -264,7 +290,15 @@ namespace cagd
         void setOutlineB2(double value);
         void setOutlineA2(double value);
 
-        // arc
+        void setScaleFactor3(double value);
+        void setSmoothing3(double value);
+        void setShading3(double value);
+        void setOutlineR3(double value);
+        void setOutlineG3(double value);
+        void setOutlineB3(double value);
+        void setOutlineA3(double value);
+
+        // --------- arc ---------
         void toggleFirstOrderDerivativesArc(bool value);
         void toggleSecondOrderDerivativesArc(bool value);
         void toggleControlPolygonArc(bool value);
@@ -274,7 +308,7 @@ namespace cagd
         void setControlPointArcY (double value);
         void setControlPointArcZ (double value);
 
-        // curve
+        // --------- curve ---------
 
         // render
         void setMaxOrderOfDerivativesCurve(int value);
@@ -308,8 +342,16 @@ namespace cagd
         void setEraseIndexCurve(int value);
         void eraseArc(bool value);
 
+        // edit
+        void setArcCurveIndex (int index);
+        void setControlPointCurveIndex(int index);
+        void setControlPointCurveX (double value);
+        void setControlPointCurveY (double value);
+        void setControlPointCurveZ (double value);
 
-        // patch
+
+        // --------- patch ---------
+
         void setBeforeInterpolate(bool value);
         void setAfterInterpolate(bool value);
         void setULines(bool value);
@@ -323,13 +365,17 @@ namespace cagd
         void setControlPointPatchY (double value);
         void setControlPointPatchZ (double value);
 
-        // surface
+        // --------- surface ---------
 
         // render
         void toggleULinesSurface(bool value);
         void toggleVLinesSurface(bool value);
+        void toggleUDerivativesSurface(bool value);
+        void toggleVDerivativesSurface(bool value);
         void toggleControlNetSurface(bool value);
         void toggleSurfaceSurface(bool value);
+        void toggleShader3Surface(bool value);
+        void toggleSurfaceNormal(bool value);
 
         // insert
         void setMaterialSurfaceInsert(int value);
@@ -360,6 +406,14 @@ namespace cagd
         void setEraseIndexSurface(int value);
         void erasePatch(bool value);
 
+        // edit
+        void setPatchSurfaceIndex (int index);
+        void setControlPointSurfaceUIndex(int index);
+        void setControlPointSurfaceVIndex(int index);
+        void setControlPointSurfaceX (double value);
+        void setControlPointSurfaceY (double value);
+        void setControlPointSurfaceZ (double value);
+
     private slots:
         void _animate();
 
@@ -377,6 +431,10 @@ namespace cagd
 
         // curve
         void arcNumberChanged(int);
+        void xCoordinateCurveChanged(double);
+        void yCoordinateCurveChanged(double);
+        void zCoordinateCurveChanged(double);
+
 
         // patch
         void xCoordinatePatchChanged(double);
@@ -385,5 +443,9 @@ namespace cagd
 
         // surface
         void patchNumberChanged(int);
+        void xCoordinateSurfaceChanged(double);
+        void yCoordinateSurfaceChanged(double);
+        void zCoordinateSurfaceChanged(double);
+
     };
 }

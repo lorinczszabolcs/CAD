@@ -93,18 +93,25 @@ namespace cagd
         connect(_side_widget->materialCombo_2, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialIndex2(int)));
         connect(_side_widget->scaleSpinBox, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setScaleFactor(double)));
         connect(_side_widget->scaleSpinBox_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setScaleFactor2(double)));
+        connect(_side_widget->scaleSpinBox_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setScaleFactor3(double)));
         connect(_side_widget->smoothSpinBox, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setSmoothing(double)));
         connect(_side_widget->smoothSpinBox_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setSmoothing2(double)));
+        connect(_side_widget->smoothSpinBox_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setSmoothing3(double)));
         connect(_side_widget->shadeSpinBox, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setShading(double)));
         connect(_side_widget->shadeSpinBox_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setShading2(double)));
+        connect(_side_widget->shadeSpinBox_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setShading3(double)));
         connect(_side_widget->outlineSpinBoxR, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineR(double)));
         connect(_side_widget->outlineSpinBoxR_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineR2(double)));
+        connect(_side_widget->outlineSpinBoxR_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineR3(double)));
         connect(_side_widget->outlineSpinBoxG, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineG(double)));
         connect(_side_widget->outlineSpinBoxG_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineG2(double)));
+        connect(_side_widget->outlineSpinBoxG_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineG3(double)));
         connect(_side_widget->outlineSpinBoxB, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineB(double)));
         connect(_side_widget->outlineSpinBoxB_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineB2(double)));
+        connect(_side_widget->outlineSpinBoxB_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineB3(double)));
         connect(_side_widget->outlineSpinBoxA, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineA(double)));
         connect(_side_widget->outlineSpinBoxA_2, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineA2(double)));
+        connect(_side_widget->outlineSpinBoxA_3, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setOutlineA3(double)));
 
         // Arc
         connect(_side_widget->arcFirstOrderDerivativeCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleFirstOrderDerivativesArc(bool)));
@@ -156,6 +163,21 @@ namespace cagd
         connect(_side_widget->compCurveEraseButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(eraseArc(bool)));
         connect(_side_widget->compCurveEraseIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setEraseIndexCurve(int)));
 
+        // edit
+        connect(_side_widget->compCurveArcSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setArcCurveIndex(int)));
+        connect(_side_widget->compCurvePointSlider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointCurveIndex(int)));
+        connect(_side_widget->compCurveTranslateX, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointCurveX(double)));
+        connect(_side_widget->compCurveTranslateY, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointCurveY(double)));
+        connect(_side_widget->compCurveTranslateZ, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointCurveZ(double)));
+
+        connect(_gl_widget, SIGNAL(xCoordinateCurveChanged(double)), _side_widget, SLOT(setControlPointCurveX(double)));
+        connect(_gl_widget, SIGNAL(yCoordinateCurveChanged(double)), _side_widget, SLOT(setControlPointCurveY(double)));
+        connect(_gl_widget, SIGNAL(zCoordinateCurveChanged(double)), _side_widget, SLOT(setControlPointCurveZ(double)));
+
+
+
+
+
         // ------------------- Patch -------------------
 
         // booleans
@@ -191,18 +213,24 @@ namespace cagd
         // rendering
         connect(_side_widget->compSurfaceULinesCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleULinesSurface(bool)));
         connect(_side_widget->compSurfaceVLinesCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleVLinesSurface(bool)));
+        connect(_side_widget->compSurfaceUDerivativesCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleUDerivativesSurface(bool)));
+        connect(_side_widget->compSurfaceVDerivativesCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleVDerivativesSurface(bool)));
         connect(_side_widget->compSurfaceControlCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleControlNetSurface(bool)));
         connect(_side_widget->compSurfaceSurfaceCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleSurfaceSurface(bool)));
+        connect(_side_widget->compSurfaceShaderCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleShader3Surface(bool)));
+        connect(_side_widget->compSurfaceNormalsCheckBox, SIGNAL(toggled(bool)), _gl_widget, SLOT(toggleSurfaceNormal(bool)));
 
         // insert
         connect(_side_widget->compSurfaceInsertComboBoxMaterial, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialSurfaceInsert(int)));
         connect(_side_widget->compSurfaceInsertButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(insertPatch(bool)));
+        connect(_side_widget->compSurfaceInsertComboBoxShader, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setShaderInsertIndex3(int)));
 
         // continue
         connect(_side_widget->compSurfaceContinueButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(continuePatch(bool)));
         connect(_side_widget->compSurfaceContinueComboBoxMaterial, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialSurfaceContinue(int)));
         connect(_side_widget->compSurfaceContinueDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setContinueDirectionSurface(int)));
         connect(_side_widget->compSurfaceContinueIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setContinueIndexSurface(int)));
+        connect(_side_widget->compSurfaceContinueComboBoxShader, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setShaderContinueIndex3(int)));
 
         // join
         connect(_side_widget->compSurfaceJoinButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(joinPatch(bool)));
@@ -211,6 +239,7 @@ namespace cagd
         connect(_side_widget->compSurfaceJoinFirstDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection1Surface(int)));
         connect(_side_widget->compSurfaceJoinSecondDirectionComboBox, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setJoinDirection2Surface(int)));
         connect(_side_widget->compSurfaceJoinComboBoxMaterial, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setMaterialSurfaceJoin(int)));
+        connect(_side_widget->compSurfaceJoinComboBoxShader, SIGNAL(currentIndexChanged(int)), _gl_widget, SLOT(setShaderJoinIndex3(int)));
 
         // merge
         connect(_side_widget->compSurfaceMergeButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(mergePatch(bool)));
@@ -222,6 +251,18 @@ namespace cagd
         // erase
         connect(_side_widget->compSurfaceEraseButton, SIGNAL(clicked(bool)), _gl_widget, SLOT(erasePatch(bool)));
         connect(_side_widget->compSurfaceEraseIndexSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setEraseIndexSurface(int)));
+
+        // edit
+        connect(_side_widget->compSurfacePatchSpinBox, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setPatchSurfaceIndex(int)));
+        connect(_side_widget->compSurfaceUPointSlider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointSurfaceUIndex(int)));
+        connect(_side_widget->compSurfaceVPointSlider, SIGNAL(valueChanged(int)), _gl_widget, SLOT(setControlPointSurfaceVIndex(int)));
+        connect(_side_widget->compSurfaceTranslateX, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointSurfaceX(double)));
+        connect(_side_widget->compSurfaceTranslateY, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointSurfaceY(double)));
+        connect(_side_widget->compSurfaceTranslateZ, SIGNAL(valueChanged(double)), _gl_widget, SLOT(setControlPointSurfaceZ(double)));
+
+        connect(_gl_widget, SIGNAL(xCoordinateSurfaceChanged(double)), _side_widget, SLOT(setControlPointSurfaceX(double)));
+        connect(_gl_widget, SIGNAL(yCoordinateSurfaceChanged(double)), _side_widget, SLOT(setControlPointSurfaceY(double)));
+        connect(_gl_widget, SIGNAL(zCoordinateSurfaceChanged(double)), _side_widget, SLOT(setControlPointSurfaceZ(double)));
     }
 
     //--------------------------------

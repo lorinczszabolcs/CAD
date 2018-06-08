@@ -93,6 +93,11 @@ namespace cagd
             compCurveContinueButton->setDisabled(true);
             compCurveMergeButton->setDisabled(true);
             compCurveJoinButton->setDisabled(true);
+            compCurveArcSpinBox->setDisabled(true);
+            compCurvePointSlider->setDisabled(true);
+            compCurveTranslateX->setDisabled(true);
+            compCurveTranslateY->setDisabled(true);
+            compCurveTranslateZ->setDisabled(true);
         }
         else
         {
@@ -100,6 +105,11 @@ namespace cagd
             compCurveContinueButton->setDisabled(false);
             compCurveMergeButton->setDisabled(true);
             compCurveJoinButton->setDisabled(true);
+            compCurveArcSpinBox->setDisabled(false);
+            compCurvePointSlider->setDisabled(false);
+            compCurveTranslateX->setDisabled(false);
+            compCurveTranslateY->setDisabled(false);
+            compCurveTranslateZ->setDisabled(false);
             if (value >= 1)
             {
                 compCurveJoinButton->setDisabled(false);
@@ -117,6 +127,31 @@ namespace cagd
         compCurveMergeSecondIndexSpinBox->setMaximum(value);
         compCurveContinueIndexSpinBox->setMaximum(value);
         compCurveEraseIndexSpinBox->setMaximum(value);
+        compCurveArcSpinBox->setMaximum(value);
+    }
+
+    void SideWidget::setControlPointCurveX(double value)
+    {
+        if (compCurveTranslateX->value() != value)
+        {
+            compCurveTranslateX->setValue(value);
+        }
+    }
+
+    void SideWidget::setControlPointCurveY(double value)
+    {
+        if (compCurveTranslateY->value() != value)
+        {
+            compCurveTranslateY->setValue(value);
+        }
+    }
+
+    void SideWidget::setControlPointCurveZ(double value)
+    {
+        if (compCurveTranslateZ->value() != value)
+        {
+            compCurveTranslateZ->setValue(value);
+        }
     }
 
     void SideWidget::setControlPointPatchX(double value)
@@ -151,6 +186,13 @@ namespace cagd
             compSurfaceContinueButton->setDisabled(true);
             compSurfaceMergeButton->setDisabled(true);
             compSurfaceJoinButton->setDisabled(true);
+
+            compSurfacePatchSpinBox->setDisabled(true);
+            compSurfaceUPointSlider->setDisabled(true);
+            compSurfaceVPointSlider->setDisabled(true);
+            compSurfaceTranslateX->setDisabled(true);
+            compSurfaceTranslateY->setDisabled(true);
+            compSurfaceTranslateZ->setDisabled(true);
         }
         else
         {
@@ -158,6 +200,12 @@ namespace cagd
             compSurfaceContinueButton->setDisabled(false);
             compSurfaceMergeButton->setDisabled(true);
             compSurfaceJoinButton->setDisabled(true);
+            compSurfacePatchSpinBox->setDisabled(false);
+            compSurfaceUPointSlider->setDisabled(false);
+            compSurfaceVPointSlider->setDisabled(false);
+            compSurfaceTranslateX->setDisabled(false);
+            compSurfaceTranslateY->setDisabled(false);
+            compSurfaceTranslateZ->setDisabled(false);
             if (value >= 1)
             {
                 compSurfaceJoinButton->setDisabled(false);
@@ -175,6 +223,31 @@ namespace cagd
         compSurfaceMergeSecondIndexSpinBox->setMaximum(value);
         compSurfaceContinueIndexSpinBox->setMaximum(value);
         compSurfaceEraseIndexSpinBox->setMaximum(value);
+        compSurfacePatchSpinBox->setMaximum(value);
+    }
+
+    void SideWidget::setControlPointSurfaceX(double value)
+    {
+        if (compSurfaceTranslateX->value() != value)
+        {
+            compSurfaceTranslateX->setValue(value);
+        }
+    }
+
+    void SideWidget::setControlPointSurfaceY(double value)
+    {
+        if (compSurfaceTranslateY->value() != value)
+        {
+            compSurfaceTranslateY->setValue(value);
+        }
+    }
+
+    void SideWidget::setControlPointSurfaceZ(double value)
+    {
+        if (compSurfaceTranslateZ->value() != value)
+        {
+            compSurfaceTranslateZ->setValue(value);
+        }
     }
 
 }

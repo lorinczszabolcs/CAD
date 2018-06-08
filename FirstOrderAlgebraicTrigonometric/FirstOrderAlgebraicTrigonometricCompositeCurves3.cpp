@@ -171,20 +171,23 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::validateAttributes(ArcAt
 GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::updateArcVBOGenerateImage(ArcAttributes &arc_attr)
 {
     cout << "Bent vagyok\n";
-    if (!arc_attr._arc->UpdateVertexBufferObjectsOfData()) {
+    if (!arc_attr._arc->UpdateVertexBufferObjectsOfData())
+    {
         return GL_FALSE;
     }
 
     cout << "Update1kesz\n";
 
     arc_attr._image = arc_attr._arc->GenerateImage(arc_attr._mod, arc_attr._div_point_count);
-    if (!arc_attr._image) {
+    if (!arc_attr._image)
+    {
         return GL_FALSE;
     }
 
     cout << "Generatimage kesz\n";
 
-    if (!arc_attr._image->UpdateVertexBufferObjects()) {
+    if (!arc_attr._image->UpdateVertexBufferObjects())
+    {
         return GL_FALSE;
     }
 
@@ -458,10 +461,13 @@ GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::renderControlPolygon()
 
         if(arc._arc)
         {
-            //glPointSize(10.0);
+            glPointSize(3.0);
+            arc._arc->RenderData(GL_POINTS);
+            glPointSize(1.0);
+
             glColor3f(0.0, 0.5, 0.0);
             arc._arc->RenderData(GL_LINE_STRIP);
-            //glPointSize(1.0);
+            glPointSize(1.0);
         }
     }
 }
@@ -482,7 +488,7 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::renderCurves(GLuint o
                 else
                     glColor3f(1.0,1.0,1.0);
 
-//                glPointSize(10.0);
+//                glPointSize(5.0);
 //                attr._image->RenderDerivatives(0, GL_POINTS);
 //                glPointSize(1.0);
 
@@ -509,6 +515,62 @@ GLboolean FirstOrderAlgebraicTrigonometricCompositeCurve3::renderCurves(GLuint o
             }
         }
         return GL_TRUE;
+}
+
+DCoordinate3 FirstOrderAlgebraicTrigonometricCompositeCurve3::getData(GLint arc_index, GLint point_index)
+{
+    if (_attributes[arc_index]._arc != nullptr)
+    {
+        return _attributes[arc_index]._arc->GetData(point_index);
+    }
+    else{
+        return DCoordinate3(0.0, 0.0, 0.0);
+    }
+}
+
+GLvoid FirstOrderAlgebraicTrigonometricCompositeCurve3::setData(GLint arc_index, GLint point_index, GLdouble x, GLdouble y, GLdouble z)
+{
+    _attributes[arc_index]._arc->SetData(point_index, x, y, z);
+
+    if (_attributes[arc_index]._next != nullptr)
+    {
+        if (point_index == 2)
+        {
+            DCoordinate3 aux = 2 * (*_attributes[arc_index]._arc)[3] - (*_attributes[arc_index]._arc)[2];
+            _attributes[arc_index]._next->_arc->SetData(1, aux.x(), aux.y(), aux.z());
+        }
+
+        else if (point_index == 3)
+        {
+            DCoordinate3 aux = (*_attributes[arc_index]._arc)[3];
+            _attributes[arc_index]._next->_arc->SetData(0, aux.x(), aux.y(), aux.z());
+            aux = 2 * (*_attributes[arc_index]._arc)[3] - (*_attributes[arc_index]._arc)[2];
+            _attributes[arc_index]._next->_arc->SetData(1, aux.x(), aux.y(), aux.z());
+        }
+        updateArcVBOGenerateImage((*_attributes[arc_index]._next));
+    }
+
+    if (_attributes[arc_index]._previous != nullptr)
+    {
+        if (point_index == 1)
+        {
+            DCoordinate3 aux = 2 * (*_attributes[arc_index]._arc)[0] - (*_attributes[arc_index]._arc)[1];
+            _attributes[arc_index]._previous->_arc->SetData(2, aux.x(), aux.y(), aux.z());
+        }
+
+        else if (point_index == 0)
+        {
+            DCoordinate3 aux = (*_attributes[arc_index]._arc)[0];
+            _attributes[arc_index]._previous->_arc->SetData(3, aux.x(), aux.y(), aux.z());
+            aux = 2 * (*_attributes[arc_index]._arc)[0] - (*_attributes[arc_index]._arc)[1];
+            _attributes[arc_index]._previous->_arc->SetData(2, aux.x(), aux.y(), aux.z());
+        }
+
+        updateArcVBOGenerateImage((*_attributes[arc_index]._previous));
+    }
+
+    updateArcVBOGenerateImage(_attributes[arc_index]);
+
 }
 
 GLint FirstOrderAlgebraicTrigonometricCompositeCurve3::getAttributesSize()

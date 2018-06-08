@@ -719,6 +719,39 @@ namespace cagd
 
         _shader_index2 = 0;
         _shader_enabled2 = true;
+
+        _shaders3.ResizeColumns(4);
+
+        _shaders3[0] = new ShaderProgram();
+        _shaders3[0]->InstallShaders("shaders/directional_light.vert","shaders/directional_light.frag");
+
+        _shaders3[1] = new ShaderProgram();
+        _shaders3[1]->InstallShaders("shaders/reflection_lines.vert","shaders/reflection_lines.frag");
+        _shaders3[1]->Enable();
+        _shaders3[1]->SetUniformVariable1f("scale_factor", 4.0);
+        _scale_factor3 = 4.0;
+        _shaders3[1]->SetUniformVariable1f("smoothing", 2.0);
+        _scale_factor3 = 2.0;
+        _shaders3[1]->SetUniformVariable1f("shading", 1.0);
+        _scale_factor3 = 1.0;
+        _shaders3[1]->Disable();
+
+        _shaders3[2] = new ShaderProgram();
+        _shaders3[2]->InstallShaders("shaders/toon.vert","shaders/toon.frag");
+        _shaders3[2]->Enable();
+        _shaders3[2]->SetUniformVariable4f("default_outline_color", 120.0, 150.0, 170.0, 0.7);
+        _outline3.r() = 120.0;
+        _outline3.g() = 150.0;
+        _outline3.b() = 170.0;
+        _outline3.a() = 0.7;
+        _shaders3[2]->Disable();
+
+        _shaders3[3] = new ShaderProgram();
+        _shaders3[3]->InstallShaders("shaders/two_sided_lighting.vert","shaders/two_sided_lighting.frag");
+
+        _shader_index_insert3 = 0;
+        _shader_index_join3 = 0;
+        _shader_index_continue3 = 0;
     }
 
     void GLWidget::initializeMaterials()
@@ -828,7 +861,7 @@ namespace cagd
 
         cout << "A1\n";
 
-        _curve->insert();
+        _curve->insert(_colors[0]);
 
         _mod_curve = 0;
         _color_index_insert_curve = 0;
@@ -837,6 +870,13 @@ namespace cagd
         _color_index_curve = 0;
         _continue_index_c = _erase_index_c = _join_index1_c = _join_index2_c = _merge_index1_c = _merge_index2_c = 0;
         _merge_direction1_c = _merge_direction2_c = _join_direction1_c = _join_direction2_c = _continue_direction_c = 0;
+        _selected_arc_point_index = _selected_arc_index = 0;
+
+        DCoordinate3 aux = _curve->getData(0,0);
+
+        emit xCoordinateCurveChanged(aux.x());
+        emit yCoordinateCurveChanged(aux.y());
+        emit zCoordinateCurveChanged(aux.z());
 
         emit arcNumberChanged(_curve->getAttributesSize() - 1);
     }
@@ -1010,7 +1050,7 @@ namespace cagd
         _surface = new FirstOrderAlgebraicTrigonometricSurface3();
         cout << "A1\n";
 
-        _surface->insert();
+        _surface->insert(_shaders[0]);
 
         _u_lin_surf = _v_lin_surf = _control_surf = _surf = GL_TRUE;
 
@@ -1018,8 +1058,18 @@ namespace cagd
         _material_index_continue_surf = 0;
         _material_index_join_surf = 0;
         _material_index_surf = 0;
+        _normal_surf = GL_TRUE;
+        _shader_enabled3 = GL_TRUE;
         _continue_index_s = _erase_index_s = _join_index1_s = _join_index2_s = _merge_index1_s = _merge_index2_s = 0;
         _merge_direction1_s = _merge_direction2_s = _join_direction1_s = _join_direction2_s = _continue_direction_s = 0;
+
+        _selected_patch_index = _selected_Upoint_index = _selected_Vpoint_index = 0;
+
+        DCoordinate3 aux = _surface->getData(0, 0, 0);
+
+        emit xCoordinateSurfaceChanged(aux.x());
+        emit yCoordinateSurfaceChanged(aux.y());
+        emit zCoordinateSurfaceChanged(aux.z());
 
         emit patchNumberChanged(_surface->getAttributesSize() - 1);
     }
@@ -1030,7 +1080,7 @@ namespace cagd
         glEnable(GL_LIGHT0);
         glEnable(GL_NORMALIZE);
 
-        _surface->renderSurfaces(_u_lin_surf, _v_lin_surf, _control_surf, _surf);
+        _surface->renderSurfaces(_u_lin_surf, _v_lin_surf, _u_der_surf, _v_der_surf, _control_surf, _surf, _shader_enabled3, _normal_surf);
     }
 
     //-----------------------------------
@@ -1343,15 +1393,18 @@ namespace cagd
     }
 
     void GLWidget::applyMaterial() {
-        if (_material_enabled) {
-            if (_materials[_material_index]) {
+        if (_material_enabled)
+        {
+            if (_materials[_material_index])
+            {
                 _materials[_material_index]->Apply();
             }
         }
     }
 
     void GLWidget::applyMaterial2() {
-        if (_material_enabled2) {
+        if (_material_enabled2)
+        {
             if (_materials2[_material_index2]) {
                 _materials2[_material_index2]->Apply();
             }
@@ -1359,16 +1412,20 @@ namespace cagd
     }
 
     void GLWidget::enableShader() {
-        if(_shader_enabled) {
-            if (_shaders[_shader_index]) {
+        if(_shader_enabled)
+        {
+            if (_shaders[_shader_index])
+            {
                 _shaders[_shader_index]->Enable();
             }
         }
     }
 
     void GLWidget::enableShader2() {
-        if(_shader_enabled2) {
-            if (_shaders2[_shader_index2]) {
+        if(_shader_enabled2)
+        {
+            if (_shaders2[_shader_index2])
+            {
                 _shaders2[_shader_index2]->Enable();
             }
         }
@@ -1399,12 +1456,54 @@ namespace cagd
         }
     }
 
+    void GLWidget::toggleShader3Surface(bool value)
+    {
+        if (_shader_enabled3 != value)
+        {
+            _shader_enabled3 = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::toggleSurfaceNormal(bool value)
+    {
+        if (_normal_surf != value)
+        {
+            _normal_surf = value;
+            updateGL();
+        }
+    }
+
     void GLWidget::setShaderIndex2(int index)
     {
         if (_shader_index2 != index)
         {
             _shader_index2 = index;
             updateGL();
+        }
+    }
+
+    void GLWidget::setShaderInsertIndex3(int index)
+    {
+        if (_shader_index_insert3 != index)
+        {
+            _shader_index_insert3 = index;
+        }
+    }
+
+    void GLWidget::setShaderContinueIndex3(int index)
+    {
+        if (_shader_index_continue3 != index)
+        {
+            _shader_index_continue3 = index;
+        }
+    }
+
+    void GLWidget::setShaderJoinIndex3(int index)
+    {
+        if (_shader_index_join3 != index)
+        {
+            _shader_index_join3 = index;
         }
     }
 
@@ -1450,6 +1549,18 @@ namespace cagd
         }
     }
 
+    void GLWidget::setScaleFactor3(double value)
+    {
+        if (_scale_factor3 != value)
+        {
+            _shaders3[1]->Enable();
+            _shaders3[1]->SetUniformVariable1f("scale_factor", value);
+            _shaders3[1]->Disable();
+            _scale_factor3 = value;
+            updateGL();
+        }
+    }
+
     void GLWidget::setSmoothing(double value)
     {
         if (_smoothing != value)
@@ -1474,6 +1585,18 @@ namespace cagd
         }
     }
 
+    void GLWidget::setSmoothing3(double value)
+    {
+        if (_smoothing3 != value)
+        {
+            _shaders3[1]->Enable();
+            _shaders3[1]->SetUniformVariable1f("smoothing", value);
+            _shaders3[1]->Disable();
+            _smoothing3 = value;
+            updateGL();
+        }
+    }
+
     void GLWidget::setShading(double value)
     {
         if (_shading != value)
@@ -1494,6 +1617,18 @@ namespace cagd
             _shaders2[1]->SetUniformVariable1f("shading", value);
             _shaders2[1]->Disable();
             _shading2 = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setShading3(double value)
+    {
+        if (_shading3 != value)
+        {
+            _shaders3[1]->Enable();
+            _shaders3[1]->SetUniformVariable1f("shading", value);
+            _shaders3[1]->Disable();
+            _shading3 = value;
             updateGL();
         }
     }
@@ -1590,6 +1725,54 @@ namespace cagd
             _shaders2[2]->SetUniformVariable4f("default_outline_color", _outline2.r(), _outline2.g(), _outline2.b(), value);
             _shaders2[2]->Disable();
             _outline2.a() = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setOutlineR3(double value)
+    {
+        if (_outline3.r() != value)
+        {
+            _shaders3[2]->Enable();
+            _shaders3[2]->SetUniformVariable4f("default_outline_color", value, _outline3.g(), _outline3.b(), _outline3.a());
+            _shaders3[2]->Disable();
+            _outline3.r() = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setOutlineG3(double value)
+    {
+        if (_outline3.g() != value)
+        {
+            _shaders3[2]->Enable();
+            _shaders3[2]->SetUniformVariable4f("default_outline_color", _outline3.r(), value, _outline3.b(), _outline3.a());
+            _shaders3[2]->Disable();
+            _outline3.g() = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setOutlineB3(double value)
+    {
+        if (_outline3.b() != value)
+        {
+            _shaders3[2]->Enable();
+            _shaders3[2]->SetUniformVariable4f("default_outline_color", _outline3.r(), _outline3.g(), value, _outline3.a());
+            _shaders3[2]->Disable();
+            _outline3.b() = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::setOutlineA3(double value)
+    {
+        if (_outline3.a() != value)
+        {
+            _shaders3[2]->Enable();
+            _shaders3[2]->SetUniformVariable4f("default_outline_color", _outline3.r(), _outline3.g(), _outline3.b(), value);
+            _shaders3[2]->Disable();
+            _outline3.a() = value;
             updateGL();
         }
     }
@@ -1733,6 +1916,7 @@ namespace cagd
         if (_arc->getAlpha() != value)
         {
             _arc->setAlpha(value);
+            _arc->SetDefinitionDomain(0, value);
 
             if (!_arc->UpdateVertexBufferObjectsOfData())
             {
@@ -1923,6 +2107,77 @@ namespace cagd
         {
             emit arcNumberChanged(_curve->getAttributesSize() - 1);
             cout << "Succesfull erase!\n";
+            updateGL();
+        }
+    }
+
+    void GLWidget::setArcCurveIndex(int index)
+    {
+        if (_selected_arc_index != index)
+        {
+            _selected_arc_index = index;
+
+            DCoordinate3 aux = _curve->getData(_selected_arc_index, _selected_arc_point_index);
+
+            emit xCoordinateCurveChanged(aux.x());
+            emit yCoordinateCurveChanged(aux.y());
+            emit zCoordinateCurveChanged(aux.z());
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointCurveIndex(int index)
+    {
+        if (_selected_arc_point_index != index)
+        {
+            _selected_arc_point_index = index;
+
+            DCoordinate3 aux = _curve->getData(_selected_arc_index, _selected_arc_point_index);
+
+            emit xCoordinateCurveChanged(aux.x());
+            emit yCoordinateCurveChanged(aux.y());
+            emit zCoordinateCurveChanged(aux.z());
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointCurveX(double value)
+    {
+
+        if (_selected_arc_pointX != value)
+        {
+            _selected_arc_pointX = value;
+
+            _curve->setData(_selected_arc_index, _selected_arc_point_index, _selected_arc_pointX, _selected_arc_pointY, _selected_arc_pointZ);
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointCurveY(double value)
+    {
+
+        if (_selected_arc_pointY != value)
+        {
+            _selected_arc_pointY = value;
+
+            _curve->setData(_selected_arc_index, _selected_arc_point_index, _selected_arc_pointX, _selected_arc_pointY, _selected_arc_pointZ);
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointCurveZ(double value)
+    {
+
+        if (_selected_arc_pointZ != value)
+        {
+            _selected_arc_pointZ = value;
+
+            _curve->setData(_selected_arc_index, _selected_arc_point_index, _selected_arc_pointX, _selected_arc_pointY, _selected_arc_pointZ);
+
             updateGL();
         }
     }
@@ -2198,6 +2453,7 @@ namespace cagd
 //            cout << _patch->_data << "\n\n";
 
             _patch->setAlphaU(value);
+            _patch->SetUInterval(0, value);
 
 //            cout << "\n\n---3---\n\n";
 //            cout << _patch->_data << "\n\n";
@@ -2293,6 +2549,7 @@ namespace cagd
         if (_patch->getAlphaV() != value)
         {
             _patch->setAlphaV(value);
+            _patch->SetVInterval(0, value);
 
             if (! _patch->UpdateVertexBufferObjectsOfData())
             {
@@ -2369,6 +2626,24 @@ namespace cagd
         }
     }
 
+    void GLWidget::toggleUDerivativesSurface(bool value)
+    {
+        if (_u_der_surf != value)
+        {
+            _u_der_surf = value;
+            updateGL();
+        }
+    }
+
+    void GLWidget::toggleVDerivativesSurface(bool value)
+    {
+        if (_v_der_surf != value)
+        {
+            _v_der_surf = value;
+            updateGL();
+        }
+    }
+
     void GLWidget::toggleControlNetSurface(bool value)
     {
         if (_control_surf != value)
@@ -2400,9 +2675,11 @@ namespace cagd
 
     void GLWidget::insertPatch(bool value)
     {
-        if (! _surface->insert(_materials[_material_index_insert_surf]))
+        cout << "Szurjuk be!\n\n" << _shader_index_insert3 << "\n\n";
+
+        if (! _surface->insert(_shaders3[_shader_index_insert3], _materials[_material_index_insert_surf]))
         {
-            cout << "Could not insert curve!";
+            cout << "Could not insert patch!";
         }
         else
         {
@@ -2436,6 +2713,7 @@ namespace cagd
         cout << _continue_direction_s << "\n";
         if (! _surface->continueExistingSurface(_continue_index_s,
                                           (FirstOrderAlgebraicTrigonometricSurface3::Direction)_continue_direction_s,
+                                          _shaders3[_shader_index_continue3],
                                           _materials[_material_index_continue_surf]))
         {
             cout << "Could not continue existing arc!\n";
@@ -2479,6 +2757,7 @@ namespace cagd
         if (!_surface->joinExistingSurface(_join_index1_s, _join_index2_s,
                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_join_direction1_s,
                                      (FirstOrderAlgebraicTrigonometricSurface3::Direction)_join_direction2_s,
+                                     _shaders3[_shader_index_join3],
                                      _materials[_material_index_join_surf]))
         {
             cout << "Could not join arc!\n";
@@ -2532,6 +2811,8 @@ namespace cagd
         _erase_index_s = value;
     }
 
+    // erase
+
     void GLWidget::erasePatch(bool value)
     {
         cout << _erase_index_s << "\n --- ASD --- \n";
@@ -2540,6 +2821,96 @@ namespace cagd
         emit patchNumberChanged(_surface->getAttributesSize() - 1);
         cout << "Succesfull erase!\n";
         updateGL();
+    }
+
+
+    // edit
+
+    void GLWidget::setPatchSurfaceIndex(int index)
+    {
+        if (_selected_patch_index != index)
+        {
+            _selected_patch_index = index;
+
+            DCoordinate3 aux = _surface->getData(_selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index);
+
+            emit xCoordinateSurfaceChanged(aux.x());
+            emit yCoordinateSurfaceChanged(aux.y());
+            emit zCoordinateSurfaceChanged(aux.z());
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointSurfaceUIndex(int index)
+    {
+        if (_selected_Upoint_index != index)
+        {
+            _selected_Upoint_index = index;
+
+            DCoordinate3 aux = _surface->getData(_selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index);
+
+            emit xCoordinateSurfaceChanged(aux.x());
+            emit yCoordinateSurfaceChanged(aux.y());
+            emit zCoordinateSurfaceChanged(aux.z());
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointSurfaceVIndex(int index)
+    {
+        if (_selected_Vpoint_index != index)
+        {
+            _selected_Vpoint_index = index;
+
+            DCoordinate3 aux = _surface->getData(_selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index);
+
+            emit xCoordinateSurfaceChanged(aux.x());
+            emit yCoordinateSurfaceChanged(aux.y());
+            emit zCoordinateSurfaceChanged(aux.z());
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointSurfaceX(double value)
+    {
+
+        if (_selected_patch_pointX != value)
+        {
+            _selected_patch_pointX = value;
+
+            _surface->setData(_selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index, _selected_patch_pointX, _selected_patch_pointY, _selected_patch_pointZ);
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointSurfaceY(double value)
+    {
+
+        if (_selected_patch_pointY != value)
+        {
+            _selected_patch_pointY = value;
+
+            _surface->setData(_selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index, _selected_patch_pointX, _selected_patch_pointY, _selected_patch_pointZ);
+
+            updateGL();
+        }
+    }
+
+    void GLWidget::setControlPointSurfaceZ(double value)
+    {
+
+        if (_selected_patch_pointZ != value)
+        {
+            _selected_patch_pointZ = value;
+
+            _surface->setData(_selected_patch_index, _selected_Upoint_index, _selected_Vpoint_index, _selected_patch_pointX, _selected_patch_pointY, _selected_patch_pointZ);
+
+            updateGL();
+        }
     }
 
 

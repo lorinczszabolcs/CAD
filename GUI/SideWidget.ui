@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>590</width>
-    <height>555</height>
+    <height>957</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -241,14 +241,14 @@
      <x>10</x>
      <y>260</y>
      <width>571</width>
-     <height>291</height>
+     <height>681</height>
     </rect>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="parametricTab">
     <attribute name="title">
@@ -1684,7 +1684,7 @@
        <x>10</x>
        <y>50</y>
        <width>531</width>
-       <height>171</height>
+       <height>181</height>
       </rect>
      </property>
      <property name="currentIndex">
@@ -1894,7 +1894,7 @@
          <x>20</x>
          <y>20</y>
          <width>181</width>
-         <height>71</height>
+         <height>111</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_12">
@@ -2052,7 +2052,7 @@
          <x>20</x>
          <y>20</y>
          <width>181</width>
-         <height>48</height>
+         <height>91</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_14">
@@ -2149,7 +2149,7 @@
       <rect>
        <x>10</x>
        <y>11</y>
-       <width>167</width>
+       <width>271</width>
        <height>31</height>
       </rect>
      </property>
@@ -2166,6 +2166,146 @@
       </item>
      </layout>
     </widget>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>240</y>
+       <width>531</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Change curve</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>511</width>
+        <height>191</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_29">
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_98">
+         <property name="text">
+          <string>Select point</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSlider" name="compCurvePointSlider">
+         <property name="maximum">
+          <number>3</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_101">
+         <property name="text">
+          <string>Translate along x</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="compCurveTranslateX">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="decimals">
+          <number>5</number>
+         </property>
+         <property name="minimum">
+          <double>-10.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_99">
+         <property name="text">
+          <string>Translate along y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="compCurveTranslateY">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="decimals">
+          <number>5</number>
+         </property>
+         <property name="minimum">
+          <double>-1000.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_100">
+         <property name="text">
+          <string>Translate along z</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="compCurveTranslateZ">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="decimals">
+          <number>5</number>
+         </property>
+         <property name="minimum">
+          <double>-100000000.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_102">
+         <property name="text">
+          <string>Select curve</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="compCurveArcSpinBox">
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </widget>
    <widget class="QWidget" name="compositeSurface">
     <attribute name="title">
@@ -2175,9 +2315,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>70</y>
        <width>531</width>
-       <height>171</height>
+       <height>181</height>
       </rect>
      </property>
      <property name="currentIndex">
@@ -2258,97 +2398,54 @@
         </item>
        </layout>
       </widget>
-     </widget>
-     <widget class="QWidget" name="joinTab_2">
-      <attribute name="title">
-       <string>Join</string>
-      </attribute>
-      <widget class="QWidget" name="layoutWidget_7">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>20</y>
+         <y>50</y>
          <width>181</width>
-         <height>111</height>
+         <height>22</height>
         </rect>
        </property>
-       <layout class="QFormLayout" name="formLayout_19">
+       <layout class="QFormLayout" name="formLayout_27">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_71">
+         <widget class="QLabel" name="label_87">
           <property name="text">
-           <string>First index</string>
+           <string>Shaders</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QSpinBox" name="compSurfaceJoinFirstIndexSpinBox">
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_72">
-          <property name="text">
-           <string>Second index</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="compSurfaceJoinSecondIndexSpinBox">
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_85">
-          <property name="text">
-           <string>Material</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="compSurfaceJoinComboBoxMaterial">
+         <widget class="QComboBox" name="compSurfaceInsertComboBoxShader">
           <item>
            <property name="text">
-            <string>Brass</string>
+            <string>Directional</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Gold</string>
+            <string>Reflection</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Silver</string>
+            <string>Toon</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Emerald</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Pearl</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Ruby</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Turquoise</string>
+            <string>Two sided</string>
            </property>
           </item>
          </widget>
         </item>
        </layout>
       </widget>
+     </widget>
+     <widget class="QWidget" name="joinTab_2">
+      <attribute name="title">
+       <string>Join</string>
+      </attribute>
       <widget class="QWidget" name="layoutWidget_8">
        <property name="geometry">
         <rect>
@@ -2475,6 +2572,123 @@
        <property name="text">
         <string>Join</string>
        </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>21</x>
+         <y>21</y>
+         <width>181</width>
+         <height>121</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_19">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_71">
+          <property name="text">
+           <string>First index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="compSurfaceJoinFirstIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_72">
+          <property name="text">
+           <string>Second index</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="compSurfaceJoinSecondIndexSpinBox">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_85">
+          <property name="text">
+           <string>Material</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="compSurfaceJoinComboBoxMaterial">
+          <item>
+           <property name="text">
+            <string>Brass</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Gold</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Silver</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Emerald</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Pearl</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Ruby</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Turquoise</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_88">
+          <property name="text">
+           <string>Shaders</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="compSurfaceJoinComboBoxShader">
+          <item>
+           <property name="text">
+            <string>Directional</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Reflection</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toon</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Two sided</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
      <widget class="QWidget" name="mergeTab_2">
@@ -2659,7 +2873,7 @@
          <x>20</x>
          <y>20</y>
          <width>181</width>
-         <height>67</height>
+         <height>93</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_23">
@@ -2719,6 +2933,37 @@
           <item>
            <property name="text">
             <string>Turquoise</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_92">
+          <property name="text">
+           <string>Shaders</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="compSurfaceContinueComboBoxShader">
+          <item>
+           <property name="text">
+            <string>Directional</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Reflection</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toon</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Two sided</string>
            </property>
           </item>
          </widget>
@@ -2852,31 +3097,11 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>371</width>
-       <height>31</height>
+       <width>531</width>
+       <height>51</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="compSurfaceULinesCheckBox">
-        <property name="text">
-         <string>U lines</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="compSurfaceVLinesCheckBox">
-        <property name="text">
-         <string>V lines</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="2">
        <widget class="QCheckBox" name="compSurfaceControlCheckBox">
         <property name="text">
@@ -2897,7 +3122,393 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="compSurfaceVLinesCheckBox">
+        <property name="text">
+         <string>V lines</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="compSurfaceULinesCheckBox">
+        <property name="text">
+         <string>U lines</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QCheckBox" name="compSurfaceNormalsCheckBox">
+        <property name="text">
+         <string>Normals</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="compSurfaceShaderCheckBox">
+        <property name="text">
+         <string>Shader</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="compSurfaceUDerivativesCheckBox">
+        <property name="text">
+         <string>U derivatives</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="compSurfaceVDerivativesCheckBox">
+        <property name="text">
+         <string>V derivatives</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>250</y>
+       <width>531</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Shader settings</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>151</width>
+        <height>101</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout_28">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_89">
+         <property name="text">
+          <string>Scale factor</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QDoubleSpinBox" name="scaleSpinBox_3">
+         <property name="value">
+          <double>4.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_90">
+         <property name="text">
+          <string>Smoothing</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="smoothSpinBox_3">
+         <property name="value">
+          <double>2.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_91">
+         <property name="text">
+          <string>Shading</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="shadeSpinBox_3">
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_15">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>30</y>
+        <width>351</width>
+        <height>100</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_95">
+         <property name="text">
+          <string>Green</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_94">
+         <property name="text">
+          <string>Red</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLabel" name="label_97">
+         <property name="text">
+          <string>Alpha</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_96">
+         <property name="text">
+          <string>Blue</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="outlineSpinBoxG_3">
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QDoubleSpinBox" name="outlineSpinBoxB_3">
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QDoubleSpinBox" name="outlineSpinBoxA_3">
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.700000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QDoubleSpinBox" name="outlineSpinBoxR_3">
+         <property name="maximum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="label_93">
+         <property name="text">
+          <string>Default outline color</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>420</y>
+       <width>531</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Change surface</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>11</x>
+        <y>41</y>
+        <width>511</width>
+        <height>171</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_117">
+         <property name="text">
+          <string>Select patch</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QSpinBox" name="compSurfacePatchSpinBox">
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_113">
+         <property name="text">
+          <string>Select U point</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSlider" name="compSurfaceUPointSlider">
+         <property name="maximum">
+          <number>3</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_118">
+         <property name="text">
+          <string>Select V point</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QSlider" name="compSurfaceVPointSlider">
+         <property name="maximum">
+          <number>3</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_114">
+         <property name="text">
+          <string>Translate along x</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="compSurfaceTranslateX">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="decimals">
+          <number>5</number>
+         </property>
+         <property name="minimum">
+          <double>-10.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_115">
+         <property name="text">
+          <string>Translate along y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="compSurfaceTranslateY">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="decimals">
+          <number>5</number>
+         </property>
+         <property name="minimum">
+          <double>-1000.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_116">
+         <property name="text">
+          <string>Translate along z</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="compSurfaceTranslateZ">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="decimals">
+          <number>5</number>
+         </property>
+         <property name="minimum">
+          <double>-100000000.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
   </widget>

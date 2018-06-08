@@ -5,7 +5,7 @@
 using namespace cagd;
 
 
-FirstOrderAlgebraicTrigonometricArc3::FirstOrderAlgebraicTrigonometricArc3(GLdouble alpha): LinearCombination3(0.0, 1.0, 4 )
+FirstOrderAlgebraicTrigonometricArc3::FirstOrderAlgebraicTrigonometricArc3(GLdouble alpha) : LinearCombination3(0.0, alpha, 4)
 {
     this->_alpha = alpha;
 }
@@ -15,7 +15,7 @@ GLdouble FirstOrderAlgebraicTrigonometricArc3::getAlpha() const
     return _alpha;
 }
 
-void FirstOrderAlgebraicTrigonometricArc3::setAlpha(GLdouble alpha)
+GLvoid FirstOrderAlgebraicTrigonometricArc3::setAlpha(GLdouble alpha)
 {
     this->_alpha = alpha;
 }
