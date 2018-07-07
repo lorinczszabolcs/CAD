@@ -871,6 +871,7 @@ namespace cagd
         _continue_index_c = _erase_index_c = _join_index1_c = _join_index2_c = _merge_index1_c = _merge_index2_c = 0;
         _merge_direction1_c = _merge_direction2_c = _join_direction1_c = _join_direction2_c = _continue_direction_c = 0;
         _selected_arc_point_index = _selected_arc_index = 0;
+        _selected_arc_pointX = _selected_arc_pointY = _selected_arc_pointZ = 0;
 
         DCoordinate3 aux = _curve->getData(0,0);
 
@@ -1064,6 +1065,7 @@ namespace cagd
         _merge_direction1_s = _merge_direction2_s = _join_direction1_s = _join_direction2_s = _continue_direction_s = 0;
 
         _selected_patch_index = _selected_Upoint_index = _selected_Vpoint_index = 0;
+        _selected_patch_pointX = _selected_patch_pointY = _selected_patch_pointZ = 0;
 
         DCoordinate3 aux = _surface->getData(0, 0, 0);
 
@@ -3019,6 +3021,16 @@ namespace cagd
         if (_image_of_arc)
         {
             delete _image_of_arc, _image_of_arc = nullptr;
+        }
+
+        if (_curve)
+        {
+            delete _curve, _curve = nullptr;
+        }
+
+        if (_surface)
+        {
+            delete _surface, _surface = nullptr;
         }
     }
 }

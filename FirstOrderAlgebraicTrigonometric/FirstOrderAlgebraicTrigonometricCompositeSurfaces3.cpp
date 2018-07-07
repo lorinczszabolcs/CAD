@@ -293,10 +293,10 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             if (u_index > 2)
             {
                 DCoordinate3 d1, d2;
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d1);
-                _attributes[patch_index]._patch->GetData(v_index, 2, d2);
-                _attributes[patch_index]._neighbors[N]->_patch->SetData(v_index, 0, d1);
-                _attributes[patch_index]._neighbors[N]->_patch->SetData(v_index, 1, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d1);
+                _attributes[patch_index]._patch->GetData(2, v_index, d2);
+                _attributes[patch_index]._neighbors[N]->_patch->SetData(0, v_index, d1);
+                _attributes[patch_index]._neighbors[N]->_patch->SetData(1, v_index, 2.0 * d1 - d2);
 
             }
             // u = 2
@@ -304,9 +304,19 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             {
                 DCoordinate3 d1, d2;
 
-                _attributes[patch_index]._patch->GetData(v_index, 3, d1);
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d2);
-                _attributes[patch_index]._neighbors[N]->_patch->SetData(v_index, 1, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(3, v_index, d1);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d2);
+                _attributes[patch_index]._neighbors[N]->_patch->SetData(1, v_index, 2.0 * d1 - d2);
+            }
+
+            _attributes[patch_index]._neighbors[N]->_u_lines = _attributes[patch_index]._neighbors[N]->_patch->GenerateUIsoparametricLines(5, 1, 100);
+            _attributes[patch_index]._neighbors[N]->_v_lines = _attributes[patch_index]._neighbors[N]->_patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for (GLint i = 0; i < 5; i++)
+            {
+                (*_attributes[patch_index]._neighbors[N]->_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_attributes[patch_index]._neighbors[N]->_v_lines)[i]->UpdateVertexBufferObjects();
+
             }
 
             UpdatePatchVBOGenerateImage((*_attributes[patch_index]._neighbors[N]));
@@ -321,10 +331,10 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             if (u_index < 1)
             {
                 DCoordinate3 d1, d2;
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d1);
-                _attributes[patch_index]._patch->GetData(v_index, 1, d2);
-                _attributes[patch_index]._neighbors[S]->_patch->SetData(v_index, 3, d1);
-                _attributes[patch_index]._neighbors[S]->_patch->SetData(v_index, 2, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d1);
+                _attributes[patch_index]._patch->GetData(1, v_index, d2);
+                _attributes[patch_index]._neighbors[S]->_patch->SetData(3, v_index, d1);
+                _attributes[patch_index]._neighbors[S]->_patch->SetData(2, v_index, 2 * d1 - d2);
 
             }
             // u = 1
@@ -332,9 +342,19 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             {
                 DCoordinate3 d1, d2;
 
-                _attributes[patch_index]._patch->GetData(v_index, 0, d1);
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d2);
-                _attributes[patch_index]._neighbors[N]->_patch->SetData(v_index, 2, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(0, v_index, d1);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d2);
+                _attributes[patch_index]._neighbors[S]->_patch->SetData(2, v_index, 2 * d1 - d2);
+            }
+
+            _attributes[patch_index]._neighbors[S]->_u_lines = _attributes[patch_index]._neighbors[S]->_patch->GenerateUIsoparametricLines(5, 1, 100);
+            _attributes[patch_index]._neighbors[S]->_v_lines = _attributes[patch_index]._neighbors[S]->_patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for (GLint i = 0; i < 5; i++)
+            {
+                (*_attributes[patch_index]._neighbors[S]->_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_attributes[patch_index]._neighbors[S]->_v_lines)[i]->UpdateVertexBufferObjects();
+
             }
 
             UpdatePatchVBOGenerateImage((*_attributes[patch_index]._neighbors[S]));
@@ -350,20 +370,29 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             if (v_index > 2)
             {
                 DCoordinate3 d1, d2;
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d1);
-                _attributes[patch_index]._patch->GetData(2, u_index, d2);
-                _attributes[patch_index]._neighbors[E]->_patch->SetData(0, u_index, d1);
-                _attributes[patch_index]._neighbors[E]->_patch->SetData(1, u_index, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d1);
+                _attributes[patch_index]._patch->GetData(u_index, 2, d2);
+                _attributes[patch_index]._neighbors[E]->_patch->SetData(u_index, 0, d1);
+                _attributes[patch_index]._neighbors[E]->_patch->SetData(u_index, 1, 2 * d1 - d2);
 
             }
             // v = 2
             else
             {
                 DCoordinate3 d1, d2;
+                _attributes[patch_index]._patch->GetData(u_index, 3, d1);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d2);
+                _attributes[patch_index]._neighbors[E]->_patch->SetData(u_index, 1, 2 * d1 - d2);
+            }
 
-                _attributes[patch_index]._patch->GetData(3, u_index, d1);
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d2);
-                _attributes[patch_index]._neighbors[E]->_patch->SetData(1, u_index, 2 * d1 - d2);
+            _attributes[patch_index]._neighbors[E]->_u_lines = _attributes[patch_index]._neighbors[E]->_patch->GenerateUIsoparametricLines(5, 1, 100);
+            _attributes[patch_index]._neighbors[E]->_v_lines = _attributes[patch_index]._neighbors[E]->_patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for (GLint i = 0; i < 5; i++)
+            {
+                (*_attributes[patch_index]._neighbors[E]->_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_attributes[patch_index]._neighbors[E]->_v_lines)[i]->UpdateVertexBufferObjects();
+
             }
 
             UpdatePatchVBOGenerateImage((*_attributes[patch_index]._neighbors[E]));
@@ -378,10 +407,10 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             if (v_index < 1)
             {
                 DCoordinate3 d1, d2;
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d1);
-                _attributes[patch_index]._patch->GetData(1, u_index, d2);
-                _attributes[patch_index]._neighbors[W]->_patch->SetData(3, u_index, d1);
-                _attributes[patch_index]._neighbors[W]->_patch->SetData(2, u_index, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d1);
+                _attributes[patch_index]._patch->GetData(u_index, 1, d2);
+                _attributes[patch_index]._neighbors[W]->_patch->SetData(u_index, 3, d1);
+                _attributes[patch_index]._neighbors[W]->_patch->SetData(u_index, 2, 2 * d1 - d2);
 
             }
             // v = 1
@@ -389,13 +418,35 @@ GLvoid FirstOrderAlgebraicTrigonometricSurface3::setData(GLint patch_index, GLin
             {
                 DCoordinate3 d1, d2;
 
-                _attributes[patch_index]._patch->GetData(0, u_index, d1);
-                _attributes[patch_index]._patch->GetData(v_index, u_index, d2);
-                _attributes[patch_index]._neighbors[W]->_patch->SetData(2, u_index, 2 * d1 - d2);
+                _attributes[patch_index]._patch->GetData(u_index, 0, d1);
+                _attributes[patch_index]._patch->GetData(u_index, v_index, d2);
+                _attributes[patch_index]._neighbors[W]->_patch->SetData(u_index, 2, 2 * d1 - d2);
+            }
+
+
+            _attributes[patch_index]._neighbors[W]->_u_lines = _attributes[patch_index]._neighbors[W]->_patch->GenerateUIsoparametricLines(5, 1, 100);
+            _attributes[patch_index]._neighbors[W]->_v_lines = _attributes[patch_index]._neighbors[W]->_patch->GenerateVIsoparametricLines(5, 1, 100);
+
+            for (GLint i = 0; i < 5; i++)
+            {
+                (*_attributes[patch_index]._neighbors[W]->_u_lines)[i]->UpdateVertexBufferObjects();
+                (*_attributes[patch_index]._neighbors[W]->_v_lines)[i]->UpdateVertexBufferObjects();
+
             }
 
             UpdatePatchVBOGenerateImage((*_attributes[patch_index]._neighbors[W]));
         }
+    }
+
+    _attributes[patch_index]._u_lines = _attributes[patch_index]._patch->GenerateUIsoparametricLines(5, 1, 100);
+    _attributes[patch_index]._v_lines = _attributes[patch_index]._patch->GenerateVIsoparametricLines(5, 1, 100);
+
+
+    for (GLint i = 0; i < 5; i++)
+    {
+        (*_attributes[patch_index]._u_lines)[i]->UpdateVertexBufferObjects();
+        (*_attributes[patch_index]._v_lines)[i]->UpdateVertexBufferObjects();
+
     }
 
     UpdatePatchVBOGenerateImage(_attributes[patch_index]);
@@ -814,12 +865,6 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::renderSurfaces(GLboolean u_l
                 glColor3f(0.2, 0.2, 0.2);
                 for(GLuint j = 0; j < 5; j++)
                 {
-                    if (j > 1)
-                    {
-                        glPointSize(5.0);
-                        (*_attributes[i]._v_lines)[j]->RenderDerivatives(0, GL_POINTS);
-                        glPointSize(1.0);
-                    }
                     (*_attributes[i]._v_lines)[j]->RenderDerivatives(0, GL_LINE_STRIP);
                 }
             }
@@ -1989,7 +2034,7 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLui
 
 
             patch._neighbors[N] = &newPatch;
-            newPatch._neighbors[W] = &patch;
+            newPatch._neighbors[S] = &patch;
             UpdatePatchVBOGenerateImage(newPatch);
         }
         else if(direction == W)
@@ -2023,8 +2068,8 @@ GLboolean FirstOrderAlgebraicTrigonometricSurface3::continueExistingSurface(GLui
                 (*newPatch._v_lines)[i]->UpdateVertexBufferObjects();
             }
 
-            patch._neighbors[N] = &newPatch;
-            newPatch._neighbors[W] = &patch;
+            patch._neighbors[W] = &newPatch;
+            newPatch._neighbors[E] = &patch;
             UpdatePatchVBOGenerateImage(newPatch);
         }
         return GL_TRUE;

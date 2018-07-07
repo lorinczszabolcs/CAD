@@ -248,7 +248,7 @@
     <string notr="true"/>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>7</number>
    </property>
    <widget class="QWidget" name="parametricTab">
     <attribute name="title">
@@ -2321,7 +2321,7 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="insertTab_2">
       <attribute name="title">
